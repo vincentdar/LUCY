@@ -10,6 +10,8 @@
 
 // Last edit: Matthew Sutanto 28/05/2020 => First
 
+#define UTILS Utils::get()
+
 namespace LUCY {
 
 	class Utils
@@ -24,11 +26,11 @@ namespace LUCY {
 		Utils(const Utils& utils) = delete;
 		void operator=(const Utils& utils) = delete;
 
-		static Utils* get() {
+		static Utils& get() {
 			if (instance == nullptr) {
 				instance = new Utils();
 			}
-			return instance;
+			return *instance;
 		}
 
 		bool isInBetween(float number, float min, float max) {
@@ -45,6 +47,4 @@ namespace LUCY {
 			TODO : isInRange, isCollided.. etc
 		*/
 	};
-
-	Utils* Utils::instance = nullptr;
 }

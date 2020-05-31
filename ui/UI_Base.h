@@ -8,7 +8,7 @@ namespace LUCY {
 	class UI_Base
 	{
 	private:
-		static unsigned int gui_generate_id;
+		static unsigned int static_ID;
 
 	protected:
 		unsigned int id;
@@ -17,9 +17,13 @@ namespace LUCY {
 		UI_Base() {
 			// Ketika object BaseUI dibuat, maka gui_generate_id akan mengenerate id baru,
 			//  dimana id tsb akan dimiliki scr unik oleh tiap gui component.
-			gui_generate_id++;
-			id = gui_generate_id;
+			static_ID++;
+			id = static_ID;
 		}
+
+		unsigned int getID() { return id; }
+
+		virtual void draw(sf::RenderTarget& target) = 0;
 	};
 
 }

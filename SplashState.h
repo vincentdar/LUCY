@@ -3,6 +3,7 @@
 #include "Game.h"
 #include <SFML/Graphics.hpp>
 #include "Hero.h"
+#include "ui/UI_Button.h"
 
 namespace LUCY
 {
@@ -14,6 +15,10 @@ namespace LUCY
 		GameDataRef m_data;
 
 		Hero m_hero;
+
+		// Debug
+		UI_Button button;
+		UI_Button button1;
 	public:
 		SplashState(GameDataRef data);
 		virtual void VInit();
