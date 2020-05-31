@@ -10,38 +10,41 @@
 
 // Last edit: Matthew Sutanto 28/05/2020 => First
 
-class Utils 
-{
-private:
-	static Utils* instance;
+namespace LUCY {
 
-public:
-	Utils() {}
+	class Utils
+	{
+	private:
+		static Utils* instance;
 
-	// Copying is no-no;
-	Utils(const Utils& utils) = delete;
-	void operator=(const Utils& utils) = delete;
+	public:
+		Utils() {}
 
-	static Utils* get() {
-		if (instance == nullptr) {
-			instance = new Utils();
+		// Copying is no-no;
+		Utils(const Utils& utils) = delete;
+		void operator=(const Utils& utils) = delete;
+
+		static Utils* get() {
+			if (instance == nullptr) {
+				instance = new Utils();
+			}
+			return instance;
 		}
-		return instance;
-	}
 
-	bool isInBetween(float number, float min, float max) {
-		return (number >= min && number <= max);
-	}
+		bool isInBetween(float number, float min, float max) {
+			return (number >= min && number <= max);
+		}
 
-	// Get mouse over
-	bool isMouseOver(sf::Vector2f objPos, float width, float height, sf::RenderWindow& window) {
-		return (isInBetween(sf::Mouse::getPosition(window).x, objPos.x, objPos.x + width) &&
-			isInBetween(sf::Mouse::getPosition(window).y, objPos.y, objPos.y + height));
-	}
+		// Get mouse over
+		bool isMouseOver(sf::Vector2f objPos, float width, float height, sf::RenderWindow& window) {
+			return (isInBetween(sf::Mouse::getPosition(window).x, objPos.x, objPos.x + width) &&
+				isInBetween(sf::Mouse::getPosition(window).y, objPos.y, objPos.y + height));
+		}
 
-	/*
-		TODO : isInRange, isCollided.. etc
-	*/
-};
+		/*
+			TODO : isInRange, isCollided.. etc
+		*/
+	};
 
-Utils* Utils::instance = nullptr;
+	Utils* Utils::instance = nullptr;
+}

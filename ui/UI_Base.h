@@ -3,37 +3,23 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 
-enum class UI_Shape 
-{
-	NONE = 0, RECT, CIRCLE, TEXTURE
-};
-
 namespace LUCY {
 
-	class UI_Base :
-		public sf::Transformable,
-		public sf::Drawable
+	class UI_Base
 	{
-	protected:
-		sf::Sprite sprite;
-		sf::Texture* texture;
-		sf::Text text;
-		sf::Font* font;
+	private:
+		static unsigned int gui_generate_id;
 
-		int width, height;
+	protected:
+		unsigned int id;
 
 	public:
-		UI_Base(sf::Texture* texture, sf::Font* font, sf::String text = "");
-		UI_Base(const UI_Base& base) = default;
-
-		void setText(std::string text);
-		void setFont(sf::Font *font);
-		void setTexture(sf::Texture* texture);
-
-		std::string getText();
-		sf::Texture& getTexture();
-		sf::Font& getFont();
-
-		void draw(sf::RenderWindow* window);
+		UI_Base() {
+			// Ketika object BaseUI dibuat, maka gui_generate_id akan mengenerate id baru,
+			//  dimana id tsb akan dimiliki scr unik oleh tiap gui component.
+			gui_generate_id++;
+			id = gui_generate_id;
+		}
 	};
+
 }
