@@ -3,7 +3,11 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 
-namespace LUCY {
+namespace GUI {
+
+	enum UI_Type {
+		UI_BUTTON = 0, UI_TEXTBOX
+	};
 
 	class UI_Base
 	{
@@ -21,9 +25,14 @@ namespace LUCY {
 			id = static_ID;
 		}
 
+		virtual ~UI_Base() {}
+
 		unsigned int getID() { return id; }
 
+		virtual void update(sf::RenderWindow& window) = 0;
 		virtual void draw(sf::RenderTarget& target) = 0;
+
+		virtual UI_Type getType() = 0;
 	};
 
 }

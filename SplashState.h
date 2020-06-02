@@ -17,8 +17,8 @@ namespace LUCY
 		Hero m_hero;
 
 		// Debug
-		UI_Button button;
-		UI_Button button1;
+		GUI::Button button;
+		GUI::Button button1;
 	public:
 		SplashState(GameDataRef data);
 		virtual void VInit();

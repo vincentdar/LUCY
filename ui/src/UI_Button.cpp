@@ -2,7 +2,7 @@
 
 #include "../../utils/Utils.h"
 
-namespace LUCY {
+namespace GUI {
 
 	void UI_Button::update(sf::RenderWindow& window)
 	{

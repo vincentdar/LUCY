@@ -122,6 +122,7 @@ namespace LUCY {
 			else if (mode == InputMode::INPUT_KEYDOWN) {
 				return sf::Keyboard::isKeyPressed(mapping_keys[name]);
 			}
+			return false;
 		}
 
 		bool getButton(const std::string& name, InputMode mode, sf::Event& event) {

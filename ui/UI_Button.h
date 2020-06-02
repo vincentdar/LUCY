@@ -2,7 +2,7 @@
 
 #include "UI_Base.h"
 
-namespace LUCY {
+namespace GUI {
 
 	enum UI_Button_State {
 		ENABLED, ISHOVERED, DISABLED, ISPRESSED
@@ -84,6 +84,11 @@ namespace LUCY {
 				sf::Texture*	pressed_texture = nullptr,
 				sf::Texture*	disabled_texture = nullptr
 		);
+
+		UI_Type getType() override {
+			return UI_Type::UI_BUTTON;
+		}
 	};
 
+	typedef UI_Button Button;
 }
