@@ -41,7 +41,16 @@ public:
 			isInBetween(sf::Mouse::getPosition(window).y, objPos.y, objPos.y + height));
 	}
 
+	void normalizeVector2f(sf::Vector2f &range) {
+		// Get vector length
+		double vec_magnitude = sqrt(pow(range.x, 2) + pow(range.y, 2));
+
+		range.x = float(range.x / vec_magnitude);
+		range.y = float(range.y / vec_magnitude);
+	}
+
 	/*
 		TODO : isInRange, isCollided.. etc
 	*/
+
 };

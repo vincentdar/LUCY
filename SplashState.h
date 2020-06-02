@@ -5,6 +5,8 @@
 #include "Hero.h"
 #include "ui/UI_Button.h"
 
+#include "view/camera.h"
+
 namespace LUCY
 {
 	class SplashState : public IState
@@ -19,6 +21,8 @@ namespace LUCY
 		// Debug
 		GUI::Button button;
 		GUI::Button button1;
+
+		Camera camera;
 	public:
 		SplashState(GameDataRef data);
 		virtual void VInit();
