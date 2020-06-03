@@ -3,6 +3,9 @@
 #include "Game.h"
 #include <SFML/Graphics.hpp>
 #include "Hero.h"
+#include "ui/UI_Button.h"
+
+#include "view/camera.h"
 
 namespace LUCY
 {
@@ -14,6 +17,12 @@ namespace LUCY
 		GameDataRef m_data;
 
 		Hero m_hero;
+
+		// Debug
+		GUI::Button button;
+		GUI::Button button1;
+
+		Camera camera;
 	public:
 		SplashState(GameDataRef data);
 		virtual void VInit();
