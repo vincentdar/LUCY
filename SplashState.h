@@ -2,6 +2,10 @@
 #include "IState.h"
 #include "Game.h"
 #include <SFML/Graphics.hpp>
+#include "Hero.h"
+#include "ui/UI_Button.h"
+
+#include "view/camera.h"
 
 namespace LUCY
 {
@@ -14,6 +18,13 @@ namespace LUCY
 		sf::Sprite m_background;
 		GameDataRef m_data;
 
+		Hero m_hero;
+
+		// Debug
+		GUI::Button button;
+		GUI::Button button1;
+
+		Camera camera;
 		sf::Sprite sf_logo;
 		sf::RectangleShape rect_mask;
 		sf::RectangleShape rect_omask;

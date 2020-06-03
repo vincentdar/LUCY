@@ -7,12 +7,12 @@ namespace LUCY
 	Game::Game(int width, int height, std::string title)
 	{
 		m_data->window.create(sf::VideoMode(width, height), title, sf::Style::Close | sf::Style::Titlebar);
-
-
+		m_data->window.setKeyRepeatEnabled(false);
 		m_data->assets.LoadSoundBuffer("LOGO_SFX", LOGO_SFX);
 		m_data->machine.AddState(StateRef(new SplashState(this->m_data)), true);
 		Logger::PrintLn("Added Splash state");
 		
+
 		this->Run();
 	}
 	void Game::Run()
