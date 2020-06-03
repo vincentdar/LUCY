@@ -19,6 +19,7 @@ namespace LUCY
 	{
 		if (m_isRemoving && !m_states.empty())
 		{
+			Logger::PrintLn("Removed a stack");
 			m_states.pop();
 			if (!m_states.empty())
 			{
@@ -33,14 +34,17 @@ namespace LUCY
 
 		if (m_isAdding)
 		{
+			
 			if (!m_states.empty())
 			{
 				if (m_isReplacing)
 				{
+					Logger::PrintLn("Replaced and add a new stack");
 					m_states.pop();
 				}
 				else
 				{
+					Logger::PrintLn("Added a new stack");
 					m_states.top()->VPause();
 				}
 			}
@@ -58,6 +62,10 @@ namespace LUCY
 	bool StateMachine::StackEmpty()
 	{
 		return m_stackEmpty;
+	}
+	int StateMachine::StackAllocated()
+	{
+		return m_states.size();
 	}
 }
 

@@ -3,6 +3,7 @@
 #include <stack>
 
 #include "IState.h"
+#include "Logger.h"
 
 namespace LUCY
 {
@@ -29,6 +30,7 @@ namespace LUCY
 
 		StateRef& GetActiveState();
 		bool StackEmpty();
+		int StackAllocated();
 	};
 }
 

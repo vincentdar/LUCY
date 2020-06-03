@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "DemoState.h"
 #include "SplashState.h"
 
 namespace LUCY
@@ -6,9 +7,11 @@ namespace LUCY
 	Game::Game(int width, int height, std::string title)
 	{
 		m_data->window.create(sf::VideoMode(width, height), title, sf::Style::Close | sf::Style::Titlebar);
-		m_data->machine.AddState(StateRef(new SplashState(this->m_data)), true);
-
 		m_data->window.setKeyRepeatEnabled(false);
+		m_data->assets.LoadSoundBuffer("LOGO_SFX", LOGO_SFX);
+		m_data->machine.AddState(StateRef(new SplashState(this->m_data)), true);
+		Logger::PrintLn("Added Splash state");
+		
 
 		this->Run();
 	}
@@ -23,6 +26,8 @@ namespace LUCY
 
 		while (exit == false && this->m_data->window.isOpen())
 		{
+			//Logger::Clear();
+			//Logger::PrintLn("Run");
 			this->m_data->machine.ProcessStateChanges();
 			if (m_data->machine.StackEmpty())
 			{
