@@ -1,11 +1,11 @@
 #pragma once
-#include "IState.h"
-#include "Game.h"
+#include "../engine/IState.h"
+#include "../engine/Game.h"
 #include <SFML/Graphics.hpp>
 #include "Hero.h"
-#include "ui/UI_Button.h"
+#include "../ui/UI_Button.h"
 
-#include "view/camera.h"
+#include "../view/Camera.h"
 
 namespace LUCY
 {
