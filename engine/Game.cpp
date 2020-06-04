@@ -1,6 +1,6 @@
-#include "Game.h"
-#include "DemoState.h"
-#include "SplashState.h"
+#include "../engine/Game.h"
+#include "../game/DemoState.h"
+#include "../game/SplashState.h"
 
 namespace LUCY
 {
@@ -12,7 +12,6 @@ namespace LUCY
 		m_data->machine.AddState(StateRef(new SplashState(this->m_data)), true);
 		Logger::PrintLn("Added Splash state");
 		
-
 		this->Run();
 	}
 	void Game::Run()

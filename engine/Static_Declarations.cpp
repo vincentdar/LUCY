@@ -1,5 +1,5 @@
-#include "utils/Utils.h"
-#include "ui/UI_Base.h"
+#include "../utils/Utils.h"
+#include "../ui/UI_Base.h"
 
 Utils* Utils::instance = nullptr;
 

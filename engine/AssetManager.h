@@ -4,6 +4,12 @@
 #include <map>
 #include <string>
 
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include "../engine/Macro.h"
+#include "../utils/Utils.h"
+
 namespace LUCY
 {
 	class AssetManager
@@ -22,6 +28,7 @@ namespace LUCY
 		void LoadSoundBuffer(std::string name, std::string fileName);
 		sf::SoundBuffer& GetSoundBuffer(std::string name);
 
+		void LoadAssetFromText(std::string filename);
 	};
 }
 

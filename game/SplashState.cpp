@@ -53,17 +53,21 @@ void LUCY::SplashState::VInit()
 {
 	/*logo_sfx.setBuffer(m_data->assets.GetSoundBuffer("LOGO_SFX"));
 	logo_sfx.play();*/
-	m_data->assets.LoadTexture("SFML_Logo", SFML_LOGO);
+	m_data->assets.LoadAssetFromText("res/assets.path");
+
+	//m_data->assets.LoadTexture("SFML_Logo", SFML_LOGO);
 
 	sf_logo.setTexture(m_data->assets.GetTexture("SFML_Logo"));
 	sf_logo.setScale(0.5, 0.5);
-	sf_logo.setPosition(sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2));
+	sf_logo.setOrigin(sf::Vector2f(sf_logo.getLocalBounds().width / 2, sf_logo.getLocalBounds().height / 2));
+	//sf_logo.setPosition(sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2));
+	sf_logo.setPosition(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
 
-	sf_logo.setOrigin(sf::Vector2f(sf_logo.getGlobalBounds().width, sf_logo.getGlobalBounds().height));
-	stop_point.x = SCREEN_WIDTH/2 - sf_logo.getGlobalBounds().width / 3;
-	sf_logo.setOrigin(sf::Vector2f(sf_logo.getGlobalBounds().width / 3, sf_logo.getGlobalBounds().height));
+	std::cout << sf_logo.getOrigin().x << " " << sf_logo.getOrigin().y << std::endl;
+	//stop_point.x = SCREEN_WIDTH/2 - sf_logo.getGlobalBounds().width / 3;
+	/*sf_logo.setOrigin(sf::Vector2f(sf_logo.getGlobalBounds().width / 3, sf_logo.getGlobalBounds().height));
 	sf_logo.setPosition(sf::Vector2f(SCREEN_WIDTH / 2 - sf_logo.getGlobalBounds().width/2,
-		SCREEN_HEIGHT / 2 - sf_logo.getGlobalBounds().height/2));
+		SCREEN_HEIGHT / 2 - sf_logo.getGlobalBounds().height/2));*/
 
 	rect_mask.setSize(sf::Vector2f(500.0f, 128.0f));
 	rect_mask.setPosition(sf::Vector2f(sf_logo.getPosition().x + 75.f, sf_logo.getPosition().y - 50.0f));
@@ -159,5 +163,5 @@ void LUCY::SplashState::VPause()
 
 void LUCY::SplashState::VExit()
 {
-	m_data->machine.AddState(StateRef(new DemoState(this->m_data)), true);
+	//m_data->machine.AddState(StateRef(new DemoState(this->m_data)), true);
 }

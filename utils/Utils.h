@@ -49,6 +49,20 @@ public:
 		range.y = float(range.y / vec_magnitude);
 	}
 
+	void clearSpacesInFront(std::string& str) {
+		while (str[0] == ' ' || str[0] == '\t') {
+			str.erase(str.begin());
+		}
+	}
+
+	std::string getLowercase(std::string str) {
+		for (int i = 0; i < str.length(); i++) {
+			str[i] = tolower(str[i]);
+		}
+
+		return str;
+	}
+
 	/*
 		TODO : isInRange, isCollided.. etc
 	*/
