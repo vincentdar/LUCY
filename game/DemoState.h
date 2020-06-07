@@ -3,6 +3,7 @@
 #include "../engine/Game.h"
 #include <SFML/Graphics.hpp>
 #include "Hero.h"
+#include "units/GoldenKnight.h"
 
 namespace LUCY
 {
@@ -12,6 +13,8 @@ namespace LUCY
 		sf::Clock m_clock;
 		sf::Sprite m_background;
 		GameDataRef m_data;
+
+		GoldenKnight gk;
 
 		//Hero m_hero;
 	public:

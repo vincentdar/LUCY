@@ -22,6 +22,9 @@ namespace LUCY
 		void LoadTexture(std::string name, std::string fileName);
 		sf::Texture& GetTexture(std::string name);
 
+		// Tambahan
+		sf::Texture* GetTexturePtr(std::string name);
+
 		void LoadFonts(std::string name, std::string fileName);
 		sf::Font& GetFont(std::string name);
 

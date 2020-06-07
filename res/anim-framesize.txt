@@ -1,4 +1,4 @@
 knight_gold : 
 	- Run 34 x 52
 	- Attack 86 x 40
-	- Idle 32 x 41
+	- Idle 32 * 41

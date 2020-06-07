@@ -16,6 +16,11 @@ namespace LUCY
 		return m_textures.at(name);
 	}
 
+	sf::Texture * AssetManager::GetTexturePtr(std::string name)
+	{
+		return &m_textures[name];
+	}
+
 	void AssetManager::LoadFonts(std::string name, std::string fileName)
 	{
 		sf::Font font;
@@ -65,8 +70,6 @@ namespace LUCY
 
 			// Clear whitespace didpn
 			UTILS.clearSpacesInFront(line);
-
-			std::cout << line << std::endl;
 
 			// Check if it is a comment.
 			if (line[0] == '#') {

@@ -163,5 +163,5 @@ void LUCY::SplashState::VPause()
 
 void LUCY::SplashState::VExit()
 {
-	//m_data->machine.AddState(StateRef(new DemoState(this->m_data)), true);
+	m_data->machine.AddState(StateRef(new DemoState(this->m_data)), true);
 }

@@ -2,15 +2,22 @@
 
 namespace LUCY
 {
-	DemoState::DemoState(GameDataRef data): m_data(data) 
+	DemoState::DemoState(GameDataRef data) : m_data(data), gk(data)
 	{
+
 	}
+
 	void DemoState::VInit()
 	{
+		std::cout << "VINIT Demostate\n";
+		gk.setup();
 	}
 	void DemoState::VDraw(float dt)
 	{
 		m_data->window.clear(sf::Color::Red);
+
+		gk.draw(m_data->window);
+
 		m_data->window.display();
 	}
 	void DemoState::VHandleInput()
@@ -35,6 +42,7 @@ namespace LUCY
 	}
 	void DemoState::VUpdate(float dt)
 	{
+		gk.update();
 	}
 	void DemoState::VResume()
 	{
