@@ -63,8 +63,9 @@ void LUCY::SplashState::VInit()
 	//sf_logo.setPosition(sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2));
 	sf_logo.setPosition(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
 
-	std::cout << sf_logo.getOrigin().x << " " << sf_logo.getOrigin().y << std::endl;
+	//std::cout << sf_logo.getOrigin().x << " " << sf_logo.getOrigin().y << std::endl;
 	//stop_point.x = SCREEN_WIDTH/2 - sf_logo.getGlobalBounds().width / 3;
+	stop_point.x = SCREEN_WIDTH / 2 - sf_logo.getGlobalBounds().width / 2;
 	/*sf_logo.setOrigin(sf::Vector2f(sf_logo.getGlobalBounds().width / 3, sf_logo.getGlobalBounds().height));
 	sf_logo.setPosition(sf::Vector2f(SCREEN_WIDTH / 2 - sf_logo.getGlobalBounds().width/2,
 		SCREEN_HEIGHT / 2 - sf_logo.getGlobalBounds().height/2));*/

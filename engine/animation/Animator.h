@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <unordered_map>
+#include <queue>
 
 class Animator
 {
@@ -18,15 +19,19 @@ private:
 		// Size (dimensi)
 		sf::IntRect current;
 
+		// Frame counter
 		float delta;
-		bool isLooping;
 		int frameCount;
-
 		int counter = 0;
+
+		// Booleans
+		bool isLooping;
+		bool allowCancel;
+		bool isDone;
 
 	public:
 		AnimState(sf::Texture* texture, sf::IntRect start, 
-			float delta, bool isLooping, int frameCount);
+			float delta, int frameCount, bool isLooping, bool allowCancel = false);
 
 		void advanceToNextFrame(sf::Vector2i &dim);
 		void resetState();
@@ -39,6 +44,8 @@ private:
 		sf::IntRect& getTexRect() { return current; }
 
 		sf::Texture* getTexture() { return texture; }
+
+		bool getAllowCancel() { return allowCancel; }
 	};
 
 	sf::Clock timer;
@@ -46,16 +53,19 @@ private:
 	sf::Vector2i spriteDimension;
 
 	sf::Sprite* sprite;
+
 	AnimState* current;
 
 	AnimState* defaultState;
 	
 	std::unordered_map<std::string, AnimState*> states;
 
+	std::queue<AnimState*> queueStates;
+
 public:
 	~Animator();
 
-	void addAnimationState(std::string key, sf::Texture* texture, sf::IntRect start, sf::Vector2i dim, float delta, int frameCount, bool isLooping, bool isDefault = false);
+	void addAnimationState(std::string key, sf::Texture* texture, sf::IntRect start, sf::Vector2i dim, float delta, int frameCount, bool isLooping, bool isDefault = false, bool allowCancel = false);
 
 	void playAnimation(std::string key);
 	void updateAnimation();

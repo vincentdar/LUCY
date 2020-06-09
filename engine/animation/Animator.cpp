@@ -9,11 +9,12 @@ Animator::~Animator()
 	states.clear();
 }
 
-void Animator::addAnimationState(std::string key, sf::Texture * texture, sf::IntRect start, sf::Vector2i dim, float delta, int frameCount, bool isLooping, bool isDefault)
+void Animator::addAnimationState(std::string key, sf::Texture * texture, sf::IntRect start, sf::Vector2i dim, float delta, int frameCount, bool isLooping, bool isDefault, bool allowCancel)
 {
 	if (states.find(key) == states.end()) {
 
-		AnimState* as = new AnimState(texture, start, delta, isLooping, frameCount);
+		AnimState* as = new AnimState
+		(texture, start, delta, frameCount, isLooping);
 
 		spriteDimension = dim;
 
@@ -34,10 +35,12 @@ void Animator::playAnimation(std::string key)
 		printf("Key not found in states!\n");
 		return;
 	}
+
 	current = states[key];
 	current->resetState();
 
 	sprite->setTexture(*current->getTexture());
+	sprite->setTextureRect(current->getTexRect());
 }
 
 void Animator::updateAnimation()
@@ -56,7 +59,12 @@ void Animator::updateAnimation()
 	{
 		if (!current->getIsLooping())
 		{
-			current = defaultState;
+			if (!queueStates.empty() && !current->getAllowCancel()) {
+				current = queueStates.front();
+				queueStates.pop();
+			}
+			else
+				current = defaultState;
 		}
 		current->resetState();
 	}
@@ -78,13 +86,16 @@ void Animator::unbindSprite()
 }
 
 // Animstate methods
-Animator::AnimState::AnimState(sf::Texture * texture, sf::IntRect start, float delta, bool isLooping, int frameCount)
-	: texture(texture), start(start), isLooping(isLooping), delta(delta), frameCount(frameCount) {
+Animator::AnimState::AnimState(sf::Texture * texture, sf::IntRect start, float delta, int frameCount, bool isLooping, bool allowCancel)
+	: texture(texture), start(start), isLooping(isLooping), delta(delta), frameCount(frameCount), allowCancel(allowCancel) {
 	current = start;
 }
 
 void Animator::AnimState::advanceToNextFrame(sf::Vector2i &dim)
 {
+	if (counter == frameCount - 1) isDone = true;
+	else isDone = false;
+
 	current.left += dim.x;
 	current.top += dim.y;
 

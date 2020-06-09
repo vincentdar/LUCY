@@ -15,21 +15,41 @@ private:
 	LUCY::GameDataRef gdr;
 
 	sf::Sprite charSprite;
-	sf::Texture idleTexture;
 
 public:
 	GoldenKnight(LUCY::GameDataRef gdr) : gdr(gdr) { position = { 100, 100 }; }
 
-	void setup() {
-
-		charSprite.setPosition(position);
+	void setup(sf::Vector2f position) {
 
 		animator.bindSprite(&charSprite);
-		animator.addAnimationState("Idle", gdr->assets.GetTexturePtr("Knight_G_Idle"), sf::IntRect(0, 0, 32, 41), sf::Vector2i(32, 0), 0.3, 2, true, true);
+
+		animator.addAnimationState(
+			"Idle", 
+			gdr->assets.GetTexturePtr("Knight_Gold"), 
+			sf::IntRect(0, 52 * 2, 86, 52), 
+			sf::Vector2i(86, 0), 0.2, 2, true, true);
+
+		animator.addAnimationState(
+			"Move", 
+			gdr->assets.GetTexturePtr("Knight_Gold"), 
+			sf::IntRect(0, 52 * 1, 86, 52), 
+			sf::Vector2i(86, 0), 0.2, 3, false, false);
+
+		animator.addAnimationState(
+			"Attack", 
+			gdr->assets.GetTexturePtr("Knight_Gold"), 
+			sf::IntRect(0, 52 * 0, 86, 52), 
+			sf::Vector2i(86, 0), 0.2, 2, false, false);
+
+		animator.addAnimationState("Bash",
+			gdr->assets.GetTexturePtr("Knight_Gold"),
+			sf::IntRect(0, 52 * 3, 86, 52),
+			sf::Vector2i(86, 0), 0.2, 2, false, false);
 
 		charSprite.setScale(2, 2);
-		charSprite.setPosition(100, 100);
-		animator.playAnimation("Idle");
+		charSprite.setPosition(position);
+		animator.playAnimation("Idle"); 
+
 	}
 
 	void update() {
@@ -38,5 +58,17 @@ public:
 
 	void draw(sf::RenderTarget& target) {
 		target.draw(charSprite);
+	}
+
+	void attack() {
+		animator.playAnimation("Attack");
+	}
+
+	void run() {
+		animator.playAnimation("Move");
+	}
+
+	void bash() {
+		animator.playAnimation("Bash");
 	}
 };

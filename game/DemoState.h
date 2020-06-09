@@ -14,7 +14,7 @@ namespace LUCY
 		sf::Sprite m_background;
 		GameDataRef m_data;
 
-		GoldenKnight gk;
+		GoldenKnight gk, gk1;
 
 		//Hero m_hero;
 	public:
