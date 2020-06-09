@@ -17,7 +17,7 @@ private:
 	sf::Sprite charSprite;
 
 public:
-	GoldenKnight(LUCY::GameDataRef gdr) : gdr(gdr) { position = { 100, 100 }; }
+	GoldenKnight(LUCY::GameDataRef gdr) : gdr(gdr) { }
 
 	void setup(sf::Vector2f position) {
 

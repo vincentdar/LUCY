@@ -5,6 +5,8 @@
 
 #include "../utils/Utils.h"
 
+#define INPUT Input::get()
+
 // Singleton class input
 // Class ini menyimpan data semua input yg diterima,
 //  dan bisa diberi label untuk akses lebih mudah.
@@ -142,6 +144,5 @@ namespace LUCY {
 		}
 	};
 
-	Input* Input::instance = nullptr;
 
 }

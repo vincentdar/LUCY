@@ -1,4 +1,4 @@
-knight_gold : 
-	- Run 34 x 52
-	- Attack 86 x 40
-	- Idle 32 * 41
+knight 86 x 52
+archer 37 x 51
+demon 170 x 116
+assassin 52 x 34, knife 16 * 8

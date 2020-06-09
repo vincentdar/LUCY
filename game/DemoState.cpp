@@ -1,5 +1,7 @@
 #include "DemoState.h"
 
+#include "../controls/Input.h"
+
 namespace LUCY
 {
 	DemoState::DemoState(GameDataRef data) : m_data(data), gk(data), gk1(data)
@@ -11,6 +13,8 @@ namespace LUCY
 	{
 		gk.setup(sf::Vector2f(100, 100));
 		gk1.setup(sf::Vector2f(100, 200));
+		INPUT.registerKey("Attack", sf::Keyboard::Enter);
+		
 	}
 	void DemoState::VDraw(float dt)
 	{
@@ -26,6 +30,10 @@ namespace LUCY
 		sf::Event event;
 		while (m_data->window.pollEvent(event))
 		{
+			if (INPUT.getKey("Attack", InputMode::INPUT_KEYRELEASED, event)) {
+				gk1.attack();
+			}
+
 			if (sf::Event::Closed == event.type)
 			{
 				this->VExit();
