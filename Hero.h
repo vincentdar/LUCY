@@ -1,8 +1,8 @@
 #pragma once
-#include "../engine/IActor.h"
-#include "../engine/Game.h"
-#include "../engine/Animation.h"
-#include "../engine/Physics.h"
+#include "IActor.h"
+#include "Game.h"
+#include "Animation.h"
+#include "Physics.h"
 
 namespace LUCY
 {

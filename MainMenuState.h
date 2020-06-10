@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "../engine/IState.h"
+#include "IState.h"
 
 class MenuState
 	: public LUCY::IState 

@@ -1,6 +1,6 @@
 #include "DemoState.h"
 
-#include "../controls/Input.h"
+#include "Input.h"
 
 namespace LUCY
 {

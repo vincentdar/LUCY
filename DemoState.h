@@ -1,6 +1,6 @@
 #pragma once
-#include "../engine/IState.h"
-#include "../engine/Game.h"
+#include "IState.h"
+#include "Game.h"
 #include <SFML/Graphics.hpp>
 #include "Hero.h"
 #include "units/GoldenKnight.h"

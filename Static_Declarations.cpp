@@ -1,6 +1,6 @@
-#include "../utils/Utils.h"
-#include "../ui/UI_Base.h"
-#include "../controls/Input.h"
+#include "Utils.h"
+#include "ui/UI_Base.h"
+#include "Input.h"
 
 Utils* Utils::instance = nullptr;
 

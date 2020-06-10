@@ -1,6 +1,6 @@
-#include "../engine/Game.h"
-#include "../game/DemoState.h"
-#include "../game/SplashState.h"
+#include "Game.h"
+#include "DemoState.h"
+#include "SplashState.h"
 
 namespace LUCY
 {

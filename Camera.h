@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <chrono>
 
-#include "../utils/Utils.h"
+#include "Utils.h"
 
 class Camera
 {

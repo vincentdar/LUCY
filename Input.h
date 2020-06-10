@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <unordered_map>
 
-#include "../utils/Utils.h"
+#include "Utils.h"
 
 #define INPUT Input::get()
 

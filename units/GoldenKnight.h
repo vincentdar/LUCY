@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Base_Unit.h"
-#include "../../engine/Game.h"
-#include "../../engine/animation/Animator.h"
+#include "Game.h"
+#include "Animator.h"
 
 class GoldenKnight 
 	: public BaseUnit
