@@ -86,7 +86,7 @@ void LUCY::SplashState::VUpdate(float dt)
 		}
 	}
 
-	if (m_clock.getElapsedTime().asSeconds() > 4.5f)
+	if (logo_sfx.getStatus() == sf::SoundSource::Status::Stopped)
 	{
 		VExit();
 	}
