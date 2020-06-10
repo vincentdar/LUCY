@@ -86,8 +86,11 @@ void LUCY::SplashState::VUpdate(float dt)
 		}
 	}
 
-	if (logo_sfx.getStatus() == sf::SoundSource::Status::Stopped)
+	/*if (logo_sfx.getStatus() == sf::SoundSource::Status::Stopped)
 	{
+		VExit();
+	}*/
+	if (m_clock.getElapsedTime().asSeconds() > 4.75) {
 		VExit();
 	}
 }

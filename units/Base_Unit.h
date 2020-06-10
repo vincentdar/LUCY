@@ -6,7 +6,7 @@ struct Position
 	int y;
 };
 
-class BaseUnit 
+class BaseUnit
 {
 protected:
 	float HP, MP, HPRegen, MPRegen, MovementSpeed, Attack, Defend, ShieldHP;

@@ -63,6 +63,20 @@ public:
 		return str;
 	}
 
+	sf::Vector2f getScaleToSize(sf::Texture& tex, const sf::Vector2f& target) {
+		return
+		{
+			target.x / tex.getSize().x,
+			target.y / tex.getSize().y
+		};
+	}
+
+	sf::Vector2f lerp(sf::Vector2f position, sf::Vector2f target, float time)
+	{
+		return (sf::Vector2f(position.x * (1.0 - time) , position.y * (1.0 - time))
+			+ (target * time));
+	}
+
 	/*
 		TODO : isInRange, isCollided.. etc
 	*/

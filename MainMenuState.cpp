@@ -1,29 +1,46 @@
 #include "MainMenuState.h"
 
-void MenuState::VInit()
-{
-}
+namespace LUCY {
+	MenuState::MenuState(GameDataRef data) : m_data(data) {}
 
-void MenuState::VDraw(float dt)
-{
-}
+	void MenuState::VInit()
+	{
+	}
 
-void MenuState::VHandleInput()
-{
-}
+	void MenuState::VDraw(float dt)
+	{
+		m_data->window.clear();
 
-void MenuState::VUpdate(float dt)
-{
-}
 
-void MenuState::VResume()
-{
-}
+		m_data->window.display();
+	}
 
-void MenuState::VPause()
-{
-}
+	void MenuState::VHandleInput()
+	{
+		sf::Event event;
+		while (m_data->window.pollEvent(event))
+		{
+			if (sf::Event::Closed == event.type)
+			{
+				this->VExit();
+				this->m_data->window.close();
+			}
+		}
+	}
 
-void MenuState::VExit()
-{
+	void MenuState::VUpdate(float dt)
+	{
+	}
+
+	void MenuState::VResume()
+	{
+	}
+
+	void MenuState::VPause()
+	{
+	}
+
+	void MenuState::VExit()
+	{
+	}
 }
