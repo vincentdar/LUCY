@@ -77,6 +77,13 @@ public:
 			+ (target * time));
 	}
 
+	float getTextWidth(sf::Text& text) 
+	{
+		return text.findCharacterPos(
+			text.getString().getSize()
+		).x - text.getGlobalBounds().left;
+	}
+
 	/*
 		TODO : isInRange, isCollided.. etc
 	*/

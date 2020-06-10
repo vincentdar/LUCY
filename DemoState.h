@@ -18,8 +18,8 @@ namespace LUCY
 
 		GoldenKnight gk, gk1;
 
-		UI::UI_Board board;
-		UI::UI_Button button;
+		UI::Board board;
+		UI::Button button;
 
 		//Hero m_hero;
 	public:

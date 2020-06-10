@@ -4,16 +4,16 @@
 
 namespace UI {
 
-	enum UI_Button_State {
+	enum Button_State {
 		ENABLED, ISHOVERED, DISABLED, ISPRESSED
 	};
 
-	class UI_Button
-		: public UI_Base
+	class Button
+		: public Base
 	{
 	protected:
 
-		UI_Button_State currentState = ENABLED;
+		Button_State currentState = ENABLED;
 
 		bool usingColor = false;
 
@@ -42,7 +42,7 @@ namespace UI {
 		bool hovered = false;
 
 	public:
-		UI_Button(sf::Vector2f position = { 0, 0 }, sf::Vector2f size = { 0, 0 }) {}
+		Button(sf::Vector2f position = { 0, 0 }, sf::Vector2f size = { 0, 0 }) {}
 
 		// Update kondisi.
 		void update(sf::RenderWindow &window);

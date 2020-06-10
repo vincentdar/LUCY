@@ -22,7 +22,6 @@ void LUCY::SplashState::VInit()
 	stop_point.x = SCREEN_WIDTH / 2 - sf_logo.getGlobalBounds().width / 3;
 	sf_logo.setOrigin(sf::Vector2f(sf_logo.getGlobalBounds().width / 3, sf_logo.getGlobalBounds().height));
 
-
 	rect_mask.setSize(sf::Vector2f(500.0f, 128.0f));
 	rect_mask.setPosition(sf::Vector2f(sf_logo.getPosition().x + 75.f, sf_logo.getPosition().y - 50.0f));
 	rect_mask.setFillColor(sf::Color(15, 0, 20));

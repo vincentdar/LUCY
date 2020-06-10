@@ -22,13 +22,14 @@ namespace LUCY
 			"Hello World", "Just passing by");
 
 		board.display();
-		board.setSize(sf::Vector2f(500, 500));
+		board.setSize(sf::Vector2f(500, 400));
 		board.setOrigin(UI::UI_Origin::CENTERED);
 
 		board.setPosition(sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2));
-		board.setTextPosition(sf::Vector2f(10, 150));
+		board.setHeadToCenter();
+		board.setTextPositionBody(sf::Vector2f(10, 150));
 
-		board.setColor(sf::Color::Blue);
+		board.setTexture(m_data->assets.GetTexturePtr("Grass"));
 
 		button.setSize(sf::Vector2f(200, 20));
 		button.setPosition(sf::Vector2f(0, 0));
@@ -76,18 +77,17 @@ namespace LUCY
 					gk.bash();
 			}
 		}
+
+		if (button.isClicked()) {
+			m_data->machine.AddState(StateRef(new MenuState(m_data)));
+		}
 	}
 	void DemoState::VUpdate(float dt)
 	{
 		gk.update();
 		gk1.update();
-
 		board.update(m_data->window);
 		button.update(m_data->window);
-
-		if (button.isClicked()) {
-			m_data->machine.AddState(StateRef(new MenuState(m_data)));
-		}
 	}
 	void DemoState::VResume()
 	{

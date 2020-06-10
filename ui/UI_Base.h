@@ -17,7 +17,7 @@ namespace UI {
 		TOPLEFT, CENTERED
 	};
 
-	class UI_Base
+	class Base
 	{
 	private:
 		// Perlu?
@@ -41,7 +41,7 @@ namespace UI {
 		sf::Color			main_color;
 
 	public:
-		UI_Base() {
+		Base() {
 			// Ketika object BaseUI dibuat, maka gui_generate_id akan mengenerate id baru,
 			//  dimana id tsb akan dimiliki scr unik oleh tiap gui component.
 			static_ID++;
@@ -78,7 +78,7 @@ namespace UI {
 			}
 		}
 
-		virtual ~UI_Base() {}
+		virtual ~Base() {}
 
 		unsigned int getID() { return id; }
 

@@ -4,9 +4,9 @@
 
 namespace UI {
 
-	void UI_Button::update(sf::RenderWindow& window)
+	void Button::update(sf::RenderWindow& window)
 	{
-		UI::UI_Base::update(window);
+		UI::Base::update(window);
 
 		if (currentState == DISABLED) {
 			if (usingColor) {
@@ -53,12 +53,12 @@ namespace UI {
 		}
 	}
 
-	void UI_Button::draw(sf::RenderTarget& target)
+	void Button::draw(sf::RenderTarget& target)
 	{
 		target.draw(base_shape);
 	}
 
-	void UI_Button::setColor(sf::Color main, sf::Color secondary, sf::Color disabled, sf::Color pressed, sf::Color hovered)
+	void Button::setColor(sf::Color main, sf::Color secondary, sf::Color disabled, sf::Color pressed, sf::Color hovered)
 	{
 		usingColor = true;
 	
@@ -68,7 +68,7 @@ namespace UI {
 		this->pressed		= pressed == sf::Color() ? main : pressed;
 		this->disabled		= disabled == sf::Color() ? main : disabled;
 	}
-	void UI_Button::setTexture(sf::Texture * main_texture, sf::Texture * hovered_texture, sf::Texture * secondary_texture, sf::Texture * pressed_texture, sf::Texture * disabled_texture)
+	void Button::setTexture(sf::Texture * main_texture, sf::Texture * hovered_texture, sf::Texture * secondary_texture, sf::Texture * pressed_texture, sf::Texture * disabled_texture)
 	{
 		usingColor = false;
 		this->main_texture		= main_texture;

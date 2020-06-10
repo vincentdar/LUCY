@@ -8,14 +8,14 @@
 class Camera
 {
 private:
-	sf::View view;
-	sf::RenderTarget* target;
+	sf::View			view;
+	sf::RenderTarget*	target;
 
 	// Implementasi hanya translate saja
-	bool translate = false;
-	sf::Vector2f translateTarget;
-	sf::Vector2f directionOfTranslation;
-	std::time_t offset;
+	bool				translate = false;
+	sf::Vector2f		translateTarget;
+	sf::Vector2f		directionOfTranslation;
+	std::time_t			offset;
 
 	// Start time
 	std::chrono::time_point
