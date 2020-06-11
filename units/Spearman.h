@@ -1,10 +1,8 @@
 #pragma once
 
 #include "Base_Unit.h"
-#include "../Game.h"
-#include "../Animator.h"
 
-class GoldenKnight
+class Spearman
 	: public BaseUnit
 {
 private:
@@ -17,8 +15,7 @@ private:
 	sf::Sprite charSprite;
 
 public:
-	GoldenKnight(LUCY::GameDataRef gdr) : gdr(gdr) { position = { 100, 100 }; }
-
+	Spearman(LUCY::GameDataRef gdr) : gdr(gdr) { position = { 100, 100 }; }
 	void setup(sf::Vector2f position) {
 
 		BaseUnit::setUnit(1.25, 0.3, 3, 5, 0, 1.5, 0.5, 0, 2);
@@ -27,34 +24,21 @@ public:
 
 		animator.addAnimationState(
 			"Idle",
-			gdr->assets.GetTexturePtr("Knight_Gold"),
+			gdr->assets.GetTexturePtr(""),
 			sf::IntRect(0, 52 * 2, 86, 52),
 			sf::Vector2i(86, 0), 0.2, 2, true, true);
 
 		animator.addAnimationState(
 			"Move",
-			gdr->assets.GetTexturePtr("Knight_Gold"),
+			gdr->assets.GetTexturePtr(""),
 			sf::IntRect(0, 52 * 1, 86, 52),
-			sf::Vector2i(86, 0), 0.2, 3, true, false);
+			sf::Vector2i(86, 0), 0.2, 3, false, false);
 
 		animator.addAnimationState(
 			"Attack",
-			gdr->assets.GetTexturePtr("Knight_Gold"),
+			gdr->assets.GetTexturePtr(""),
 			sf::IntRect(0, 52 * 0, 86, 52),
 			sf::Vector2i(86, 0), 0.2, 2, false, false);
-
-		//Skills
-
-		animator.addAnimationState("Gungnir",
-			gdr->assets.GetTexturePtr(""),
-			sf::IntRect(0, 52 * 3, 86, 52),
-			sf::Vector2i(86, 0), 0.2, 2, false, false);
-
-		animator.addAnimationState("GaeBolg",
-			gdr->assets.GetTexturePtr(""),
-			sf::IntRect(0, 52 * 4, 86, 52),
-			sf::Vector2i(86, 0), 0.2, 2, false, false);
-		//Skill mungkin bisa tak ubah kalo tidak ada spritenya, tak buat maneh sing sesuai mbek sprite sing ada
 
 		charSprite.setScale(2, 2);
 		charSprite.setPosition(position);
@@ -63,7 +47,6 @@ public:
 	}
 
 	void update() {
-		BaseUnit::Update();
 		animator.updateAnimation();
 	}
 
@@ -77,14 +60,5 @@ public:
 
 	void run() {
 		animator.playAnimation("Move");
-	}
-
-	void Gungnir() {
-		animator.playAnimation("Gungnir");
-
-	}
-
-	void Ultimate() {
-		animator.playAnimation("GaeBolg");
 	}
 };

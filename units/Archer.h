@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Base_Unit.h"
-#include "../Game.h"
-#include "../Animator.h"
 
 class Archer :
 	public BaseUnit
@@ -14,10 +12,8 @@ private:
 
 	LUCY::GameDataRef gdr;
 
-	sf::Sprite charSprite;
-
 public:
-	Archer(LUCY::GameDataRef gdr) :gdr(gdr) {position = { 100, 100 }; }
+	Archer(LUCY::GameDataRef gdr) :gdr(gdr) { position = { 100, 100 }; }
 
 	void setup(sf::Vector2f position) {
 
@@ -27,60 +23,34 @@ public:
 
 		animator.addAnimationState(
 			"Idle",
-			gdr->assets.GetTexturePtr("Archer_Black"),	//Need a file name
-			sf::IntRect(0, 52 * 2, 86, 52),	//Probably stays the same as the golden knight
-			sf::Vector2i(86,0), 0.2, 2, true, true
+			gdr->assets.GetTexturePtr("Archer_Black"),
+			sf::IntRect(0, 53 * 1, 37, 53),
+			sf::Vector2i(37, 0), 0.2, 2, true, true
 		);
 
 		animator.addAnimationState(
 			"Move",
 			gdr->assets.GetTexturePtr("Archer_Black"),
-			sf::IntRect(0,52*1,86,52),
-			sf::Vector2i(86,0), 0.2,3,false,false
+			sf::IntRect(0, 53 * 0, 37, 53),
+			sf::Vector2i(37, 0), 0.2, 3, true, false
 		);
 
 		animator.addAnimationState(
 			"Attack",
 			gdr->assets.GetTexturePtr("Archer_Black"),
-			sf::IntRect(0, 52 * 0, 86, 52),
-			sf::Vector2i(86, 0), 0.2, 2, false, false
+			sf::IntRect(0, 53 * 2, 37, 53),
+			sf::Vector2i(37, 0), 0.2, 6, false, false
 		);
 
 		//Skills
 
-		animator.addAnimationState(
-			"PowerShot",
-			gdr->assets.GetTexturePtr("Archer_Black"),
-			sf::IntRect(0, 52 * 3, 86, 52),
-			sf::Vector2i(86, 0), 0.2, 2, false, false
-		);
-
-		animator.addAnimationState(
-			"RhoAias",
-			gdr->assets.GetTexturePtr(""),
-			sf::IntRect(0, 52 * 4, 86, 52),
-			sf::Vector2i(86, 0), 0.2, 2, false, false
-		);
-
-		animator.addAnimationState( //Help me on this skill, create sum random bullshits skill than can win the game but will also cost a lot of shits :/
-			"nameTBD",
-			gdr->assets.GetTexturePtr(""),
-			sf::IntRect(0, 52 * 3, 86, 52),
-			sf::Vector2i(86, 0), 0.2, 2, false, false
-		);
-
 		charSprite.setScale(2, 2);
 		charSprite.setPosition(position);
-		animator.playAnimation("idle");
+		animator.playAnimation("Idle");
 	}
 
 	void update() {
-		BaseUnit::Update();
 		animator.updateAnimation();
-	}
-
-	void draw(sf::RenderTarget &target) {
-		target.draw(charSprite);
 	}
 
 	void attack() {
@@ -89,18 +59,6 @@ public:
 
 	void run() {
 		animator.playAnimation("Move");
-	}
-
-	void PowerShot() {
-		animator.playAnimation("PowerShot");
-	}
-
-	void RhoAias() {
-		animator.playAnimation("RhoAias");
-	}
-
-	void Ultimate() {
-		animator.playAnimation("nameTBD");
 	}
 };
 

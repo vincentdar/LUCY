@@ -10,8 +10,6 @@ LUCY::SplashState::SplashState(GameDataRef data) : m_data(data), m_hero(data)
 
 void LUCY::SplashState::VInit()
 {
-	m_data->assets.LoadAssetFromText("res/assets.path");
-
 	logo_sfx.setBuffer(*m_data->assets.GetSoundBufferPtr("Logo_SFX"));
 	logo_sfx.play();
 

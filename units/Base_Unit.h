@@ -1,19 +1,28 @@
 #pragma once
 
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 
-class BaseUnit 
+#include "Base_Unit.h"
+#include "../Game.h"
+#include "../Animator.h"
+
+struct Position
+{
+	int x;
+	int y;
+};
+
+class BaseUnit
 {
 protected:
 	float HP, MP, HPRegen, MPRegen, MovementSpeed, Attack, Defend, ShieldHP, attackUp, defenseUp;
 	int Blocks;
 	bool isAlive, isHit;
 	int id;
-	
-	// Jadi kita pake lane-based, x nya boleh bentuk float, tapi y nya ngikut lane.
-	float positionX;
-	int lane;
-	
+	Position pos;
+
+	sf::Sprite charSprite;
+
 public:
 	BaseUnit() : HP(100), MP(75), HPRegen(1), MPRegen(1), MovementSpeed(1), Attack(75), Defend(50), ShieldHP(0), Blocks(1), isAlive(true), isHit(false), attackUp(0), defenseUp(0) {}
 
@@ -29,16 +38,29 @@ public:
 		Blocks *= block;
 	}
 
-	float getXPosition() { return positionX; }
+	virtual void setup(sf::Vector2f position) = 0;
+	virtual void update() = 0;
 
-	virtual void Update() {
-		//This function is for checking if the units have enemy colliding with itself
-		//Idk what to do honestly
+	virtual void draw(sf::RenderTarget& target) {
+		target.draw(charSprite);
 	}
+
+	virtual void draw(sf::RenderTarget& target, sf::Shader* shader) {
+		target.draw(charSprite, shader);
+	}
+
+	virtual void attack() = 0;
+	virtual void run() = 0;
+	
+	virtual void idle() {}
+	virtual void die() {}
+	virtual void doSkill() {}
+
+	Position GetPosition() { return pos; }
 
 	void takeDamage(float damage) {
 		if (ShieldHP > 0) {
-			
+
 			ShieldHP -= damage;
 
 			if (ShieldHP < 0) {
