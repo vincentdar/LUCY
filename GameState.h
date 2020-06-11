@@ -3,7 +3,8 @@
 #include "Game.h"
 #include "IState.h"
 #include "units/Base_Unit.h"
-#include <vector>
+
+#include "Lane.h"
 
 // Semua gameplay disini!!
 
@@ -15,16 +16,13 @@ namespace LUCY {
 	private:
 		GameDataRef data;
 
-		std::vector<BaseUnit*> enemyUnits;
-
-		// TODO: Saved file reading!
+		Lane lanes[6];
 
 	public:
 		GameState(GameDataRef data) : data(data) {}
 
 		// Fungsi khusus di GameState
 		void onExitClear();
-
 
 		// Fungsi dlm game loop
 		void VHandleInput()		override;

@@ -2,11 +2,6 @@
 
 void LUCY::GameState::onExitClear()
 {
-	for (int i = 0; i < enemyUnits.size(); i++) {
-		delete enemyUnits[i];
-	}
-
-	enemyUnits.clear();
 }
 
 // GAME.H EXECUTED FUNCTIONS:
