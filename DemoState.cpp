@@ -73,8 +73,6 @@ namespace LUCY
 					gk.run();
 				else if (event.key.code == sf::Keyboard::Space)
 					gk.attack();
-				else if (event.key.code == sf::Keyboard::G)
-					gk.bash();
 			}
 		}
 

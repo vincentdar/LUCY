@@ -18,8 +18,7 @@ namespace LUCY
 		sf::Sprite m_background;
 		GameDataRef m_data;
 
-		Archer archer;
-		Spearmen spearman;
+		GoldenKnight gk, gk1;
 
 		UI::Board board;
 		UI::Button button;
