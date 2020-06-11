@@ -3,17 +3,38 @@
 #include "Game.h"
 #include <SFML/Graphics.hpp>
 #include "Hero.h"
+#include "ui/UI_Button.h"
+
+#include "Camera.h"
 
 namespace LUCY
 {
-	class SplashState : public IState
+	class SplashState: public IState
 	{
 	private:
+		sf::View m_view;
+
 		sf::Clock m_clock;
 		sf::Sprite m_background;
 		GameDataRef m_data;
 
 		Hero m_hero;
+
+		// Debug
+		UI::Button button;
+		UI::Button button1;
+
+		Camera camera;
+		sf::Sprite sf_logo;
+		sf::RectangleShape rect_mask;
+		sf::RectangleShape rect_omask;
+		int opaque = 255;
+		bool reach_zero = false;
+		sf::Vector2f stop_point;
+
+		float initial_speed_sf = -4.0f;
+		float initial_speed_rectMask = 4.4f;
+		sf::Sound logo_sfx;
 	public:
 		SplashState(GameDataRef data);
 		virtual void VInit();
@@ -23,9 +44,6 @@ namespace LUCY
 		virtual void VResume();
 		virtual void VPause();
 		virtual void VExit();
-
 	};
-	
 }
-
 

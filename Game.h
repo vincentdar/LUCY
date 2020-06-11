@@ -1,13 +1,11 @@
 #pragma once
 
 #include <memory>
-
 #include <SFML/Graphics.hpp>
 #include "AssetManager.h"
 #include "StateMachine.h"
 #include "Macro.h"
-
-
+#include "Logger.h"
 
 namespace LUCY
 {
@@ -17,6 +15,7 @@ namespace LUCY
 		StateMachine machine;
 		sf::RenderWindow window;
 	};
+
 	typedef std::shared_ptr<GameData> GameDataRef;
 	class Game
 	{

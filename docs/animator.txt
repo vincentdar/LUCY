@@ -1,0 +1,36 @@
+Dokumentasi Animator:
+
+Animator adalah class yg menggerakkan animasi scr otomatis dan bisa pindah-pindah
+berbagai animation state, atau jenis-jenis animasi yg dijalankan saat tertentu spt
+idle, attack, run, dll.
+
+AnimState adalah class dlm Animator yg menyimpan setiap state animasi.
+
+Cara pakai:
+ Dalam class yg mau dipakaikan animator, buat object Animator di dlmnya sbg member
+	variabel. Setelah itu, di constructor class, gunakan 2 fn berikut:
+	- bindSprite(sf::Sprite&) 
+		Untuk memasukkan sprite yg dipakai utk animasi.
+		Ingat sprite hanya utk visual aja, jadi utk collider, dll jgn pake sprite. Pake
+		sf::IntRect aja.
+	- addAnimationState(... param liat dwe, ada akeh)
+		Untuk membuat sebuah animation state, ikuti paramnya ya. Utk param kedua, 
+		gunakan lgs dari m_data->assets.GetTexturePtr("nama texture yg disimpan") karena
+		data aslinya tidak boleh out of scope.
+		1. Nama				: nama state buat diaccess di fungsi playAnimation
+		2. Texture pointer	: langsung pake m_data->assets.GetTexturePtr
+		3. IntRect start	: sf::IntRect(x, y, width, height) dari bagian texture yg mau
+			ditampilkan.
+		4. Delta			: delay sebelum frame selanjutnya digambar (dalam detik 
+		(seconds))
+		5. Bool isLooping	: apakah animasinya jalan terus apa hanya sekali?
+		6. Bool isDefault	: set animasi ini sbg default (klo tidak ada state 
+			di play atau tidak ada state yg jalan setelah animasi yg tidak looping berakhir,
+			maka default akan jalan)
+	- playAnimation(std::string namaState)
+		Untuk set animasi yg harus jalan. Gunakan nama yg di set di addAnimationState()
+	- updateAnimation(void)
+		Inget untuk panggil fungsi ini di dlm fungsi update di class itu biar animasinya 
+		jalan.
+
+Referensi lihat di game/units/GoldenKnight.h utk penggunaan animasi.

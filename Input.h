@@ -3,11 +3,17 @@
 #include <SFML/Graphics.hpp>
 #include <unordered_map>
 
+#include "Utils.h"
+
+#define INPUT Input::get()
+
 // Singleton class input
 // Class ini menyimpan data semua input yg diterima,
 //  dan bisa diberi label untuk akses lebih mudah.
 
-// Last edit: Matthew Sutanto, 28/05/2020 => First
+// Last edit: 
+//		Matthew Sutanto, 28/05/2020 => First
+//		Matthew Sutanto, 31/05/2020 => Nambah namespace LUCY. biar keren.
 
 namespace LUCY {
 
@@ -28,11 +34,11 @@ namespace LUCY {
 		static Input* instance;
 
 	public:
-		static Input* get() {
+		static Input& get() {
 			if (instance == nullptr) {
 				instance = new Input();
 			}
-			return instance;
+			return *instance;
 		}
 
 		void registerKey(const std::string& name, sf::Keyboard::Key key)
@@ -118,6 +124,7 @@ namespace LUCY {
 			else if (mode == InputMode::INPUT_KEYDOWN) {
 				return sf::Keyboard::isKeyPressed(mapping_keys[name]);
 			}
+			return false;
 		}
 
 		bool getButton(const std::string& name, InputMode mode, sf::Event& event) {
@@ -137,6 +144,5 @@ namespace LUCY {
 		}
 	};
 
-	Input* Input::instance = nullptr;
 
 }
