@@ -4,6 +4,8 @@
 #include <SFML/Graphics.hpp>
 #include "Hero.h"
 #include "units/GoldenKnight.h"
+#include "units/Archer.h"
+#include "units/Spearmen.h"
 #include "ui/UI_Board.h"
 #include "ui/UI_Button.h"
 
@@ -16,7 +18,8 @@ namespace LUCY
 		sf::Sprite m_background;
 		GameDataRef m_data;
 
-		GoldenKnight gk, gk1;
+		Archer archer;
+		Spearmen spearman;
 
 		UI::Board board;
 		UI::Button button;
