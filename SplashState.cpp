@@ -1,6 +1,6 @@
 #include "SplashState.h"
 #include "DemoState.h"
-
+#include "MainMenuState.h"
 #include "Input.h"
 #include "ui/UI_Button.h"
 
@@ -11,6 +11,7 @@ LUCY::SplashState::SplashState(GameDataRef data) : m_data(data), m_hero(data)
 void LUCY::SplashState::VInit()
 {
 	m_data->assets.LoadAssetFromText("res/assets.path");
+	VExit();
 
 	logo_sfx.setBuffer(*m_data->assets.GetSoundBufferPtr("Logo_SFX"));
 	logo_sfx.play();
@@ -33,6 +34,8 @@ void LUCY::SplashState::VInit()
 	//m_view = m_data->window.getDefaultView();
 	//m_view.zoom(0.75f);
 	//m_data->window.setView(m_view);
+
+
 
 }
 
@@ -102,5 +105,5 @@ void LUCY::SplashState::VPause()
 
 void LUCY::SplashState::VExit()
 {
-	m_data->machine.AddState(StateRef(new DemoState(this->m_data)), true);
+	m_data->machine.AddState(StateRef(new MainMenuState(this->m_data)), true);
 }

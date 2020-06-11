@@ -6,23 +6,6 @@ namespace GUI {
 
 	void UI_Button::update(sf::RenderWindow& window)
 	{
-		if (currentState == DISABLED) {
-			if (usingColor) {
-				this->bounds.setFillColor(disabled);
-			}
-			else {
-				this->bounds.setTexture(disabled_texture);
-			}
-			return;
-		}
-		else {
-			if (usingColor) {
-				this->bounds.setFillColor(main_color);
-			}
-			else {
-				this->bounds.setTexture(main_texture);
-			}
-		}
 
 		if (UTILS.isMouseOver(bounds.getPosition(), bounds.getSize().x, bounds.getSize().y, window)) {
 			currentState = ISHOVERED;

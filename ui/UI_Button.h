@@ -1,7 +1,6 @@
 #pragma once
 
 #include "UI_Base.h"
-
 namespace GUI {
 
 	enum UI_Button_State {
@@ -44,6 +43,28 @@ namespace GUI {
 
 	public:
 		UI_Button(sf::Vector2f position = { 0, 0 }, sf::Vector2f size = { 0, 0 }) {}
+
+		//Untuk buat perubahan setTexture SetColor FIX 
+		virtual void init()
+		{
+			if (currentState == DISABLED) {
+				if (usingColor) {
+					this->bounds.setFillColor(disabled);
+				}
+				else {
+					this->bounds.setTexture(disabled_texture);
+				}
+				return;
+			}
+			else {
+				if (usingColor) {
+					this->bounds.setFillColor(main_color);
+				}
+				else {
+					this->bounds.setTexture(main_texture);
+				}
+			}
+		}
 
 		// Update kondisi.
 		void update(sf::RenderWindow &window);

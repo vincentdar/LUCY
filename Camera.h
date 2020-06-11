@@ -22,7 +22,7 @@ private:
 		<std::chrono::high_resolution_clock>	start, previous;
 
 public:
-	Camera(sf::View& view) {
+	Camera(sf::View view) {
 		this->view = view;
 		translate = false;
 	}

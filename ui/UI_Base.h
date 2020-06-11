@@ -29,6 +29,7 @@ namespace GUI {
 
 		unsigned int getID() { return id; }
 
+		virtual void init() = 0;
 		virtual void update(sf::RenderWindow& window) = 0;
 		virtual void draw(sf::RenderTarget& target) = 0;
 

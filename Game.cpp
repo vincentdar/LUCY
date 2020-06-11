@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "DemoState.h"
 #include "SplashState.h"
+#include "MainMenuState.h"
 
 namespace LUCY
 {
