@@ -1,6 +1,10 @@
-#include "utils/Utils.h"
+#include "Utils.h"
 #include "ui/UI_Base.h"
+#include "Input.h"
 
 Utils* Utils::instance = nullptr;
 
-unsigned int GUI::UI_Base::static_ID = 0;
+unsigned int UI::Base::static_ID = 0;
+
+LUCY::Input* LUCY::Input::instance = nullptr;
+

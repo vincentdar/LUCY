@@ -1,58 +1,64 @@
-#include "../UI_Button.h"
+#include "UI_Button.h"
 
-#include "../../utils/Utils.h"
+#include "../Utils.h"
 
-namespace GUI {
+namespace UI {
 
-	void UI_Button::update(sf::RenderWindow& window)
+	void Button::update(sf::RenderWindow& window)
 	{
+		UI::Base::update(window);
+
 		if (currentState == DISABLED) {
 			if (usingColor) {
-				this->bounds.setFillColor(disabled);
+				this->base_shape.setFillColor(disabled);
 			}
 			else {
-				this->bounds.setTexture(disabled_texture);
+				this->base_shape.setTexture(disabled_texture);
 			}
 			return;
 		}
 		else {
 			if (usingColor) {
-				this->bounds.setFillColor(main_color);
+				this->base_shape.setFillColor(main_color);
 			}
 			else {
-				this->bounds.setTexture(main_texture);
+				this->base_shape.setTexture(main_texture);
 			}
 		}
 
-		if (UTILS.isMouseOver(bounds.getPosition(), bounds.getSize().x, bounds.getSize().y, window)) {
+		if (UTILS.isMouseOver(base_shape.getPosition(), base_shape.getSize().x, base_shape.getSize().y, window)) {
 			currentState = ISHOVERED;
-			onHovered();
+
 			if (usingColor) {
-				this->bounds.setFillColor(hovered_color);
+				this->base_shape.setFillColor(hovered_color);
+				hovered = true;
 			}
 			else {
-				this->bounds.setTexture(hovered_texture);
+				this->base_shape.setTexture(hovered_texture);
+				hovered = false;
 			}
 		}
 
 		if (currentState == ISHOVERED && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
 			currentState = ISPRESSED;
-			onPressed();
+
 			if (usingColor) {
-				this->bounds.setFillColor(pressed);
+				this->base_shape.setFillColor(pressed);
+				clicked = true;
 			}
 			else {
-				this->bounds.setTexture(pressed_texture);
+				this->base_shape.setTexture(pressed_texture);
+				clicked = false;
 			}
 		}
 	}
 
-	void UI_Button::draw(sf::RenderTarget& target)
+	void Button::draw(sf::RenderTarget& target)
 	{
-		target.draw(bounds);
+		target.draw(base_shape);
 	}
 
-	void UI_Button::setColor(sf::Color main, sf::Color secondary, sf::Color disabled, sf::Color pressed, sf::Color hovered)
+	void Button::setColor(sf::Color main, sf::Color secondary, sf::Color disabled, sf::Color pressed, sf::Color hovered)
 	{
 		usingColor = true;
 	
@@ -62,7 +68,7 @@ namespace GUI {
 		this->pressed		= pressed == sf::Color() ? main : pressed;
 		this->disabled		= disabled == sf::Color() ? main : disabled;
 	}
-	void UI_Button::setTexture(sf::Texture * main_texture, sf::Texture * hovered_texture, sf::Texture * secondary_texture, sf::Texture * pressed_texture, sf::Texture * disabled_texture)
+	void Button::setTexture(sf::Texture * main_texture, sf::Texture * hovered_texture, sf::Texture * secondary_texture, sf::Texture * pressed_texture, sf::Texture * disabled_texture)
 	{
 		usingColor = false;
 		this->main_texture		= main_texture;

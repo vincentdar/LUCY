@@ -7,8 +7,8 @@ namespace LUCY
 	}
 	void Hero::VInit()
 	{
-		m_data->assets.LoadTexture("Hero SpriteR", HERO_ANIMATION_SPRITESHEET_R);
-		m_data->assets.LoadTexture("Hero SpriteL", HERO_ANIMATION_SPRITESHEET_L);
+		/*m_data->assets.LoadTexture("Hero SpriteR", HERO_ANIMATION_SPRITESHEET_R);
+		m_data->assets.LoadTexture("Hero SpriteL", HERO_ANIMATION_SPRITESHEET_L);*/
 		m_textureR = m_data->assets.GetTexture("Hero SpriteR");
 		m_textureL = m_data->assets.GetTexture("Hero SpriteL");
 		m_sprite.setTexture(m_textureR);

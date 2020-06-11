@@ -49,6 +49,41 @@ public:
 		range.y = float(range.y / vec_magnitude);
 	}
 
+	void clearSpacesInFront(std::string& str) {
+		while (str[0] == ' ' || str[0] == '\t') {
+			str.erase(str.begin());
+		}
+	}
+
+	std::string getLowercase(std::string str) {
+		for (int i = 0; i < str.length(); i++) {
+			str[i] = tolower(str[i]);
+		}
+
+		return str;
+	}
+
+	sf::Vector2f getScaleToSize(sf::Texture& tex, const sf::Vector2f& target) {
+		return
+		{
+			target.x / tex.getSize().x,
+			target.y / tex.getSize().y
+		};
+	}
+
+	sf::Vector2f lerp(sf::Vector2f position, sf::Vector2f target, float time)
+	{
+		return (sf::Vector2f(position.x * (1.0 - time) , position.y * (1.0 - time))
+			+ (target * time));
+	}
+
+	float getTextWidth(sf::Text& text) 
+	{
+		return text.findCharacterPos(
+			text.getString().getSize()
+		).x - text.getGlobalBounds().left;
+	}
+
 	/*
 		TODO : isInRange, isCollided.. etc
 	*/
