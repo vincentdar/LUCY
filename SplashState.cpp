@@ -10,9 +10,6 @@ LUCY::SplashState::SplashState(GameDataRef data) : m_data(data), m_hero(data)
 
 void LUCY::SplashState::VInit()
 {
-	m_data->assets.LoadAssetFromText("res/assets.path");
-	VExit();
-
 	logo_sfx.setBuffer(*m_data->assets.GetSoundBufferPtr("Logo_SFX"));
 	logo_sfx.play();
 
@@ -22,7 +19,6 @@ void LUCY::SplashState::VInit()
 
 	stop_point.x = SCREEN_WIDTH / 2 - sf_logo.getGlobalBounds().width / 3;
 	sf_logo.setOrigin(sf::Vector2f(sf_logo.getGlobalBounds().width / 3, sf_logo.getGlobalBounds().height));
-
 
 	rect_mask.setSize(sf::Vector2f(500.0f, 128.0f));
 	rect_mask.setPosition(sf::Vector2f(sf_logo.getPosition().x + 75.f, sf_logo.getPosition().y - 50.0f));
@@ -89,8 +85,11 @@ void LUCY::SplashState::VUpdate(float dt)
 		}
 	}
 
-	if (logo_sfx.getStatus() == sf::SoundSource::Status::Stopped)
+	/*if (logo_sfx.getStatus() == sf::SoundSource::Status::Stopped)
 	{
+		VExit();
+	}*/
+	if (m_clock.getElapsedTime().asSeconds() > 4.75) {
 		VExit();
 	}
 }

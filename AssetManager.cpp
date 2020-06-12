@@ -35,10 +35,20 @@ namespace LUCY
 		return m_fonts.at(name);
 	}
 
+	sf::Font * AssetManager::GetFontPtr(const std::string & name)
+	{
+		if (m_fonts.find(name) == m_fonts.end()) {
+			printf("Font doesn't exist!\n");
+			return nullptr;
+		}
+
+		return &m_fonts[name];
+	}
+
 	void AssetManager::AddMusicPath(const std::string& name, const std::string& path)
 	{
 		if (m_musicPaths.find(name) != m_musicPaths.end()) {
-			printf("Name already registered!");
+			printf("Name already registered!\n");
 			return;
 		}
 

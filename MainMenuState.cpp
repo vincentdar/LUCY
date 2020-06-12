@@ -17,6 +17,12 @@ void LUCY::MainMenuState::VInit()
 	_cam.setCenter(sf::Vector2f(SCREEN_WIDTH / 2, 0));
 	_cam.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
 	m_data->window.setView(_cam);
+
+	/*camera.set(sf::Vector2f(SCREEN_WIDTH / 2, 0), sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
+	camera.setRenderTarget(&m_data->window);
+	camera.translateCameraToPosition(sf::Vector2f(SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0),
+		sf::Vector2f(0, 5.0f));*/
+
 	
 	_clock.restart();
 }
@@ -55,12 +61,16 @@ void LUCY::MainMenuState::VHandleInput()
 
 void LUCY::MainMenuState::VUpdate(float dt)
 {
-	if (m_data->window.getView().getCenter().y < SCREEN_HEIGHT / 2)
+	if (m_data->window.getView().getCenter().y <= SCREEN_HEIGHT / 2)
 	{
 		_cam.move(sf::Vector2f(0, 5.0f));
 		_cam.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
 		m_data->window.setView(_cam);
+		printf("%f, %f\n", _cam.getCenter().x, _cam.getCenter().y);
 	}
+
+	//camera.update();
+
 	_play.update(m_data->window);
 }
 

@@ -1,23 +1,24 @@
 #pragma once
 
 #include "UI_Base.h"
-namespace GUI {
 
-	enum UI_Button_State {
+namespace UI {
+
+	enum Button_State {
 		ENABLED, ISHOVERED, DISABLED, ISPRESSED
 	};
 
-	class UI_Button
-		: public UI_Base
+	class Button
+		: public Base
 	{
 	protected:
 
-		UI_Button_State currentState = ENABLED;
+		Button_State currentState = ENABLED;
 
 		bool usingColor = false;
 
 		/* 
-			Color yg digunakan pada bounds, pada berbagai state buttonnya.
+			Color yg digunakan pada base_shape, pada berbagai state buttonnya.
 			-- Main color: Default warna button. Apabila warna lain tidak diset, fallback ke sini.
 			-- Secondary: Opsional. Tidak dipanggil kecuali mau diset toggleable. Maka switch dari main color ke secondary color.
 			-- Hovered : Ketika dihover (tapi tidak diclick. Kalau diclick ikut yg pressed)
@@ -32,63 +33,47 @@ namespace GUI {
 		/*
 			Sama spt color, tapi texture.
 		*/
-		sf::Texture*		main_texture;
 		sf::Texture*		hovered_texture;
 		sf::Texture*		secondary_texture;
 		sf::Texture*		pressed_texture;
 		sf::Texture*		disabled_texture;
 
-		// Bounds adalah area dimana click dan hover didetect. Bisa invisible (sf::Color::Transparent di main_color)
-		sf::RectangleShape	bounds;
+		bool clicked = false;
+		bool hovered = false;
 
 	public:
-		UI_Button(sf::Vector2f position = { 0, 0 }, sf::Vector2f size = { 0, 0 }) {}
+		Button(sf::Vector2f position = { 0, 0 }, sf::Vector2f size = { 0, 0 }) {}
 
 		//Untuk buat perubahan setTexture SetColor FIX 
 		virtual void init()
 		{
 			if (currentState == DISABLED) {
 				if (usingColor) {
-					this->bounds.setFillColor(disabled);
+					this->base_shape.setFillColor(disabled);
 				}
 				else {
-					this->bounds.setTexture(disabled_texture);
+					this->base_shape.setTexture(disabled_texture);
 				}
 				return;
 			}
 			else {
 				if (usingColor) {
-					this->bounds.setFillColor(main_color);
+					this->base_shape.setFillColor(main_color);
 				}
 				else {
-					this->bounds.setTexture(main_texture);
+					this->base_shape.setTexture(main_texture);
 				}
 			}
 		}
 
 		// Update kondisi.
 		void update(sf::RenderWindow &window);
+
+		bool isClicked() { return clicked; }
+		bool isHovered() { return hovered; }
 	
 		// Manual draw: object.draw();
 		void draw(sf::RenderTarget &target);
-
-		// Fungsi yg dijalankan khusus ketika sedang diklik.
-		virtual void onPressed() {}
-
-		// Fungsi yg dijalankan khusus ketika sedang dihover. (tidak diclick)
-		virtual void onHovered() {}
-
-		void setPosition(sf::Vector2f position) {
-			bounds.setPosition(position);
-		}
-
-		sf::Vector2f getPosition() { return bounds.getPosition(); }
-
-		void setBounds(sf::Vector2f size) {
-			bounds.setSize(size);
-		}
-
-		sf::Vector2f getBounds() { return bounds.getSize(); }
 
 		void setColor(
 				sf::Color main,
@@ -107,9 +92,7 @@ namespace GUI {
 		);
 
 		UI_Type getType() override {
-			return UI_Type::UI_BUTTON;
+			return UI_Type::BUTTON;
 		}
 	};
-
-	typedef UI_Button Button;
 }

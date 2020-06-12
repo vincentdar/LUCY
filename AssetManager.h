@@ -29,6 +29,7 @@ namespace LUCY
 
 		void LoadFonts(const std::string& name, const std::string& fileName);
 		sf::Font& GetFont(const std::string& name);
+		sf::Font* GetFontPtr(const std::string& name);
 
 		void AddMusicPath(const std::string& name, const std::string& path);
 		const std::string& GetMusicPath(const std::string& name);

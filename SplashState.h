@@ -21,8 +21,8 @@ namespace LUCY
 		Hero m_hero;
 
 		// Debug
-		GUI::Button button;
-		GUI::Button button1;
+		UI::Button button;
+		UI::Button button1;
 
 		Camera camera;
 		sf::Sprite sf_logo;

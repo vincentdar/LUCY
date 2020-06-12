@@ -16,8 +16,10 @@ namespace LUCY
 		sf::Clock _clock;
 
 		sf::Sprite _background;
-		GUI::Button _play;
+		UI::Button _play;
 		sf::View _cam;
+
+		Camera camera;
 
 	public:
 		MainMenuState(GameDataRef data);
@@ -34,4 +36,3 @@ namespace LUCY
 		void playButtonPressed();
 	};
 }
-

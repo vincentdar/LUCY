@@ -5,17 +5,19 @@
 
 #include "Utils.h"
 
+// Class utk control camera
+
 class Camera
 {
 private:
-	sf::View view;
-	sf::RenderTarget* target;
+	sf::View			view;
+	sf::RenderTarget*	target;
 
 	// Implementasi hanya translate saja
-	bool translate = false;
-	sf::Vector2f translateTarget;
-	sf::Vector2f directionOfTranslation;
-	std::time_t offset;
+	bool				translate = false;
+	sf::Vector2f		translateTarget;
+	sf::Vector2f		directionOfTranslation;
+	std::time_t			offset;
 
 	// Start time
 	std::chrono::time_point
@@ -56,6 +58,15 @@ public:
 		UTILS.normalizeVector2f(directionOfTranslation);
 	}
 
+	void translateCameraToPosition(sf::Vector2f target, sf::Vector2f step) {
+		// Camera diset state utk gerak di update.
+		translate = true;
+		translateTarget = target;
+		this->offset = 0;
+
+		this->directionOfTranslation = step;
+	}
+
 	void update() {
 		if (!translate) {
 			return;
@@ -69,9 +80,12 @@ public:
 
 			target->setView(view);
 
-			std::cout << view.getCenter().x << " " << view.getCenter().y << std::endl;
+			/*std::cout << view.getCenter().x << " " << view.getCenter().y << std::endl;*/
 
-			if (view.getCenter() == translateTarget) {
+			if	(view.getCenter() == translateTarget || 
+				(translateTarget.x - (view.getCenter().x + directionOfTranslation.x) <= 0 
+				&& translateTarget.y - (view.getCenter().y + directionOfTranslation.y) <= 0))
+			{
 				translate = false;
 			}
 		}
