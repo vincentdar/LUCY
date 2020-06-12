@@ -31,14 +31,16 @@ namespace UI {
 		sf::RectangleShape base_shape;
 
 		// Untuk menggerakkan UI biar smooth
-		sf::Vector2f move_difference;
-		sf::Vector2f move_target;
-		sf::Clock move_timer;
-		float move_duration;
-		bool isTranslating;
+		sf::Vector2f		move_difference;
+		sf::Vector2f		move_target;
+		sf::Clock			move_timer;
+		float				move_duration;
+		bool				isTranslating;
 
 		sf::Texture*		main_texture;
 		sf::Color			main_color;
+
+		sf::RenderWindow*	window;
 
 	public:
 		Base() {

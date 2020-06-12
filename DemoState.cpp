@@ -91,10 +91,10 @@ namespace LUCY
 				else if (event.key.code == sf::Keyboard::A)
 					units[0]->run();
 			}
-		}
 
-		if (button.isClicked()) {
-			m_data->machine.AddState(StateRef(new MainMenuState(m_data)));
+			if (button.isClicked(event)) {
+				m_data->machine.AddState(StateRef(new MainMenuState(m_data)));
+			}
 		}
 	}
 	void DemoState::VUpdate(float dt)

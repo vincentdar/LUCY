@@ -19,7 +19,7 @@ namespace LUCY
 		UI::Button _play;
 		sf::View _cam;
 
-		Camera camera;
+		//Camera camera;
 
 	public:
 		MainMenuState(GameDataRef data);

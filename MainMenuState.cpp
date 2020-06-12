@@ -1,7 +1,7 @@
 #include "MainMenuState.h"
-#include "DemoState.h"
+#include "GameState.h"
 
-LUCY::MainMenuState::MainMenuState(GameDataRef data): m_data(data)
+LUCY::MainMenuState::MainMenuState(GameDataRef data) : m_data(data)
 {
 }
 
@@ -9,38 +9,39 @@ void LUCY::MainMenuState::VInit()
 {
 	_background.setTexture(m_data->assets.GetTexture("MenuBG"));
 
-	_play.setPosition(sf::Vector2f(100.0f,100.0f));
+	_play.setPosition(sf::Vector2f(100.0f, 100.0f));
 	_play.setTexture(m_data->assets.GetTexturePtr("Play_Button"));
 	_play.setBounds(sf::Vector2f(200.0f, 200.0f));
+	_play.setWindow(m_data->window);
 	_play.init();
 
 	_cam.setCenter(sf::Vector2f(SCREEN_WIDTH / 2, 0));
 	_cam.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
 	m_data->window.setView(_cam);
 
+	// Using camera.h
 	/*camera.set(sf::Vector2f(SCREEN_WIDTH / 2, 0), sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
 	camera.setRenderTarget(&m_data->window);
 	camera.translateCameraToPosition(sf::Vector2f(SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0),
 		sf::Vector2f(0, 5.0f));*/
 
-	
+
 	_clock.restart();
 }
 
 void LUCY::MainMenuState::VDraw(float dt)
 {
 	m_data->window.clear();
-	
+
 	m_data->window.draw(_background);
 	_play.draw(m_data->window);
-	
+
 	m_data->window.display();
 }
 
 void LUCY::MainMenuState::VHandleInput()
 {
 	sf::Event event;
-	sf::Vector2i mousepos = sf::Mouse::getPosition(m_data->window);
 	while (m_data->window.pollEvent(event))
 	{
 		if (sf::Event::Closed == event.type)
@@ -48,15 +49,11 @@ void LUCY::MainMenuState::VHandleInput()
 			this->m_data->window.close();
 			this->VExit();
 		}
-		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		if (_play.isClicked(event))
 		{
-			if (UTILS.isMouseOver(_play.getPosition(), _play.getBounds().x, _play.getBounds().y, m_data->window) == true)
-			{
-				m_data->machine.AddState(StateRef(new DemoState(m_data)), true);
-			}
+			m_data->machine.AddState(StateRef(new GameState(m_data)), true);
 		}
 	}
-	
 }
 
 void LUCY::MainMenuState::VUpdate(float dt)
@@ -91,5 +88,5 @@ void LUCY::MainMenuState::VExit()
 
 void LUCY::MainMenuState::playButtonPressed()
 {
-	m_data->machine.AddState(StateRef(new DemoState(m_data)), true);
+	m_data->machine.AddState(StateRef(new GameState(m_data)), true);
 }

@@ -18,6 +18,9 @@ namespace LUCY {
 
 		Lane lanes[6];
 
+		// GameInfo
+		int waveNumber;
+
 	public:
 		GameState(GameDataRef data) : data(data) {}
 

@@ -44,33 +44,16 @@ namespace UI {
 	public:
 		Button(sf::Vector2f position = { 0, 0 }, sf::Vector2f size = { 0, 0 }) {}
 
+		void setWindow(sf::RenderWindow& win);
+
 		//Untuk buat perubahan setTexture SetColor FIX 
-		virtual void init()
-		{
-			if (currentState == DISABLED) {
-				if (usingColor) {
-					this->base_shape.setFillColor(disabled);
-				}
-				else {
-					this->base_shape.setTexture(disabled_texture);
-				}
-				return;
-			}
-			else {
-				if (usingColor) {
-					this->base_shape.setFillColor(main_color);
-				}
-				else {
-					this->base_shape.setTexture(main_texture);
-				}
-			}
-		}
+		void init() override;
 
 		// Update kondisi.
 		void update(sf::RenderWindow &window);
 
-		bool isClicked() { return clicked; }
-		bool isHovered() { return hovered; }
+		bool isClicked(sf::Event& event);
+		bool isHovered();
 	
 		// Manual draw: object.draw();
 		void draw(sf::RenderTarget &target);
