@@ -25,7 +25,6 @@ void LUCY::MainMenuState::VInit()
 	camera.translateCameraToPosition(sf::Vector2f(SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0),
 		sf::Vector2f(0, 5.0f));*/
 
-
 	_clock.restart();
 }
 

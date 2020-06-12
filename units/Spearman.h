@@ -5,17 +5,8 @@
 class Spearman
 	: public BaseUnit
 {
-private:
-	Animator animator;
-
-	sf::Vector2f position;
-
-	LUCY::GameDataRef gdr;
-
-	sf::Sprite charSprite;
-
 public:
-	Spearman(LUCY::GameDataRef gdr) : gdr(gdr) { position = { 100, 100 }; }
+	Spearman(LUCY::GameDataRef data) : BaseUnit(data) { }
 	void setup(sf::Vector2f position) {
 
 		BaseUnit::setUnit(1.25, 0.3, 3, 5, 0, 1.5, 0.5, 0, 2);
@@ -24,19 +15,19 @@ public:
 
 		animator.addAnimationState(
 			"Idle",
-			gdr->assets.GetTexturePtr(""),
+			data->assets.GetTexturePtr(""),
 			sf::IntRect(0, 52 * 2, 86, 52),
 			sf::Vector2i(86, 0), 0.2, 2, true, true);
 
 		animator.addAnimationState(
 			"Move",
-			gdr->assets.GetTexturePtr(""),
+			data->assets.GetTexturePtr(""),
 			sf::IntRect(0, 52 * 1, 86, 52),
 			sf::Vector2i(86, 0), 0.2, 3, false, false);
 
 		animator.addAnimationState(
 			"Attack",
-			gdr->assets.GetTexturePtr(""),
+			data->assets.GetTexturePtr(""),
 			sf::IntRect(0, 52 * 0, 86, 52),
 			sf::Vector2i(86, 0), 0.2, 2, false, false);
 

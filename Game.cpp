@@ -11,7 +11,7 @@ namespace LUCY
 		m_data->window.setKeyRepeatEnabled(false);
 		//m_data->assets.LoadSoundBuffer("LOGO_SFX", LOGO_SFX);
 		m_data->assets.LoadAssetFromText("res/Assets.conf");
-		m_data->machine.AddState(StateRef(new SplashState(this->m_data)), true);
+		m_data->machine.AddState(StateRef(new DemoState(this->m_data)), true);
 		Logger::PrintLn("Added Splash state");
 		
 		this->Run();

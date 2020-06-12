@@ -13,13 +13,17 @@ namespace LUCY
 
 	void DemoState::VInit()
 	{
-		sh.loadFromFile("res/shader/fragtest.shader", sf::Shader::Fragment);
+		//sh.loadFromFile("res/shader/fragtest.shader", sf::Shader::Fragment);
 
 		units.push_back(new Archer(m_data));
-		units.back()->setup(sf::Vector2f(10, 10));
+		units.back()->setup(sf::Vector2f(50, 50));
 		
 		INPUT.registerKey("Attack", sf::Keyboard::Enter);
 		INPUT.registerKey("Move", sf::Keyboard::A);
+		INPUT.registerKey("Skill1", sf::Keyboard::Num1);
+		INPUT.registerKey("Skill2", sf::Keyboard::Num2);
+		INPUT.registerKey("Skill3", sf::Keyboard::Num3);
+		INPUT.registerKey("Skill4", sf::Keyboard::Num4);
 
 		cam.set(
 			sf::Vector2f(SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0),
@@ -48,7 +52,7 @@ namespace LUCY
 		button.setPosition(sf::Vector2f(0, 0));
 		button.setColor(sf::Color::Blue, sf::Color::Red, sf::Color::Cyan, sf::Color::Red);
 
-		sh.setUniform("u_texture", sf::Shader::CurrentTexture);
+		//sh.setUniform("u_texture", sf::Shader::CurrentTexture);
 	}
 
 	void DemoState::VDraw(float dt)
@@ -56,7 +60,7 @@ namespace LUCY
 		m_data->window.clear();
 
 		for (int i = 0; i < units.size(); i++) {
-			units[i]->draw(m_data->window, &sh);
+			units[i]->draw();
 		}
 
 		board.draw(m_data->window);
@@ -76,6 +80,18 @@ namespace LUCY
 			else if (INPUT.getKey("Move", InputMode::INPUT_KEYRELEASED, event)) {
 				units[0]->run();
 			}
+			else if (INPUT.getKey("Skill1", InputMode::INPUT_KEYRELEASED, event)) {
+				units[0]->setOutlineState(SKILL1);
+			}
+			else if (INPUT.getKey("Skill2", InputMode::INPUT_KEYRELEASED, event)) {
+				units[0]->setOutlineState(SKILL2);
+			}
+			else if (INPUT.getKey("Skill3", InputMode::INPUT_KEYRELEASED, event)) {
+				units[0]->setOutlineState(SKILL3);
+			}
+			else if (INPUT.getKey("Skill4", InputMode::INPUT_KEYRELEASED, event)) {
+				units[0]->setOutlineState(SKILL4);
+			}
 
 			if (sf::Event::Closed == event.type)
 			{
@@ -90,10 +106,6 @@ namespace LUCY
 				}
 				else if (event.key.code == sf::Keyboard::A)
 					units[0]->run();
-			}
-
-			if (button.isClicked(event)) {
-				m_data->machine.AddState(StateRef(new MainMenuState(m_data)));
 			}
 		}
 	}

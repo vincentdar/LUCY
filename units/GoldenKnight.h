@@ -7,14 +7,8 @@
 class GoldenKnight
 	: public BaseUnit
 {
-private:
-	Animator animator;
-
-	sf::Vector2f position;
-
-	LUCY::GameDataRef gdr;
 public:
-	GoldenKnight(LUCY::GameDataRef gdr) : gdr(gdr) {  }
+	GoldenKnight(LUCY::GameDataRef data) : BaseUnit(data) {  }
 
 	void setup(sf::Vector2f position) {
 
@@ -24,24 +18,24 @@ public:
 
 		animator.addAnimationState(
 			"Idle",
-			gdr->assets.GetTexturePtr("Knight_Gold"),
+			data->assets.GetTexturePtr("Knight_Gold"),
 			sf::IntRect(0, 52 * 2, 86, 52),
 			sf::Vector2i(86, 0), 0.2, 2, true, true);
 
 		animator.addAnimationState(
 			"Move",
-			gdr->assets.GetTexturePtr("Knight_Gold"),
+			data->assets.GetTexturePtr("Knight_Gold"),
 			sf::IntRect(0, 52 * 1, 86, 52),
 			sf::Vector2i(86, 0), 0.2, 3, false, false);
 
 		animator.addAnimationState(
 			"Attack",
-			gdr->assets.GetTexturePtr("Knight_Gold"),
+			data->assets.GetTexturePtr("Knight_Gold"),
 			sf::IntRect(0, 52 * 0, 86, 52),
 			sf::Vector2i(86, 0), 0.2, 2, false, false);
 
 		animator.addAnimationState("HeadSplitter",
-			gdr->assets.GetTexturePtr("Knight_Gold"),
+			data->assets.GetTexturePtr("Knight_Gold"),
 			sf::IntRect(0, 52 * 3, 86, 52),
 			sf::Vector2i(86, 0), 0.2, 2, false, false);
 

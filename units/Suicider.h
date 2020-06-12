@@ -5,17 +5,8 @@
 class Suicider :
 	public BaseUnit
 {
-private:
-	Animator animator;
-
-	sf::Vector2f position;
-
-	LUCY::GameDataRef gdr;
-
-	sf::Sprite charSprite;
-
 public:
-	Suicider(LUCY::GameDataRef gdr) :gdr(gdr) { position = { 100, 100 }; }
+	Suicider(LUCY::GameDataRef data) :data(data) { }
 
 	void setup(sf::Vector2f position) {
 
