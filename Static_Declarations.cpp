@@ -4,7 +4,5 @@
 
 Utils* Utils::instance = nullptr;
 
-unsigned int UI::Base::static_ID = 0;
-
 LUCY::Input* LUCY::Input::instance = nullptr;
 

@@ -8,13 +8,11 @@ namespace LUCY
 {
 	DemoState::DemoState(GameDataRef data) : m_data(data)
 	{
-
+		
 	}
 
 	void DemoState::VInit()
 	{
-		//sh.loadFromFile("res/shader/fragtest.shader", sf::Shader::Fragment);
-
 		units.push_back(new Archer(m_data));
 		units.back()->setup(sf::Vector2f(50, 50));
 		
@@ -34,7 +32,16 @@ namespace LUCY
 
 		cam.translateCameraToPosition(sf::Vector2f(SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0 - 300), 0.5);
 
-		board.setup(m_data->assets.GetFontPtr("Press_Start"),
+		field.setSize(sf::Vector2f(500, 100));
+		field.setOrigin(UI::UI_Origin::CENTERED);
+		field.setPosition(sf::Vector2f(SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0));
+		field.setAllowSpaces(true);
+		field.setSelected(true);
+		field.setup(m_data->assets.GetFontPtr("Press_Start"), "Save1", sf::Color::Black);
+		field.setColor(sf::Color::White);
+		field.init();
+
+		/*board.setup(m_data->assets.GetFontPtr("Press_Start"),
 			m_data->assets.GetFontPtr("Press_Start"),
 			"Hello World", "Just passing by");
 
@@ -50,22 +57,22 @@ namespace LUCY
 
 		button.setSize(sf::Vector2f(200, 20));
 		button.setPosition(sf::Vector2f(0, 0));
-		button.setColor(sf::Color::Blue, sf::Color::Red, sf::Color::Cyan, sf::Color::Red);
-
-		//sh.setUniform("u_texture", sf::Shader::CurrentTexture);
+		button.setColor(sf::Color::Blue, sf::Color::Red, sf::Color::Cyan, sf::Color::Red);*/
 	}
 
 	void DemoState::VDraw(float dt)
 	{
-		m_data->window.clear();
+		m_data->window.clear(sf::Color::Blue);
 
 		for (int i = 0; i < units.size(); i++) {
 			units[i]->draw();
 		}
 
-		board.draw(m_data->window);
+		field.draw(m_data->window);
 
-		button.draw(m_data->window);
+		/*board.draw(m_data->window);
+
+		button.draw(m_data->window);*/
 
 		m_data->window.display();
 	}
@@ -74,6 +81,8 @@ namespace LUCY
 		sf::Event event;
 		while (m_data->window.pollEvent(event))
 		{
+			field.handleInput(event);
+
 			if (INPUT.getKey("Attack", InputMode::INPUT_KEYRELEASED, event)) {
 				units[0]->attack();
 			}
@@ -98,15 +107,7 @@ namespace LUCY
 				this->VExit();
 				this->m_data->window.close();
 			}
-			else if (sf::Event::KeyReleased == event.type)
-			{
-				if (event.key.code == sf::Keyboard::Escape) {
-					this->VExit();
-					this->m_data->window.close();
-				}
-				else if (event.key.code == sf::Keyboard::A)
-					units[0]->run();
-			}
+
 		}
 	}
 	void DemoState::VUpdate(float dt)
@@ -115,8 +116,15 @@ namespace LUCY
 			units[i]->update();
 		}
 
-		board.update(m_data->window);
-		button.update(m_data->window);
+		if (field.getIsSubmitted()) {
+			printf("%s", field.getSubmittedText().c_str());
+			field.reset();
+		}
+
+		field.update(m_data->window);
+
+		/*board.update(m_data->window);
+		button.update(m_data->window);*/
 	}
 	void DemoState::VResume()
 	{

@@ -9,8 +9,7 @@ namespace LUCY
 	{
 		m_data->window.create(sf::VideoMode(width, height), title, sf::Style::Close | sf::Style::Titlebar);
 		m_data->window.setKeyRepeatEnabled(false);
-		//m_data->assets.LoadSoundBuffer("LOGO_SFX", LOGO_SFX);
-		m_data->assets.LoadAssetFromText("res/Assets.conf");
+		m_data->assets.LoadAssetFromText(ASSET_CONF);
 		m_data->machine.AddState(StateRef(new DemoState(this->m_data)), true);
 		Logger::PrintLn("Added Splash state");
 		
@@ -23,12 +22,11 @@ namespace LUCY
 		float newTime, frameTime, interpolation;
 
 		float currentTime = this-> m_clock.getElapsedTime().asSeconds();
+
 		float accumulator = 0.0f;
 
 		while (exit == false && this->m_data->window.isOpen())
 		{
-			//Logger::Clear();
-			//Logger::PrintLn("Run");
 			this->m_data->machine.ProcessStateChanges();
 			if (m_data->machine.StackEmpty())
 			{
@@ -38,6 +36,9 @@ namespace LUCY
 			{
 				newTime = this->m_clock.getElapsedTime().asSeconds();
 				frameTime = newTime - currentTime;
+
+				// Show fps:
+				//printf("FPS: %f\n", (1 / frameTime));
 
 				if (frameTime > 0.25f)
 				{

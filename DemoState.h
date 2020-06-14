@@ -8,6 +8,7 @@
 #include "units/Spearman.h"
 #include "ui/UI_Board.h"
 #include "ui/UI_Button.h"
+#include "ui/UI_Textfield.h"
 #include "Camera.h"
 
 namespace LUCY
@@ -21,12 +22,13 @@ namespace LUCY
 
 		std::vector<BaseUnit*> units;
 
-		UI::Board board;
-		UI::Button button;
+		UI::Textfield field;
 
 		sf::Shader sh;
 
 		Camera cam;
+
+		std::string str = "";
 
 		//Hero m_hero;
 	public:
