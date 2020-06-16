@@ -65,10 +65,12 @@ namespace LUCY
 		m_data->window.clear(sf::Color::Blue);
 
 		for (int i = 0; i < units.size(); i++) {
-			units[i]->draw();
+			units[i]->draw(m_data->window);
 		}
 
 		field.draw(m_data->window);
+
+		std::cout << field.getPosition().x << field.getPosition().y << std::endl;
 
 		/*board.draw(m_data->window);
 

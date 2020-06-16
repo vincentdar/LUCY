@@ -2,6 +2,8 @@
 #include "DemoState.h"
 #include "SplashState.h"
 #include "MainMenuState.h"
+#include "GameState.h"
+#include <SFML/OpenGL.hpp>
 
 namespace LUCY
 {
@@ -10,8 +12,7 @@ namespace LUCY
 		m_data->window.create(sf::VideoMode(width, height), title, sf::Style::Close | sf::Style::Titlebar);
 		m_data->window.setKeyRepeatEnabled(false);
 		m_data->assets.LoadAssetFromText(ASSET_CONF);
-		m_data->machine.AddState(StateRef(new DemoState(this->m_data)), true);
-		Logger::PrintLn("Added Splash state");
+		m_data->machine.AddState(StateRef(new SplashState(this->m_data)), true);
 		
 		this->Run();
 	}

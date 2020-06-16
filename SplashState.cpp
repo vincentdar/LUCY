@@ -56,14 +56,6 @@ void LUCY::SplashState::VHandleInput()
 				this->m_data->window.close();
 				this->VExit();
 			}
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
-			{
-				this->VExit();
-			}
-
-			if (Input::get().getKey("Hello", INPUT_KEYPRESSED, event)) {
-				printf("Rip\n");
-			}
 		}
 	}
 }
@@ -90,8 +82,10 @@ void LUCY::SplashState::VUpdate(float dt)
 		VExit();
 	}*/
 	if (m_clock.getElapsedTime().asSeconds() > 4.75) {
+		logo_sfx.stop();
 		VExit();
 	}
+
 }
 
 void LUCY::SplashState::VResume()

@@ -79,4 +79,8 @@ public:
 
 	int getFriendlyCount() { return friendly_units.size(); }
 	int getEnemyCount() { return enemy_units.size(); }
+
+	void setSpawnPosition(sf::Vector2f position) {
+		this->enemyLaneSpawnPoint = position;
+	}
 };

@@ -1,4 +1,4 @@
-const float offset = 1.0 / 256.0; // 0.0039
+float offset = 1.0 / 256.0; // 0.0039
 uniform sampler2D u_texture;
 uniform vec4 outline_color;
 

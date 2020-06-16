@@ -22,23 +22,24 @@ protected:
 	bool isHit;
 
 	// Unit visuals
-	Animator animator;
-	sf::Sprite charSprite;
+	Animator			animator;
+	sf::Sprite			charSprite;
 
 	// Unit sound effects player
-	sf::Sound sound;
+	sf::Sound			sound;
 
 	// Unit shaders
-	sf::Shader shader;
+	sf::Shader			shader;
 
 	// State utk nunjukkan hrs pakai shader apa
-	OutlineState ostate;
+	OutlineState		ostate;
 
-	sf::Clock internal_timer;
-	float time_var;
+	sf::Clock			internal_timer;
+	float				time_var;
 
 	// Utk handle window dll
-	GameDataRef data;
+	GameDataRef			data;
+	sf::RenderTarget*	target;
 
 public:
 	BaseUnit(GameDataRef data) : data(data), ostate(NOSKILL)
@@ -59,13 +60,16 @@ public:
 	}
 	
 	virtual void setup(sf::Vector2f position) = 0;
+
 	virtual void update() = 0;
 
 	// Fungsi draw -> bisa draw saja atau dgn tambahan shader
-	virtual void draw() {
+	virtual void draw(sf::RenderTarget& target) {
+
+		charSprite.setOrigin(charSprite.getLocalBounds().width / 2.0, charSprite.getLocalBounds().height);
 
 		if (ostate == NOSKILL) {
-			data->window.draw(charSprite);
+			target.draw(charSprite);
 			return;
 		}
 		else {
@@ -98,7 +102,7 @@ public:
 				break;
 			}
 		}
-		data->window.draw(charSprite, &shader);
+		target.draw(charSprite, &shader);
 	}
 
 	void setOutlineState(OutlineState state) {

@@ -43,6 +43,7 @@ namespace UI {
 			
 			// Default origin: CENTERED
 			this->setOrigin(CENTERED);
+			this->isTranslating = false;
 		}
 
 		void setBounds(sf::Vector2f bounds) {

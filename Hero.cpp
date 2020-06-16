@@ -16,7 +16,7 @@ namespace LUCY
 		m_sprite.setPosition(sf::Vector2f(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2));
 		m_sprite.setScale(2, 2);
 
-		anim.Attach(m_textureR, m_sprite);
+		//anim.Attach(m_textureR, m_sprite, );
 		physics.Attach(8.5f, 1.0f);
 	}
 	void Hero::VHandleInput()

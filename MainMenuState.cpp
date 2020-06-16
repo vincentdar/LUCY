@@ -62,7 +62,6 @@ void LUCY::MainMenuState::VUpdate(float dt)
 		_cam.move(sf::Vector2f(0, 5.0f));
 		_cam.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
 		m_data->window.setView(_cam);
-		printf("%f, %f\n", _cam.getCenter().x, _cam.getCenter().y);
 	}
 
 	//camera.update();
@@ -87,5 +86,5 @@ void LUCY::MainMenuState::VExit()
 
 void LUCY::MainMenuState::playButtonPressed()
 {
-	m_data->machine.AddState(StateRef(new GameState(m_data)), true);
+	m_data->machine.AddState(StateRef(new GameState(m_data)), false);
 }

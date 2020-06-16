@@ -2,12 +2,12 @@
 
 namespace LUCY
 {
-	void Animation::Attach(sf::Texture& tex, sf::Sprite& sprite)
+	void Animation::Attach(sf::Texture& tex, sf::Sprite& sprite, sf::Vector2i sprite_size)
 	{
 		m_tex = tex;
 		m_frameCount = 0;
-		m_sprite_size.x = 50;
-		m_sprite_size.y = 37;
+		m_sprite_size.x = sprite_size.x;
+		m_sprite_size.y = sprite_size.y;
 		m_duration = 0;
 		FrameX = 0;
 		FrameY = 0;

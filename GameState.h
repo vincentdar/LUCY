@@ -2,11 +2,13 @@
 
 #include "Game.h"
 #include "IState.h"
+
 #include "units/Base_Unit.h"
+#include "units/Archer.h"
 
 #include "Lane.h"
 
-// Semua gameplay disini!!
+#define ENEMY_SPAWN_X data->window.getSize().x
 
 namespace LUCY {
 
@@ -14,15 +16,34 @@ namespace LUCY {
 		: public IState
 	{
 	private:
-		GameDataRef data;
 
+		// Save To File
+		void saveToFile(int slot);
+		void loadFromFile(int slot);
+
+		// Resources 
+		int food;
+		int cash;
+
+		bool isPausing = false;
+
+		// Spawn-related
+
+		int totalNumberOfFriendlyUnits;
 		Lane lanes[6];
 
-		// GameInfo
 		int waveNumber;
 
+		GameDataRef data;
+		sf::RenderTexture renderTexture;
+
+		sf::Sprite background;
+
+		int saveSlot;
+
 	public:
-		GameState(GameDataRef data) : data(data) {}
+		GameState(GameDataRef data, int saveSlot = -1) 
+			: data(data), saveSlot(-1) {}
 
 		// Fungsi khusus di GameState
 		void onExitClear();

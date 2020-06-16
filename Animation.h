@@ -19,7 +19,7 @@ namespace LUCY
 		int FrameX = 0;
 		int FrameY = 0;
 	public:
-		void Attach(sf::Texture& tex, sf::Sprite& sprite);
+		void Attach(sf::Texture& tex, sf::Sprite& sprite, sf::Vector2i sprite_size);
 		void Change(int m_frameCount, float m_duration, int frameX, int frameY);
 		void Update(float dt, sf::Sprite& sprite, bool isRight);
 		int GetAnimFrame();
