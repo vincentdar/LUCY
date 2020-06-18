@@ -83,7 +83,7 @@ namespace LUCY
 		sf::Event event;
 		while (m_data->window.pollEvent(event))
 		{
-			field.handleInput(event);
+			field.handleInput(event, m_data->window);
 
 			if (INPUT.getKey("Attack", InputMode::INPUT_KEYRELEASED, event)) {
 				units[0]->attack();

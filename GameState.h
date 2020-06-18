@@ -6,6 +6,13 @@
 #include "units/Base_Unit.h"
 #include "units/Archer.h"
 
+#include "ui/UI_Base.h"
+#include "ui/UI_Container.h"
+#include "ui/UI_Button.h"
+#include "ui/UI_Board.h"
+#include "ui/UI_Textfield.h"
+#include "ui/UI_Alert.h"
+
 #include "Lane.h"
 
 #define ENEMY_SPAWN_X data->window.getSize().x
@@ -40,6 +47,9 @@ namespace LUCY {
 		sf::Sprite background;
 
 		int saveSlot;
+
+		UI::Container container1;
+		UI::Alert alert;
 
 	public:
 		GameState(GameDataRef data, int saveSlot = -1) 

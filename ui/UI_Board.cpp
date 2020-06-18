@@ -1,7 +1,5 @@
 #include "UI_Board.h"
 
-UI::Board::Board() {}
-
 UI::Board::Board(sf::Font* font_head, sf::Font* font, const std::string& head, const std::string& body, float duration)
 {
 	setup(font, font_head, head, body, duration);

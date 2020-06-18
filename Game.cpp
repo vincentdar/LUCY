@@ -12,7 +12,7 @@ namespace LUCY
 		m_data->window.create(sf::VideoMode(width, height), title, sf::Style::Close | sf::Style::Titlebar);
 		m_data->window.setKeyRepeatEnabled(false);
 		m_data->assets.LoadAssetFromText(ASSET_CONF);
-		m_data->machine.AddState(StateRef(new SplashState(this->m_data)), true);
+		m_data->machine.AddState(StateRef(new GameState(this->m_data)), true);
 		
 		this->Run();
 	}

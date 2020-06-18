@@ -24,11 +24,6 @@ namespace UI {
 		}
 	}
 
-	void Button::setWindow(sf::RenderWindow& window)
-	{
-		this->window = &window;
-	}
-
 	void Button::update(sf::RenderWindow& window)
 	{
 		UI::Base::update(window);
@@ -67,10 +62,10 @@ namespace UI {
 		}
 	}
 
-	bool Button::isClicked(sf::Event& event)
+	bool Button::isClicked(sf::Event& event, sf::RenderWindow& window)
 	{
 		// Check apakah button diclick
-		if (UTILS.isMouseOver(base_shape.getPosition(), base_shape.getSize().x, base_shape.getSize().y, *window) && event.type == sf::Event::MouseButtonReleased) {
+		if (UTILS.isMouseOver(base_shape.getPosition(), base_shape.getSize().x, base_shape.getSize().y, window) && event.type == sf::Event::MouseButtonReleased) {
 
 			if (usingColor) {
 				this->base_shape.setFillColor(pressed);
@@ -94,20 +89,21 @@ namespace UI {
 		target.draw(base_shape);
 	}
 
-	void Button::setColor(sf::Color main, sf::Color secondary, sf::Color disabled, sf::Color pressed, sf::Color hovered)
+	void Button::setColor(sf::Color main, sf::Color pressed, sf::Color hovered, sf::Color disabled, sf::Color secondary)
 	{
 		usingColor = true;
 
 		this->main_color = main;
-		this->hovered_color = hovered == sf::Color() ? main : hovered;
-		this->secondary = secondary == sf::Color() ? main : secondary;
-		this->pressed = pressed == sf::Color() ? main : pressed;
-		this->disabled = disabled == sf::Color() ? main : disabled;
+		this->pressed = pressed == sf::Color(-1, -1, -1, -1) ? main : pressed;
+		this->hovered_color = hovered == sf::Color(-1, -1, -1, -1) ? main : hovered;
+		this->disabled = disabled == sf::Color(-1, -1, -1, -1) ? main : disabled;
+		this->secondary = secondary == sf::Color(-1, -1, -1, -1) ? main : secondary;
 	}
-	void Button::setTexture(sf::Texture * main_texture, sf::Texture * hovered_texture, sf::Texture * secondary_texture, sf::Texture * pressed_texture, sf::Texture * disabled_texture)
+	void Button::setTexture(sf::Texture* main_texture, sf::Texture* pressed_texture, sf::Texture* hovered_texture, sf::Texture* disabled_texture, sf::Texture* secondary_texture)
 	{
 		usingColor = false;
 		this->main_texture = main_texture;
+
 		// Kalau nullptr, maka dapatnya main_texture;
 		this->hovered_texture = hovered_texture == nullptr ? main_texture : hovered_texture;
 		this->secondary_texture = secondary_texture == nullptr ? main_texture : secondary_texture;

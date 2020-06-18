@@ -11,8 +11,7 @@ void LUCY::MainMenuState::VInit()
 
 	_play.setPosition(sf::Vector2f(100.0f, 100.0f));
 	_play.setTexture(m_data->assets.GetTexturePtr("Play_Button"));
-	_play.setBounds(sf::Vector2f(200.0f, 200.0f));
-	_play.setWindow(m_data->window);
+	_play.setSize(sf::Vector2f(200.0f, 200.0f));
 	_play.init();
 
 	_cam.setCenter(sf::Vector2f(SCREEN_WIDTH / 2, 0));
@@ -48,7 +47,7 @@ void LUCY::MainMenuState::VHandleInput()
 			this->m_data->window.close();
 			this->VExit();
 		}
-		if (_play.isClicked(event))
+		if (_play.isClicked(event, m_data->window))
 		{
 			m_data->machine.AddState(StateRef(new GameState(m_data)), true);
 		}

@@ -15,24 +15,15 @@ namespace UI {
 
 		Button_State currentState = ENABLED;
 
+		// Bisa color atau texture. Tergantung yg di set terakhir
 		bool usingColor = false;
-
-		/* 
-			Color yg digunakan pada base_shape, pada berbagai state buttonnya.
-			-- Main color: Default warna button. Apabila warna lain tidak diset, fallback ke sini.
-			-- Secondary: Opsional. Tidak dipanggil kecuali mau diset toggleable. Maka switch dari main color ke secondary color.
-			-- Hovered : Ketika dihover (tapi tidak diclick. Kalau diclick ikut yg pressed)
-			-- Pressed : Ketika mouse button 1 sedang ngeclick di button ini (ditahan)
-		*/
+		
 		sf::Color			main_color;
 		sf::Color			hovered_color;
 		sf::Color			disabled;
 		sf::Color			secondary;
 		sf::Color			pressed;
-
-		/*
-			Sama spt color, tapi texture.
-		*/
+		
 		sf::Texture*		hovered_texture;
 		sf::Texture*		secondary_texture;
 		sf::Texture*		pressed_texture;
@@ -42,9 +33,7 @@ namespace UI {
 		bool hovered = false;
 
 	public:
-		Button(sf::Vector2f position = { 0, 0 }, sf::Vector2f size = { 0, 0 }) {}
-
-		void setWindow(sf::RenderWindow& win);
+		Button() {}
 
 		//Untuk buat perubahan setTexture SetColor FIX 
 		void init() override;
@@ -52,7 +41,7 @@ namespace UI {
 		// Update kondisi.
 		void update(sf::RenderWindow &window);
 
-		bool isClicked(sf::Event& event);
+		bool isClicked(sf::Event& event, sf::RenderWindow& window);
 		bool isHovered();
 	
 		// Manual draw: object.draw();
@@ -60,18 +49,18 @@ namespace UI {
 
 		void setColor(
 				sf::Color main,
-				sf::Color secondary = sf::Color(), 
-				sf::Color disabled = sf::Color(), 
-				sf::Color pressed = sf::Color(), 
-				sf::Color hovered = sf::Color()
+				sf::Color pressed = sf::Color(-1, -1, -1, -1), 
+				sf::Color hovered = sf::Color(-1, -1, -1, -1),
+				sf::Color disabled = sf::Color(-1, -1, -1, -1),
+				sf::Color secondary = sf::Color(-1, -1, -1, -1)
 		);
 
 		void setTexture(
 				sf::Texture*	main_texture,
-				sf::Texture*	hovered_texture = nullptr,
-				sf::Texture*	secondary_texture = nullptr,
 				sf::Texture*	pressed_texture = nullptr,
-				sf::Texture*	disabled_texture = nullptr
+				sf::Texture*	hovered_texture = nullptr,
+				sf::Texture*	disabled_texture = nullptr,
+				sf::Texture*	secondary_texture = nullptr
 		);
 
 		UI_Type getType() override {

@@ -1,9 +1,12 @@
-float offset = 1.0 / 256.0; // 0.0039
+#version 110
+precision mediump float;
+
 uniform sampler2D u_texture;
 uniform vec4 outline_color;
 
 void main() {
-	vec4 color = texture2D(u_texture, gl_TexCoord[0]);
+	float offset = 1.0 / 256.0; // 0.0039
+	vec4 color = texture2D(u_texture, gl_TexCoord[0].st);
 	
 	if (color.a > 0.0) {
 		gl_FragColor = color;

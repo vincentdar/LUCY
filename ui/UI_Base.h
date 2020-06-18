@@ -10,11 +10,11 @@
 namespace UI {
 
 	enum UI_Type {
-		BUTTON, TEXTFIELD, BOARD, CONFIRM, ALERT
+		CONTAINER, BUTTON, TEXTFIELD, BOARD, ALERT
 	};
 
 	enum UI_Origin {
-		TOPLEFT, CENTERED
+		TOPLEFT, CENTERED, CUSTOM
 	};
 
 	class Base
@@ -25,32 +25,21 @@ namespace UI {
 		sf::RectangleShape base_shape;
 
 		// Untuk menggerakkan UI biar smooth
-		sf::Vector2f		move_difference;
 		sf::Vector2f		move_target;
-		sf::Clock			move_timer;
+		sf::Clock			timer;
 		float				move_duration;
 		bool				isTranslating;
 
 		sf::Texture*		main_texture;
 		sf::Color			main_color;
 
-		sf::RenderWindow*	window;
-
 	public:
 		Base() {
-			main_texture = nullptr;
-			main_color = sf::Color::White;
-			
-			// Default origin: CENTERED
-			this->setOrigin(CENTERED);
+			this->main_texture = nullptr;
+			this->main_color = sf::Color::White;
 			this->isTranslating = false;
+			this->origin = TOPLEFT;
 		}
-
-		void setBounds(sf::Vector2f bounds) {
-			this->base_shape.setSize(bounds);
-		}
-
-		sf::Vector2f getBounds() { return this->base_shape.getSize(); }
 
 		void setOrigin(UI_Origin origin) {
 			this->origin = origin;
@@ -77,34 +66,7 @@ namespace UI {
 		virtual void draw(sf::RenderTarget& target) = 0;
 		virtual UI_Type getType() = 0;
 
-		// Handle input utk hal-hal yang jalan di input.
-		virtual void handleInput(sf::Event& event) {}
-
-		virtual void update(sf::RenderWindow& window) {
-			if (isTranslating) {
-
-				sf::Vector2f targetPos = UTILS.lerp(base_shape.getPosition(), move_target, 0.5);
-				base_shape.move(targetPos);
-
-				if (base_shape.getPosition() == move_target) {
-					isTranslating = false;
-				}
-			}
-		}
-
-		// Base functions
-		void setPosition(sf::Vector2f position) {
-			base_shape.setPosition(position);
-		}
-
-		sf::Vector2f getPosition() { return base_shape.getPosition(); }
-
-		void setSize(sf::Vector2f size) {
-			base_shape.setSize(size);
-		}
-
-		sf::Vector2f getSize() { return base_shape.getSize(); }
-
+		// Setup main color, main texture.
 		virtual void setColor(sf::Color main) {
 			main_color = main;
 
@@ -116,6 +78,43 @@ namespace UI {
 
 			base_shape.setTexture(texture);
 		}
+
+		void translate(sf::Vector2f target, float seconds) {
+			isTranslating = true;
+			move_target = target;
+			move_duration = seconds;
+		}
+
+		// Handle input utk hal-hal yang perlu pakai event.
+		virtual void handleInput(sf::Event& event, sf::RenderWindow& window) {}
+
+		virtual void update(sf::RenderWindow& window) {
+			if (isTranslating) {
+
+				float time_percentage = UTILS.getValueFromRange(0, move_duration, 0, 1, timer.getElapsedTime().asSeconds());
+
+				sf::Vector2f lerpedVec = UTILS.lerp(base_shape.getPosition(), move_target, time_percentage);
+
+				base_shape.setPosition(lerpedVec);
+
+				if (base_shape.getPosition() == move_target) {
+					isTranslating = false;
+				}
+			}
+		}
+
+		// PAM
+		void setPosition(sf::Vector2f position) {
+			base_shape.setPosition(position);
+		}
+
+		void setSize(sf::Vector2f size) {
+			base_shape.setSize(size);
+		}
+
+		sf::Vector2f getPosition() { return base_shape.getPosition(); }
+
+		sf::Vector2f getSize() { return base_shape.getSize(); }
 	};
 
 }

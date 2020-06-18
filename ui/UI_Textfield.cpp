@@ -66,9 +66,13 @@ namespace UI
 		}
 	}
 
-	void Textfield::handleInput(sf::Event & event)
+	void Textfield::handleInput(sf::Event & event, sf::RenderWindow& window)
 	{
 		if (!fieldIsSelected) {
+			if (event.type == sf::Event::MouseButtonPressed &&
+				UTILS.isMouseOver(base_shape.getPosition(), base_shape.getSize().x, base_shape.getSize().y, window)) {
+				fieldIsSelected = true;
+			}
 			return;
 		}
 
@@ -80,7 +84,7 @@ namespace UI
 			}
 
 			// Translate to ASCII
-			if (charPressed >= sf::Keyboard::A && 
+			if (charPressed >= sf::Keyboard::A &&
 				charPressed <= sf::Keyboard::Z) {
 
 				// Check apakah huruf besar / kecil.
@@ -108,6 +112,7 @@ namespace UI
 			else if (charPressed == sf::Keyboard::Enter) {
 				isSubmitted = true;
 				submittedText = enteredText;
+				enteredText.clear();
 			}
 			else if (charPressed == sf::Keyboard::BackSpace) {
 				if (!enteredText.empty())

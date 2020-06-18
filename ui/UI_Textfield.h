@@ -34,7 +34,7 @@ namespace UI
 
 		void update(sf::RenderWindow& window) override;
 
-		void handleInput(sf::Event& event) override;
+		void handleInput(sf::Event& event, sf::RenderWindow& window) override;
 
 		void setAllowSpaces(bool allowSpaces);
 		void setMaxCharacters(int max);

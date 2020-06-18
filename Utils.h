@@ -73,8 +73,7 @@ public:
 
 	sf::Vector2f lerp(sf::Vector2f position, sf::Vector2f target, float time)
 	{
-		return (sf::Vector2f(position.x * (1.0 - time) , position.y * (1.0 - time))
-			+ (target * time));
+		return (position + (target - position) * time);
 	}
 
 	float getTextWidth(sf::Text& text) 
@@ -82,6 +81,17 @@ public:
 		return text.findCharacterPos(
 			text.getString().getSize()
 		).x - text.getGlobalBounds().left;
+	}
+
+	float getValueFromRange(float oldMin, float oldMax, float newMin, float newMax, float oldVal) {
+		float oldRange = oldMax - oldMin;
+		float newRange = newMax - newMin;
+
+		if (oldRange == 0) {
+			return newMin;
+		}
+
+		return (oldVal - oldMin) * newRange / oldRange + newMin;
 	}
 
 	/*

@@ -40,7 +40,7 @@ namespace UI
 		bool isDisplayed = false;
 
 	public:
-		Board();
+		Board(){}
 		Board(sf::Font* font, sf::Font* font_head, const std::string& head, const std::string& body, float duration = -1);
 
 		void setup(sf::Font* font, sf::Font* font_head, const std::string& head, const std::string& body, float duration = -1);
