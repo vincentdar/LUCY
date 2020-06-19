@@ -9,6 +9,42 @@ void LUCY::GameState::saveToFile(int slot)
 
 void LUCY::GameState::loadFromFile(int slot)
 {
+
+}
+
+void LUCY::GameState::UISetup()
+{
+	// Setup container
+	bottom_ui.setOrigin(UI::TOPLEFT);
+	//bottom_ui.setColor(sf::Color::White);
+	bottom_ui.setPosition(sf::Vector2f(400, data->window.getSize().y - 200));
+	bottom_ui.setSize(sf::Vector2f(data->window.getSize().x - 400, 200));
+	bottom_ui.setTexture(data->assets.GetTexturePtr("UI_Box"));
+
+	// Add UI components
+	bottom_ui.addComponent("Archer", new UI::Button(), sf::Vector2f(20, 10));
+
+	// Archer
+	UI::Button* btn1 = bottom_ui.getComponent<UI::Button>("Archer");
+	btn1->setOrigin(UI::TOPLEFT);
+	btn1->setSize(sf::Vector2f(37 * 2.2, 53 * 2.2));
+	btn1->setTexture(data->assets.GetTexturePtr("Archer_Black"));
+	btn1->setTextureRect(sf::IntRect(0, 53, 37, 53));
+
+	// First alert
+	alert.setSize(sf::Vector2f(800, 300));
+	alert.setOrigin(UI::CENTERED);
+	alert.setPosition(sf::Vector2f(data->window.getSize().x / 2.0, 0.0));
+	alert.setTitle("Hello World!");
+	alert.setContent("Welcome to the game!\nHere's how to play!");
+	alert.setTitleCharacterSize(40);
+	alert.setContentCharacterSize(25);
+	alert.setFont(data->assets.GetFontPtr("Press_Start"));
+	alert.setTexture(data->assets.GetTexturePtr("UI_Box"));
+	alert.init();
+	alert.show();
+
+	alert.translate(sf::Vector2f(data->window.getSize().x / 2.0, data->window.getSize().y / 2.0), 2.0);
 }
 
 void LUCY::GameState::onExitClear()
@@ -36,37 +72,11 @@ void LUCY::GameState::VInit()
 		lane.spawnEnemyUnit(new Archer(data));
 	}
 	lanes[0].getEnemyUnit(0)->run();
-	lanes[0].getEnemyUnit(0)->setOutlineState(HITFLASH);
+
+	UISetup();
+	//bottom_ui.translate(sf::Vector2f(400, data->window.getSize().y - 200), 2);
 	
-	container1.setPosition(sf::Vector2f(100, 100));
-	container1.setSize(sf::Vector2f(200, 200));
-	container1.setOrigin(UI::TOPLEFT);
-	container1.addComponent("Button", new UI::Button(), sf::Vector2f(0, 0));
-
-	container1.getComponent<UI::Button>("Button")->setOrigin(UI::CENTERED);
-	container1.getComponent<UI::Button>("Button")->setSize(sf::Vector2f(100, 50));
-	container1.getComponent<UI::Button>("Button")->setTexture(data->assets.GetTexturePtr("bar"));
-
-	container1.addComponent("Textbox", new UI::Textfield(), sf::Vector2f(0, 0));
-	container1.getComponent<UI::Textfield>("Textbox")->setOrigin(UI::TOPLEFT);
-	container1.getComponent<UI::Textfield>("Textbox")->setSelected(true);
-	container1.getComponent<UI::Textfield>("Textbox")->setSize({ 200, 20 });
-	container1.getComponent<UI::Textfield>("Textbox")->setup(data->assets.GetFontPtr("Press_Start"), "Hello", sf::Color::Blue);
-	container1.getComponent<UI::Textfield>("Textbox")->setMaxCharacters(100);
-
-	alert.setSize(sf::Vector2f(800, 300));
-	alert.setOrigin(UI::CENTERED);
-	alert.setPosition(sf::Vector2f(data->window.getSize().x / 2.0, 0.0));
-	alert.setTitle("Hello World!");
-	alert.setContent("Welcome to the game!\nHere's how to play!");
-	alert.setTitleCharacterSize(40);
-	alert.setContentCharacterSize(25);
-	alert.setFont(data->assets.GetFontPtr("Press_Start"));
-	alert.setTexture(data->assets.GetTexturePtr("UI_Box"));
-	alert.init();
-	alert.show();
-
-	alert.translate(sf::Vector2f(data->window.getSize().x / 2.0, data->window.getSize().y / 2.0), 2.0);
+	
 }
 
 void LUCY::GameState::VHandleInput()
@@ -81,11 +91,12 @@ void LUCY::GameState::VHandleInput()
 		default:
 			break;
 		}
-		container1.handleInput(event, data->window);
+
+		bottom_ui.handleInput(event, data->window);
 		alert.handleInput(event, data->window);
 
-		if (container1.getComponent<UI::Button>("Button")->isClicked(event, data->window)) {
-			printf("Hello World!\n");
+		if (bottom_ui.getComponent<UI::Button>("Archer")->isClicked(event, data->window)) {
+			lanes[0].spawnEnemyUnit(new Archer(data));
 		}
 	}
 
@@ -101,7 +112,7 @@ void LUCY::GameState::VUpdate(float dt)
 
 	alert.update(data->window);
 
-	container1.update(data->window);
+	bottom_ui.update(data->window);
 }
 
 void LUCY::GameState::VDraw(float dt)
@@ -113,13 +124,13 @@ void LUCY::GameState::VDraw(float dt)
 
 	renderTexture.draw(background);
 
-	container1.draw(renderTexture);
 
 	for (int i = 0; i < 6; i++) {
 		for (int j = 0; j < lanes[i].getEnemyCount(); j++) {
 			lanes[i].getEnemyUnit(j)->draw(renderTexture);
 		}
 	}
+	bottom_ui.draw(renderTexture);
 
 	alert.draw(renderTexture);
 

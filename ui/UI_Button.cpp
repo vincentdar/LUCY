@@ -5,31 +5,32 @@
 namespace UI {
 
 	void Button::init() {
-		if (currentState == DISABLED) {
-			if (usingColor) {
-				this->base_shape.setFillColor(disabled);
-			}
-			else {
-				this->base_shape.setTexture(disabled_texture);
-			}
-			return;
+		
+	}
+
+	void Button::handleInput(sf::Event & event, sf::RenderWindow & window)
+	{
+		if (!enabled) return;
+
+		if (isHovered(event, window)) {
+			hovered = true;
 		}
 		else {
-			if (usingColor) {
-				this->base_shape.setFillColor(main_color);
-			}
-			else {
-				this->base_shape.setTexture(main_texture);
-			}
+			hovered = false;
+		}
+
+		if (isClicked(event, window)) {
+			clicked = true;
+		}
+		else {
+			clicked = false;
 		}
 	}
 
 	void Button::update(sf::RenderWindow& window)
 	{
-		UI::Base::update(window);
-
 		// Check apakah button disabled
-		if (currentState == DISABLED) {
+		if (!enabled) {
 			if (usingColor) {
 				this->base_shape.setFillColor(disabled);
 			}
@@ -38,50 +39,54 @@ namespace UI {
 			}
 			return;
 		}
-		else {
-			if (usingColor) {
+
+		if (usingColor) {
+			if (!usingSecondary)
 				this->base_shape.setFillColor(main_color);
-			}
-			else {
+			else
+				this->base_shape.setFillColor(secondary);
+		}
+		else {
+			if (!usingSecondary)
 				this->base_shape.setTexture(main_texture);
-			}
+			else
+				this->base_shape.setTexture(secondary_texture);
 		}
 
 		// Check apakah button hovered
-		if (UTILS.isMouseOver(base_shape.getPosition(), base_shape.getSize().x, base_shape.getSize().y, window)) {
-			currentState = ISHOVERED;
-
+		if (hovered) {
 			if (usingColor) {
 				this->base_shape.setFillColor(hovered_color);
 			}
 			else {
 				this->base_shape.setTexture(hovered_texture);
 			}
-
-			hovered = true;
 		}
-	}
-
-	bool Button::isClicked(sf::Event& event, sf::RenderWindow& window)
-	{
-		// Check apakah button diclick
-		if (UTILS.isMouseOver(base_shape.getPosition(), base_shape.getSize().x, base_shape.getSize().y, window) && event.type == sf::Event::MouseButtonReleased) {
-
+		 
+		if (clicked) 
+		{
 			if (usingColor) {
 				this->base_shape.setFillColor(pressed);
 			}
 			else {
 				this->base_shape.setTexture(pressed_texture);
 			}
-
-			return true;
+			return;
 		}
-		return false;
 	}
 
-	bool Button::isHovered()
+	bool Button::isClicked(sf::Event& event, sf::RenderWindow& window)
 	{
-		return hovered;
+		return (UTILS.isMouseOver(
+			sf::Vector2f(base_shape.getGlobalBounds().left, base_shape.getGlobalBounds().top),
+			base_shape.getSize().x, base_shape.getSize().y, window) && event.type == sf::Event::MouseButtonPressed);
+	}
+
+	bool Button::isHovered(sf::Event& event, sf::RenderWindow& window)
+	{
+		return UTILS.isMouseOver(
+			sf::Vector2f(base_shape.getGlobalBounds().left, base_shape.getGlobalBounds().top),
+			base_shape.getSize().x, base_shape.getSize().y, window);
 	}
 
 	void Button::draw(sf::RenderTarget& target)
@@ -94,10 +99,10 @@ namespace UI {
 		usingColor = true;
 
 		this->main_color = main;
-		this->pressed = pressed == sf::Color(-1, -1, -1, -1) ? main : pressed;
-		this->hovered_color = hovered == sf::Color(-1, -1, -1, -1) ? main : hovered;
-		this->disabled = disabled == sf::Color(-1, -1, -1, -1) ? main : disabled;
-		this->secondary = secondary == sf::Color(-1, -1, -1, -1) ? main : secondary;
+		this->pressed = pressed;
+		this->hovered_color = hovered;
+		this->disabled = disabled;
+		this->secondary = secondary;
 	}
 	void Button::setTexture(sf::Texture* main_texture, sf::Texture* pressed_texture, sf::Texture* hovered_texture, sf::Texture* disabled_texture, sf::Texture* secondary_texture)
 	{

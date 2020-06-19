@@ -9,7 +9,6 @@
 #include "ui/UI_Base.h"
 #include "ui/UI_Container.h"
 #include "ui/UI_Button.h"
-#include "ui/UI_Board.h"
 #include "ui/UI_Textfield.h"
 #include "ui/UI_Alert.h"
 
@@ -48,12 +47,16 @@ namespace LUCY {
 
 		int saveSlot;
 
-		UI::Container container1;
+		UI::Container bottom_ui;
+
 		UI::Alert alert;
+
+		// Functions untuk create UI dll
+		void UISetup();
 
 	public:
 		GameState(GameDataRef data, int saveSlot = -1) 
-			: data(data), saveSlot(-1) {}
+			: data(data), saveSlot(saveSlot) {}
 
 		// Fungsi khusus di GameState
 		void onExitClear();

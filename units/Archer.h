@@ -39,11 +39,12 @@ public:
 
 		charSprite.setScale(2, 2);
 		charSprite.setPosition(position);
-		animator.playAnimation("Idle");
+		animator.playAnimation("Move");
 	}
 
 	void update() {
 		animator.updateAnimation();
+		charSprite.move(-1, 0);
 	}
 
 	void attack() {

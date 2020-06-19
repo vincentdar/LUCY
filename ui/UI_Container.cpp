@@ -3,13 +3,11 @@
 namespace UI 
 {
 	Container::Container()
-	{
-		base_shape = sf::RectangleShape(sf::Vector2f(0, 0));
-	}
+	{}
 
 	Container::Container(sf::Vector2f position, sf::Vector2f size, UI_Origin origin)
 	{
-		base_shape = sf::RectangleShape(size);
+		base_shape.setSize(size);
 		base_shape.setPosition(position);
 
 		setOrigin(origin);
@@ -67,16 +65,6 @@ namespace UI
 		components.erase(key);
 	}
 
-	/*Button * Container::getComponent(const std::string& key)
-	{
-		Button* cast = dynamic_cast<Button*>(components[key]);
-
-		if (cast == nullptr) {
-			printf("Incompatible pointer casting.\n");
-		}
-		return cast;
-	}*/
-
 	void Container::setComponentPosition(const std::string& key, sf::Vector2f position)
 	{
 		if (components.find(key) == components.end()) {
@@ -95,6 +83,7 @@ namespace UI
 
 	void Container::draw(sf::RenderTarget & target)
 	{
+		target.draw(base_shape);
 		for (auto const& component : components) {
 			component.second->draw(target);
 		}

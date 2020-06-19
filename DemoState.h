@@ -6,7 +6,6 @@
 #include "units/GoldenKnight.h"
 #include "units/Archer.h"
 #include "units/Spearman.h"
-#include "ui/UI_Board.h"
 #include "ui/UI_Button.h"
 #include "ui/UI_Textfield.h"
 #include "Camera.h"

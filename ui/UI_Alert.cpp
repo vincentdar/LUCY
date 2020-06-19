@@ -79,9 +79,14 @@ namespace UI
 
 	void Alert::handleInput(sf::Event & event, sf::RenderWindow& window)
 	{
-		if (isShown) {
-			if (event.type == sf::Event::MouseButtonPressed &&
-				UTILS.isMouseOver(base_shape.getPosition(), base_shape.getSize().x, base_shape.getSize().y, window)) {
+		if (isShown && event.type == sf::Event::MouseButtonPressed) {
+			
+			if (UTILS.isMouseOver(
+				sf::Vector2f(
+					base_shape.getGlobalBounds().left,
+					base_shape.getGlobalBounds().top ),
+				base_shape.getSize().x, base_shape.getSize().y, window))
+			{
 				hide();
 			}
 		}
