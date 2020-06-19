@@ -32,17 +32,6 @@ namespace UI
 		return CONTAINER;
 	}
 
-	void Container::setOrigin(UI_Origin origin)
-	{
-		this->origin = origin;
-	}
-
-	void Container::setOrigin(sf::Vector2f origin)
-	{
-		this->origin = CUSTOM;
-		base_shape.setOrigin(origin);
-	}
-
 	void Container::addComponent(std::string key, UI::Base * new_component, sf::Vector2f position)
 	{
 		if (components.find(key) != components.end()) {
@@ -87,8 +76,6 @@ namespace UI
 		for (auto const& component : components) {
 			component.second->draw(target);
 		}
-
-		//std::cout << getComponent("Button")->getPosition().x << " " << getComponent("Button")->getPosition().y << std::endl;
 	}
 
 	void Container::update(sf::RenderWindow& window)

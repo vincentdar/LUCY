@@ -49,7 +49,7 @@ void LUCY::MainMenuState::VHandleInput()
 		}
 		if (_play.isClicked(event, m_data->window))
 		{
-			m_data->machine.AddState(StateRef(new GameState(m_data)), true);
+			m_data->machine.AddState(StateRef(new GameState(m_data)), false);
 		}
 	}
 }

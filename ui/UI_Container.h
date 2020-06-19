@@ -28,9 +28,6 @@ namespace UI
 		void update(sf::RenderWindow& window) override;
 		void handleInput(sf::Event& event, sf::RenderWindow& window) override;
 
-		void setOrigin(UI_Origin origin);
-		void setOrigin(sf::Vector2f origin);
-
 		void addComponent(std::string key, 
 							UI::Base* new_component, 
 							sf::Vector2f position = { 0, 0 });

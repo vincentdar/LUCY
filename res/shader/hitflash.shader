@@ -1,5 +1,3 @@
-#version 120
-
 uniform sampler2D u_texture;
 
 void main() {

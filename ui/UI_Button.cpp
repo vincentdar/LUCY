@@ -27,8 +27,25 @@ namespace UI {
 		}
 	}
 
+	void Button::setText(std::string text)
+	{
+		this->text.setCharacterSize(30);
+		this->text.setString(text);
+	}
+
+	void Button::setFont(sf::Font * font)
+	{
+		this->font = font;
+		this->text.setFont(*this->font);
+	}
+
 	void Button::update(sf::RenderWindow& window)
 	{
+		this->text.setPosition(
+			base_shape.getGlobalBounds().left + base_shape.getGlobalBounds().width / 2.0 - UTILS.getTextWidth(text) / 2.0,
+			base_shape.getGlobalBounds().top + base_shape.getGlobalBounds().height / 2.0 - 15
+		);
+
 		// Check apakah button disabled
 		if (!enabled) {
 			if (usingColor) {
@@ -92,6 +109,7 @@ namespace UI {
 	void Button::draw(sf::RenderTarget& target)
 	{
 		target.draw(base_shape);
+		target.draw(text);
 	}
 
 	void Button::setColor(sf::Color main, sf::Color pressed, sf::Color hovered, sf::Color disabled, sf::Color secondary)

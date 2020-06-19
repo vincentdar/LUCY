@@ -24,6 +24,9 @@ namespace UI {
 
 		sf::IntRect			currentTexRect;
 
+		sf::Font*			font;
+		sf::Text			text;
+
 		// Button states
 		bool clicked = false;
 		bool hovered = false;
@@ -36,6 +39,9 @@ namespace UI {
 		//Untuk buat perubahan setTexture SetColor FIX 
 		void init() override;
 		void handleInput(sf::Event& event, sf::RenderWindow& window) override;
+
+		void setText(std::string text);
+		void setFont(sf::Font* font);
 
 		// Update kondisi.
 		void update(sf::RenderWindow &window);

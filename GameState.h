@@ -14,7 +14,10 @@
 
 #include "Lane.h"
 
-#define ENEMY_SPAWN_X data->window.getSize().x
+#define ENEMY_SPAWN_X data->window.getSize().x + 100
+#define TOTAL_LANES 5
+#define BOTTOM_UI_HEIGHT 180
+#define LANE_HEIGHT (data->window.getSize().y - BOTTOM_UI_HEIGHT) / TOTAL_LANES
 
 namespace LUCY {
 
@@ -45,14 +48,19 @@ namespace LUCY {
 
 		sf::Sprite background;
 
+		sf::RectangleShape selectionArea;  
+
 		int saveSlot;
 
 		UI::Container bottom_ui;
+
+		UI::Container pause_menu;
 
 		UI::Alert alert;
 
 		// Functions untuk create UI dll
 		void UISetup();
+		void displayPauseMenu();
 
 	public:
 		GameState(GameDataRef data, int saveSlot = -1) 

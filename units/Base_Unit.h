@@ -69,7 +69,9 @@ public:
 		charSprite.setOrigin(charSprite.getLocalBounds().width / 2.0, charSprite.getLocalBounds().height);
 
 		if (ostate == NOSKILL) {
-			target.draw(charSprite);
+			shader.loadFromFile("res/shader/healing.shader", sf::Shader::Fragment);
+			shader.setUniform("u_time", internal_timer.getElapsedTime().asSeconds());
+			target.draw(charSprite, &shader);
 			return;
 		}
 		else {

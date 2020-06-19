@@ -101,6 +101,7 @@ namespace UI {
 					isTranslating = false;
 				}
 			}
+
 		}
 
 		// PAM

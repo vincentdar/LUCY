@@ -55,6 +55,15 @@ public:
 		}
 	}
 
+	int screenPositionToLaneMap(sf::Vector2i position, int start, int laneCount, int height) {
+		if (position.y < start || position.y >= start + laneCount * height) {
+			return -1;
+		}
+		else {
+			return (position.y - start) / (height - start);
+		}
+	}
+
 	std::string getLowercase(std::string str) {
 		for (int i = 0; i < str.length(); i++) {
 			str[i] = tolower(str[i]);
