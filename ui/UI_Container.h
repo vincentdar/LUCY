@@ -41,15 +41,11 @@ namespace UI
 			if (dynamic_cast<T*>(components[key]) == nullptr) {
 				std::cout << "Incompatible pointer casting of " << key << ".\n";
 			}
-
 			return cast;
 		}
 
-		//Button* getComponent(const std::string& key);
-
 		// Set position relatif thd base_shape position.
 		void setComponentPosition(const std::string& key, sf::Vector2f position);
-
 		
 	};
 }

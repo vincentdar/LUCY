@@ -10,6 +10,7 @@
 #include "ui/UI_Container.h"
 #include "ui/UI_Button.h"
 #include "ui/UI_Textfield.h"
+#include "ui/UI_Text.h"
 #include "ui/UI_Alert.h"
 
 #include "Lane.h"
@@ -17,7 +18,7 @@
 #define ENEMY_SPAWN_X data->window.getSize().x + 100
 #define TOTAL_LANES 5
 #define BOTTOM_UI_HEIGHT 180
-#define LANE_HEIGHT (data->window.getSize().y - BOTTOM_UI_HEIGHT) / TOTAL_LANES
+#define LANE_HEIGHT ((data->window.getSize().y - BOTTOM_UI_HEIGHT) / TOTAL_LANES)
 
 namespace LUCY {
 
@@ -37,26 +38,30 @@ namespace LUCY {
 		bool isPausing = false;
 
 		// Spawn-related
-
 		int totalNumberOfFriendlyUnits;
 		Lane lanes[6];
-
+		int saveSlot;
 		int waveNumber;
 
 		GameDataRef data;
+		
+		
+		// Render variables
 		sf::RenderTexture renderTexture;
-
 		sf::Sprite background;
 
+		// Area selection
 		sf::RectangleShape selectionArea;  
 
-		int saveSlot;
-
+		// UI Elements
 		UI::Container bottom_ui;
-
+		UI::Container resources_ui;
 		UI::Container pause_menu;
-
 		UI::Alert alert;
+
+		sf::Text cashText, foodText;
+
+		std::string cashStr, foodStr;
 
 		// Functions untuk create UI dll
 		void UISetup();

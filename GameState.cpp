@@ -14,14 +14,30 @@ void LUCY::GameState::loadFromFile(int slot)
 
 void LUCY::GameState::UISetup()
 {
-	// Setup container
+	// Setup container unit
 	bottom_ui.setOrigin(UI::TOPLEFT);
 	bottom_ui.setPosition(sf::Vector2f(400, data->window.getSize().y - BOTTOM_UI_HEIGHT));
 	bottom_ui.setSize(sf::Vector2f(data->window.getSize().x - 400, BOTTOM_UI_HEIGHT));
 	bottom_ui.setTexture(data->assets.GetTexturePtr("UI_Box"));
 
+	// Setup container resource
+	resources_ui.setOrigin(UI::TOPLEFT);
+	resources_ui.setPosition(sf::Vector2f(0, data->window.getSize().y - BOTTOM_UI_HEIGHT));
+	resources_ui.setSize(sf::Vector2f(400, BOTTOM_UI_HEIGHT));
+	resources_ui.setTexture(data->assets.GetTexturePtr("UI_Box"));
+
 	// Add UI components
 	bottom_ui.addComponent("Archer", new UI::Button(), sf::Vector2f(20, 10));
+
+	// Setup resources
+	foodStr = "Food: ";
+	cashStr = "Cash: ";
+	cashText.setPosition(resources_ui.getPosition().x + 20, resources_ui.getPosition().y + 30);
+	cashText.setFont(*data->assets.GetFontPtr("Press_Start"));
+	cashText.setCharacterSize(15);
+	foodText.setPosition(resources_ui.getPosition().x + 20, resources_ui.getPosition().y + 80);
+	foodText.setFont(*data->assets.GetFontPtr("Press_Start"));
+	foodText.setCharacterSize(15);
 
 	// Archer
 	UI::Button* btn1 = bottom_ui.getComponent<UI::Button>("Archer");
@@ -29,6 +45,8 @@ void LUCY::GameState::UISetup()
 	btn1->setSize(sf::Vector2f(37 * 2.2, 53 * 2.2));
 	btn1->setTexture(data->assets.GetTexturePtr("Archer_Black"));
 	btn1->setTextureRect(sf::IntRect(0, 53, 37, 53));
+
+	// UI
 
 	// Opening alert setup
 	alert.setSize(sf::Vector2f(800, 300));
@@ -92,6 +110,9 @@ void LUCY::GameState::onExitClear()
 
 void LUCY::GameState::VInit()
 {
+	// Default resource setup (klo load nanti dioverwrite
+	cash = food = 0;
+
 	// Load game?
 	if (saveSlot != -1) {
 		loadFromFile(saveSlot);
@@ -99,8 +120,8 @@ void LUCY::GameState::VInit()
 
 	renderTexture.create(data->window.getSize().x, data->window.getSize().y);
 
-	selectionArea.setSize(sf::Vector2f(500, 500));
-	selectionArea.setFillColor(sf::Color::Green);
+	selectionArea.setSize(sf::Vector2f(86, LANE_HEIGHT));
+	selectionArea.setFillColor(sf::Color(0, 255, 0, 100));
 	selectionArea.setOrigin(selectionArea.getGlobalBounds().width / 2.0, selectionArea.getGlobalBounds().height / 2.0);
 
 	background.setTexture(*data->assets.GetTexturePtr("Grass"));
@@ -120,25 +141,17 @@ void LUCY::GameState::VInit()
 
 void LUCY::GameState::VHandleInput()
 {
-	int e = UTILS.screenPositionToLaneMap(sf::Mouse::getPosition(data->window),
-		0, 5, LANE_HEIGHT);
-	if (e != -1) {
-		selectionArea.setPosition(sf::Mouse::getPosition(data->window).x, sf::Mouse::getPosition(data->window).y);
-	}
-
 	sf::Event event;
 	while (data->window.pollEvent(event)) {
-		switch (event.type) {
-		case sf::Event::Closed:
+		
+		if (event.type == sf::Event::Closed) {
 			VExit();
 			data->window.close();
-			break;
-		case sf::Event::KeyPressed:
+		}
+		else if (event.type == sf::Event::KeyPressed) {
 			if (event.key.code == sf::Keyboard::Escape) {
 				isPausing = !isPausing;
 			}
-		default:
-			break;
 		}
 
 		// Non game inputs
@@ -150,6 +163,12 @@ void LUCY::GameState::VHandleInput()
 
 			if (bottom_ui.getComponent<UI::Button>("Archer")->isClicked(event, data->window)) {
 				lanes[0].spawnEnemyUnit(new Archer(data));
+			}
+
+			if (event.type == sf::Event::MouseButtonPressed) {
+				int laneNo = UTILS.screenPositionToLaneMap(sf::Mouse::getPosition(data->window), 0, TOTAL_LANES, LANE_HEIGHT);
+				if (laneNo != -1)
+					lanes[UTILS.screenPositionToLaneMap(sf::Mouse::getPosition(data->window), 0, TOTAL_LANES, LANE_HEIGHT)].spawnEnemyUnit(new Archer(data));
 			}
 		}
 		// Pause inputs
@@ -173,14 +192,34 @@ void LUCY::GameState::VUpdate(float dt)
 
 	bottom_ui.update(data->window);
 
+	resources_ui.update(data->window);
+
+	std::stringstream oss;
+	oss << food;
+
+	foodText.setString(foodStr + oss.str());
+
+	oss.str(std::string());
+	oss << cash;
+
+	cashText.setString(cashStr + oss.str());
+
 	if (isPausing) {
 		pause_menu.update(data->window);
 		return;
 	}
 
-	std::cout << sf::Mouse::getPosition(data->window).x << " " << sf::Mouse::getPosition(data->window).y << std::endl;
+	int index = UTILS.screenPositionToLaneMap(sf::Mouse::getPosition(data->window), 0, TOTAL_LANES, LANE_HEIGHT);
 
-	selectionArea.setPosition(sf::Mouse::getPosition(data->window).x, sf::Mouse::getPosition(data->window).y);
+	selectionArea.setOrigin(0, 0);
+	if (index != -1)
+		selectionArea.setPosition(sf::Mouse::getPosition(data->window).x - 43, LANE_HEIGHT * index);
+
+	
+
+	std::cout << cashStr << std::endl;
+	std::cout << foodStr << std::endl;
+
 
 	for (Lane &lane : lanes) {
 		for (int i = 0; i < lane.getEnemyCount(); i++) {
@@ -198,12 +237,19 @@ void LUCY::GameState::VDraw(float dt)
 
 	renderTexture.draw(background);
 
+
 	for (int i = 0; i < TOTAL_LANES; i++) {
 		for (int j = 0; j < lanes[i].getEnemyCount(); j++) {
 			lanes[i].getEnemyUnit(j)->draw(renderTexture);
 		}
 	}
 	bottom_ui.draw(renderTexture);
+
+	resources_ui.draw(renderTexture);
+
+	renderTexture.draw(cashText);
+
+	renderTexture.draw(foodText);
 
 	renderTexture.draw(selectionArea);
 

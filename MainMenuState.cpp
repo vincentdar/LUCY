@@ -7,7 +7,7 @@ LUCY::MainMenuState::MainMenuState(GameDataRef data) : m_data(data)
 
 void LUCY::MainMenuState::VInit()
 {
-	_background.setTexture(m_data->assets.GetTexture("MenuBG"));
+	_background.setTexture(*m_data->assets.GetTexturePtr("MenuBG"));
 
 	_play.setPosition(sf::Vector2f(100.0f, 100.0f));
 	_play.setTexture(m_data->assets.GetTexturePtr("Play_Button"));

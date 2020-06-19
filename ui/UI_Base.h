@@ -5,8 +5,6 @@
 
 #include "../Utils.h"
 
-// TODO: Move base shape to position in a certain timeframe
-
 namespace UI {
 
 	enum UI_Type {
