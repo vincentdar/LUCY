@@ -16,30 +16,32 @@ enum OutlineState {
 class BaseUnit
 {
 protected:
-	float HP, MP, HPRegen, MPRegen, MovementSpeed, Attack, Defend, ShieldHP, attackUp, defenseUp;
+	float HP, Attack, Defend, attackRange, dot, attackSpeed;
+	int currentLane;
 
 	bool isAlive;
-	bool isHit;
+	bool isStunned;
 
 	// Unit visuals
-	Animator			animator;
-	sf::Sprite			charSprite;
+	Animator animator;
+	sf::Sprite charSprite;
 
 	// Unit sound effects player
-	sf::Sound			sound;
+	sf::Sound sound;
 
 	// Unit shaders
-	sf::Shader			shader;
+	sf::Shader shader;
 
 	// State utk nunjukkan hrs pakai shader apa
-	OutlineState		ostate;
+	OutlineState ostate;
 
-	sf::Clock			internal_timer;
-	float				time_var;
+	sf::Clock internal_timer;
+	float time_var;
+
+	sf::RenderTarget *target; //idk how to use this
 
 	// Utk handle window dll
-	GameDataRef			data;
-	sf::RenderTarget*	target;
+	GameDataRef data;
 
 public:
 	BaseUnit(GameDataRef data) : data(data), ostate(NOSKILL)
@@ -48,30 +50,30 @@ public:
 		shader.setUniform("u_texture", sf::Shader::CurrentTexture);
 	}
 
-	void setUnit(float hp, float mp, float hregen, float mregen, float ms, float atk, float def, float shp, int block) {
+	virtual void setUnit(float hp, float atk, float def, int block, float range, float doT, int lane, float as) {
 		HP *= hp;
-		MP *= mp;
-		HPRegen *= hregen;
-		MPRegen *= mregen;
-		MovementSpeed *= ms;
 		Attack *= atk;
 		Defend *= def;
-		ShieldHP *= shp;
+		attackRange = range;
+		dot = doT;
+		currentLane = lane;
+		attackSpeed = as;
 	}
-	
-	virtual void setup(sf::Vector2f position) = 0;
 
+	int getCurrentLane() { return currentLane; }
+	void setCurrentLane(int lane) { currentLane = lane; }
+	
+	void setDoT(float dt) { dot = dt; }
+	float getDoT() { return dot; }
+
+	virtual void setup(sf::Vector2f position) = 0;
 	virtual void update() = 0;
 
 	// Fungsi draw -> bisa draw saja atau dgn tambahan shader
 	virtual void draw(sf::RenderTarget& target) {
 
-		charSprite.setOrigin(charSprite.getLocalBounds().width / 2.0, charSprite.getLocalBounds().height);
-
 		if (ostate == NOSKILL) {
-			shader.loadFromFile("res/shader/healing.shader", sf::Shader::Fragment);
-			shader.setUniform("u_time", internal_timer.getElapsedTime().asSeconds());
-			target.draw(charSprite, &shader);
+			target.draw(charSprite);
 			return;
 		}
 		else {
@@ -121,58 +123,20 @@ public:
 	virtual void idle() {}
 	virtual void die() {}
 
-	void takeDamage(float damage) {
-
-		ostate = HITFLASH;
-
-		if (ShieldHP > 0) {
-
-			ShieldHP -= damage;
-
-			if (ShieldHP < 0) {
-				HP += (ShieldHP - Defend - defenseUp);
-				ShieldHP = 0;
-			}
-		}
-		else
-			HP -= (damage - Defend - defenseUp);
+	virtual void takeDamage(float damage) {
+		HP -= damage;
 
 		if (HP <= 0)
 			isAlive = false;
-
-		//i still have no idea on what to do with isHit var, initially
-		//initially i wanted to make it that if the unit gets hit, then isHit is set
-		//to true, and then after some deltaTime then the isHit is set to false
-		//this will allow the unit to do / play / activate some of the passive ability
-		//the unit have
-	}
-
-	void getShieldHP(float value) {
-		ShieldHP += value;
-	}
-
-	void regenEverything() {
-		HP += HPRegen;
-		MP += MPRegen;
-	}
-
-	void updateHPRegen(float value) {
-		HPRegen += value;
-	}
-
-	void updateMPRegen(float value) {
-		MPRegen += value;
-	}
-
-	void updateAttack(float value) {
-		attackUp = Attack * value; //Value is the % of dmg, EG value = 0.5 which means 50%Attack
-	}
-
-	void updateDefend(float value) {
-		defenseUp = Defend * value; //This will help to reset to the original value
+		ostate = HITFLASH;
 	}
 
 	void blockEnemy() { //this function is supposed to count how many enemy this / the unit is currently holding, if it exceds, then the new enemy will pass thru, i think a vector is needed (?)
 
 	}
+
+	virtual void Skill1() {}
+	virtual void Skill2() {}
+	virtual void Ultimate() {}
+	virtual void Skill3() {}
 };

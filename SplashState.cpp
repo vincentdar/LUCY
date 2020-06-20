@@ -4,7 +4,7 @@
 #include "Input.h"
 #include "ui/UI_Button.h"
 
-LUCY::SplashState::SplashState(GameDataRef data) : m_data(data), m_hero(data)
+LUCY::SplashState::SplashState(GameDataRef data) : m_data(data)
 {
 }
 

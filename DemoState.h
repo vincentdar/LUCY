@@ -2,10 +2,8 @@
 #include "IState.h"
 #include "Game.h"
 #include <SFML/Graphics.hpp>
-#include "Hero.h"
-#include "units/GoldenKnight.h"
-#include "units/Archer.h"
-#include "units/Spearman.h"
+#include "units/Knight/GoldenKnight.h"
+#include "units/Archer/Archer.h"
 #include "ui/UI_Button.h"
 #include "ui/UI_Textfield.h"
 #include "Camera.h"

@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "units/Base_Unit.h"
+#include "projectiles/Projectiles.h"
 
 #include <vector>
 
@@ -15,6 +16,9 @@ private:
 
 	// Friendlies
 	std::vector<BaseUnit*>	friendly_units;
+
+	// Projectiles
+	std::vector<Projectile*> projectiles;
 
 	// Setiap unit hanya menyimpan value x : y nya tetap sama (1 baseline tiap lane)
 	//  jadi nilai y dari vector2f ini dipakai utk spawn unit friendly dan enemy
@@ -41,14 +45,6 @@ public:
 		enemy_units.clear();
 	}
 
-	void initializeLane(sf::FloatRect dim, sf::Texture* texture) {
-		this->lane_dimension = dim;
-		lane_rect.setPosition(lane_dimension.left, lane_dimension.top);
-		lane_rect.setSize(sf::Vector2f(lane_dimension.width, lane_dimension.height));
-		lane_texture = texture;
-		lane_rect.setTexture(lane_texture, false);
-	}
-
 	void drawLane(sf::RenderTarget& target) {
 	}
 
@@ -59,6 +55,7 @@ public:
 
 	void spawnFriendlyUnit(BaseUnit* unit, float offset_x) {
 		unit->setup(sf::Vector2f(offset_x, enemyLaneSpawnPoint.y));
+		friendly_units.push_back(unit);
 	}
 
 	BaseUnit* getEnemyUnit(const int index) {

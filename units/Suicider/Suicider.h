@@ -1,17 +1,16 @@
 #pragma once
 
-#include "Base_Unit.h"
+#include "../Friendly.h"
 
-class Defender :
-	public BaseUnit
+class Suicider :
+	public Friendly
 {
-
 public:
-	Defender(LUCY::GameDataRef data) :BaseUnit(data) { }
+	Suicider(LUCY::GameDataRef data) :Friendly(data) { }
 
 	void setup(sf::Vector2f position) {
 
-		BaseUnit::setUnit(3, 0.2, 5, 10, 0, 0, 5, 0, 5); //Sets unit info
+		Friendly::setUnit(0.1, 0, 0, 0, 7, 0, 0, 0, 0, 0, -1, 5, 0); //Sets unit info
 
 		animator.bindSprite(&charSprite);
 
@@ -38,13 +37,20 @@ public:
 
 		//Skills
 
+		animator.addAnimationState(
+			"Suicide",
+			data->assets.GetTexturePtr(""),
+			sf::IntRect(0, 52 * 3, 86, 52),
+			sf::Vector2i(86, 0), 0.2, 2, false, false
+		);
+
 		charSprite.setScale(2, 2);
 		charSprite.setPosition(position);
 		animator.playAnimation("Idle");
 	}
 
 	void update() {
-		BaseUnit::Update();
+		BaseUnit::update();
 		animator.updateAnimation();
 	}
 
@@ -59,5 +65,12 @@ public:
 	void run() {
 		animator.playAnimation("Move");
 	}
+
+	void Skill1() override {
+		animator.playAnimation("Suicide");
+		ostate = SKILL4;
+		//After cast / While casting isAlive = false;
+	}
 };
+
 

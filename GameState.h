@@ -4,7 +4,7 @@
 #include "IState.h"
 
 #include "units/Base_Unit.h"
-#include "units/Archer.h"
+#include "units/Enemy/EvilArcher.h"
 
 #include "ui/UI_Base.h"
 #include "ui/UI_Container.h"
@@ -44,7 +44,6 @@ namespace LUCY {
 		int waveNumber;
 
 		GameDataRef data;
-		
 		
 		// Render variables
 		sf::RenderTexture renderTexture;

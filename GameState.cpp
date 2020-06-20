@@ -1,6 +1,6 @@
 #include "GameState.h"
 
-#include "units/Archer.h"
+#include "units/Archer/Archer.h"
 
 void LUCY::GameState::saveToFile(int slot)
 {
@@ -32,6 +32,7 @@ void LUCY::GameState::UISetup()
 	// Setup resources
 	foodStr = "Food: ";
 	cashStr = "Cash: ";
+
 	cashText.setPosition(resources_ui.getPosition().x + 20, resources_ui.getPosition().y + 30);
 	cashText.setFont(*data->assets.GetFontPtr("Press_Start"));
 	cashText.setCharacterSize(15);
@@ -132,9 +133,8 @@ void LUCY::GameState::VInit()
 	}
 
 	for (Lane &lane : lanes) {
-		lane.spawnEnemyUnit(new Archer(data));
+		lane.spawnEnemyUnit(new EvilArcher(data));
 	}
-	lanes[0].getEnemyUnit(0)->run();
 
 	UISetup();
 }
@@ -167,8 +167,16 @@ void LUCY::GameState::VHandleInput()
 
 			if (event.type == sf::Event::MouseButtonPressed) {
 				int laneNo = UTILS.screenPositionToLaneMap(sf::Mouse::getPosition(data->window), 0, TOTAL_LANES, LANE_HEIGHT);
-				if (laneNo != -1)
-					lanes[UTILS.screenPositionToLaneMap(sf::Mouse::getPosition(data->window), 0, TOTAL_LANES, LANE_HEIGHT)].spawnEnemyUnit(new Archer(data));
+				if (laneNo != -1) {
+
+					/*for (int i = 0; i < laneNo; i++) {
+						if (selectionArea.getGlobalBounds().intersects(
+							lanes[laneNo].getFriendlyUnit(i).
+						))
+					}*/
+
+					lanes[laneNo].spawnFriendlyUnit(new Archer(data), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+				}
 			}
 		}
 		// Pause inputs
@@ -215,15 +223,12 @@ void LUCY::GameState::VUpdate(float dt)
 	if (index != -1)
 		selectionArea.setPosition(sf::Mouse::getPosition(data->window).x - 43, LANE_HEIGHT * index);
 
-	
-
-	std::cout << cashStr << std::endl;
-	std::cout << foodStr << std::endl;
-
-
 	for (Lane &lane : lanes) {
 		for (int i = 0; i < lane.getEnemyCount(); i++) {
 			lane.getEnemyUnit(i)->update();
+		}
+		for (int i = 0; i < lane.getFriendlyCount(); i++) {
+			lane.getFriendlyUnit(i)->update();
 		}
 	}
 }
@@ -242,7 +247,11 @@ void LUCY::GameState::VDraw(float dt)
 		for (int j = 0; j < lanes[i].getEnemyCount(); j++) {
 			lanes[i].getEnemyUnit(j)->draw(renderTexture);
 		}
+		for (int j = 0; j < lanes[i].getFriendlyCount(); j++) {
+			lanes[i].getFriendlyUnit(j)->draw(renderTexture);
+		}
 	}
+
 	bottom_ui.draw(renderTexture);
 
 	resources_ui.draw(renderTexture);

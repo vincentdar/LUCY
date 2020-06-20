@@ -2,7 +2,6 @@
 #include "IState.h"
 #include "Game.h"
 #include <SFML/Graphics.hpp>
-#include "Hero.h"
 #include "ui/UI_Button.h"
 
 #include "Camera.h"
@@ -17,8 +16,6 @@ namespace LUCY
 		sf::Clock m_clock;
 		sf::Sprite m_background;
 		GameDataRef m_data;
-
-		Hero m_hero;
 
 		// Debug
 		UI::Button button;
