@@ -4,10 +4,10 @@
 
 class Enemies : public BaseUnit {
 protected:
-	int lifes;
 	float movementSpeed;
+
 public:
-	Enemies(GameDataRef data) : BaseUnit(data){}
+	Enemies(GameDataRef data, Lane* lane) : BaseUnit(data, lane){}
 	
 	virtual void setup(float hp, float atk, float def, float range, float doT, int lane, float ms, float as, sf::Vector2f position) {
 		BaseUnit::setUnit(hp, atk, def, 0, range, doT, lane, as);

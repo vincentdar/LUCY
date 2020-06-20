@@ -72,35 +72,35 @@ void LUCY::GameState::UISetup()
 
 	// Adding pause UI components
 	pause_menu.addComponent("Pause_Resume",
-		new UI::Button());
-	pause_menu.addComponent("Pause_Exit",
-		new UI::Button());
+new UI::Button());
+pause_menu.addComponent("Pause_Exit",
+	new UI::Button());
 
-	UI::Button* resumeButton = pause_menu.getComponent<UI::Button>("Pause_Resume");
-	UI::Button* exitButton = pause_menu.getComponent<UI::Button>("Pause_Exit");
+UI::Button* resumeButton = pause_menu.getComponent<UI::Button>("Pause_Resume");
+UI::Button* exitButton = pause_menu.getComponent<UI::Button>("Pause_Exit");
 
-	resumeButton->setOrigin(UI::TOPLEFT);
-	resumeButton->setSize(sf::Vector2f(300, 70));
-	resumeButton->setColor(sf::Color::Black, sf::Color::White, sf::Color::Magenta, sf::Color::White, sf::Color::White);
-	resumeButton->setFont(data->assets.GetFontPtr("Press_Start"));
-	resumeButton->setText("RESUME");
+resumeButton->setOrigin(UI::TOPLEFT);
+resumeButton->setSize(sf::Vector2f(300, 70));
+resumeButton->setColor(sf::Color::Black, sf::Color::White, sf::Color::Magenta, sf::Color::White, sf::Color::White);
+resumeButton->setFont(data->assets.GetFontPtr("Press_Start"));
+resumeButton->setText("RESUME");
 
-	exitButton->setOrigin(UI::TOPLEFT);
-	exitButton->setSize(sf::Vector2f(300, 70));
-	exitButton->setColor(sf::Color::Black, sf::Color::White, sf::Color::Magenta, sf::Color::White, sf::Color::White);
-	exitButton->setFont(data->assets.GetFontPtr("Press_Start"));
-	exitButton->setText("EXIT");
+exitButton->setOrigin(UI::TOPLEFT);
+exitButton->setSize(sf::Vector2f(300, 70));
+exitButton->setColor(sf::Color::Black, sf::Color::White, sf::Color::Magenta, sf::Color::White, sf::Color::White);
+exitButton->setFont(data->assets.GetFontPtr("Press_Start"));
+exitButton->setText("EXIT");
 
-	pause_menu.setComponentPosition("Pause_Resume", 
-		sf::Vector2f(pause_menu.getSize().x / 2.0 - resumeButton->getSize().x / 2.0, 50));
-	pause_menu.setComponentPosition("Pause_Exit", 
-		sf::Vector2f(pause_menu.getSize().x / 2.0 - resumeButton->getSize().x / 2.0, 140));
+pause_menu.setComponentPosition("Pause_Resume",
+	sf::Vector2f(pause_menu.getSize().x / 2.0 - resumeButton->getSize().x / 2.0, 50));
+pause_menu.setComponentPosition("Pause_Exit",
+	sf::Vector2f(pause_menu.getSize().x / 2.0 - resumeButton->getSize().x / 2.0, 140));
 }
 
 void LUCY::GameState::displayPauseMenu()
 {
 	if (isPausing) {
-		
+
 	}
 }
 
@@ -132,9 +132,9 @@ void LUCY::GameState::VInit()
 		lanes[i].setSpawnPosition(sf::Vector2f(ENEMY_SPAWN_X, (i + 1) * LANE_HEIGHT));
 	}
 
-	for (Lane &lane : lanes) {
-		lane.spawnEnemyUnit(new EvilArcher(data));
-	}
+	/*for (int i = 0; i < TOTAL_LANES; i++) {
+		lanes[i].spawnEnemyUnit(new EvilArcher(data, &lanes[i]));
+	}*/
 
 	UISetup();
 }
@@ -143,7 +143,7 @@ void LUCY::GameState::VHandleInput()
 {
 	sf::Event event;
 	while (data->window.pollEvent(event)) {
-		
+
 		if (event.type == sf::Event::Closed) {
 			VExit();
 			data->window.close();
@@ -162,22 +162,31 @@ void LUCY::GameState::VHandleInput()
 			bottom_ui.handleInput(event, data->window);
 
 			if (bottom_ui.getComponent<UI::Button>("Archer")->isClicked(event, data->window)) {
-				lanes[0].spawnEnemyUnit(new Archer(data));
+				lanes[0].spawnEnemyUnit(new UNITS::Archer(data, &lanes[0]));
 			}
 
 			if (event.type == sf::Event::MouseButtonPressed) {
 				int laneNo = UTILS.screenPositionToLaneMap(sf::Mouse::getPosition(data->window), 0, TOTAL_LANES, LANE_HEIGHT);
 				if (laneNo != -1) {
 
-					/*for (int i = 0; i < laneNo; i++) {
+					bool areaIsEmpty = true;
+					for (int i = 0; i < lanes[laneNo].getFriendlyCount(); i++) {
 						if (selectionArea.getGlobalBounds().intersects(
-							lanes[laneNo].getFriendlyUnit(i).
-						))
-					}*/
+							lanes[laneNo].getFriendlyUnit(i)->getUnitBounds())) {
+							areaIsEmpty = false;
+							break;
+						}
+					}
 
-					lanes[laneNo].spawnFriendlyUnit(new Archer(data), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+					if (areaIsEmpty) {
+						lanes[laneNo].spawnFriendlyUnit(new UNITS::Archer(data, &lanes[laneNo]), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+						lanes[laneNo].getFriendlyUnit(lanes[laneNo].getFriendlyCount() - 1)->setState(UNITS::MOVE);
+					}
+
 				}
+
 			}
+
 		}
 		// Pause inputs
 		else {

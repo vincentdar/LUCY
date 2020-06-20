@@ -1,83 +1,47 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <vector>
 
 #include "units/Base_Unit.h"
-#include "projectiles/Projectiles.h"
-
-#include <vector>
+#include "projectiles/Projectile.h"
 
 class Lane
 {
 private:
 	// Lane menyimpan semua unit yg ada 
 	// Enemies
-	std::vector<BaseUnit*>	enemy_units;
+	std::vector <UNITS::Base*> enemy_units;
 
 	// Friendlies
-	std::vector<BaseUnit*>	friendly_units;
+	std::vector <UNITS::Base*> friendly_units;
 
 	// Projectiles
-	std::vector<Projectile*> projectiles;
+	std::vector<UNITS::Projectile*> friendly_projectiles;
+	std::vector<UNITS::Projectile*> enemy_projectiles;
 
 	// Setiap unit hanya menyimpan value x : y nya tetap sama (1 baseline tiap lane)
 	//  jadi nilai y dari vector2f ini dipakai utk spawn unit friendly dan enemy
-	sf::Vector2f			enemyLaneSpawnPoint;
-
-	sf::FloatRect			lane_dimension;
-
-	sf::Texture*			lane_texture;
-	sf::RectangleShape		lane_rect;
+	sf::Vector2f enemyLaneSpawnPoint;
 
 public:
-	Lane() {}
-	~Lane() {
-		for (int i = 0; i < friendly_units.size(); i++) {
-			delete friendly_units[i];
-		}
+	Lane(){}
+	~Lane();
 
-		friendly_units.clear();
+	void spawnEnemyUnit(UNITS::Base* unit);
+	void spawnEnemyProjectile(UNITS::Projectile* proj);
 
-		for (int i = 0; i < enemy_units.size(); i++) {
-			delete enemy_units[i];
-		}
+	void spawnFriendlyUnit(UNITS::Base* unit, float offset_x);
+	void spawnFriendlyProjectile(UNITS::Projectile* proj);
 
-		enemy_units.clear();
-	}
+	UNITS::Base* getEnemyUnit(int index);
+	UNITS::Base* getFriendlyUnit(int index);
 
-	void drawLane(sf::RenderTarget& target) {
-	}
-
-	void spawnEnemyUnit(BaseUnit* unit) {
-		unit->setup(enemyLaneSpawnPoint);
-		enemy_units.push_back(unit);
-	}
-
-	void spawnFriendlyUnit(BaseUnit* unit, float offset_x) {
-		unit->setup(sf::Vector2f(offset_x, enemyLaneSpawnPoint.y));
-		friendly_units.push_back(unit);
-	}
-
-	BaseUnit* getEnemyUnit(const int index) {
-		if (index < 0 || index >= enemy_units.size()) {
-			return nullptr;
-		}
-
-		return enemy_units[index];
-	}
-
-	BaseUnit* getFriendlyUnit(const int index) {
-		if (index < 0 || index >= friendly_units.size()) {
-			return nullptr;
-		}
-
-		return friendly_units[index];
-	}
+	UNITS::Projectile* getFriendlyProjectiles(int index);
+	UNITS::Projectile* getEnemyProjectiles(int index);
 
 	int getFriendlyCount() { return friendly_units.size(); }
 	int getEnemyCount() { return enemy_units.size(); }
 
-	void setSpawnPosition(sf::Vector2f position) {
-		this->enemyLaneSpawnPoint = position;
-	}
+	void setSpawnPosition(sf::Vector2f position);
 };

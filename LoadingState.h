@@ -28,7 +28,7 @@ namespace LUCY
 			loadingText.setFont(*data->assets.GetFontPtr("Press_Start"));
 			loadingText.setString("LOADING");
 			loadingText.setFillColor(sf::Color::White);
-			loadingText.setPosition(800, 600);
+			loadingText.setPosition(data->window.getSize().x - 400 , data->window.getSize().y - 100);
 			loadingText.setCharacterSize(40);
 		}
 
@@ -70,8 +70,6 @@ namespace LUCY
 				}
 				prevTime = clock.getElapsedTime().asSeconds();
 			}
-
-			printf("%f\n", clock.getElapsedTime().asSeconds() - prevTime);
 		}
 
 		void VResume() {}

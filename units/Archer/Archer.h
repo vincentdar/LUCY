@@ -2,79 +2,54 @@
 
 #include "../Friendly.h"
 
-class Archer :
-	public Friendly
-{
-public:
-	Archer(LUCY::GameDataRef data) :Friendly(data) {}
+namespace UNITS {
+	class Archer :
+		public Friendly
+	{
+	private:
+		float range = 100;
 
-	void setup(sf::Vector2f position) {
+	public:
+		Archer(LUCY::GameDataRef data, Lane* lane, int laneCount = 5) : Friendly(data, lane, laneCount) {}
 
-		Friendly::setUnit(0.75, 0.25, 3, 2, 1, 0.75, 0, 1, 10.0f, 0, -1, 10, 3.5f); //Sets unit info
+		void setup(sf::Vector2f position) override {
 
-		animator.bindSprite(&charSprite);
+			Friendly::setUnitStats(100, 10, 50); //Sets unit info
 
-		animator.addAnimationState(
-			"Idle",
-			data->assets.GetTexturePtr("Archer_Green"),
-			sf::IntRect(0, 51 * 1, 37, 51),
-			sf::Vector2i(37, 0), 0.2, 2, true, true
-		);
+			animator.bindSprite(&charSprite);
 
-		animator.addAnimationState(
-			"Move",
-			data->assets.GetTexturePtr("Archer_Green"),
-			sf::IntRect(0, 51 * 0, 37, 51),
-			sf::Vector2i(37, 0), 0.2, 3, true, false
-		);
+			animator.addAnimationState(
+				"Idle",
+				data->assets.GetTexturePtr("Archer_Green"),
+				sf::IntRect(0, 51 * 1, 37, 51),
+				sf::Vector2i(37, 0), 0.2, 2, true, true
+			);
 
-		animator.addAnimationState(
-			"Attack",
-			data->assets.GetTexturePtr("Archer_Green"),
-			sf::IntRect(0, 51 * 2, 37, 51),
-			sf::Vector2i(37, 0), 0.2, 6, false, false
-		);
+			animator.addAnimationState(
+				"Move",
+				data->assets.GetTexturePtr("Archer_Green"),
+				sf::IntRect(0, 51 * 0, 37, 51),
+				sf::Vector2i(37, 0), 0.2, 3, true, false
+			);
 
-		charSprite.setScale(2, 2);
-		charSprite.setPosition(position);
-		animator.playAnimation("Idle");
-	}
+			animator.addAnimationState(
+				"Attack",
+				data->assets.GetTexturePtr("Archer_Green"),
+				sf::IntRect(0, 51 * 2, 37, 51),
+				sf::Vector2i(37, 0), 0.2, 6, false, false
+			);
 
-	void update() {
-		charSprite.setOrigin(charSprite.getLocalBounds().width / 2.0, charSprite.getLocalBounds().height);
-		animator.updateAnimation();
-	}
+			charSprite.setScale(2, 2);
+			charSprite.setPosition(position);
+			state = IDLE;
+			stateIsChanged = true;
+		}
 
-	void attack() {
-		animator.playAnimation("Attack");
-	}
+		void update() {
+			Base::update();
+		}
 
-	void run() {
-		animator.playAnimation("Move");
-	}
-
-	virtual void Skill1() override {
-		animator.playAnimation("PrecisionShot");
-		ostate = SKILL1;
-		if(manaCost(10) == true)
-			updateAttack(5);
-		//For one attack, CD = 10 seconds
-	}
-
-	virtual void Skill2() override {
-		animator.playAnimation("ManaShield");
-		ostate = SKILL2;
-		if(manaCost(15) == true)
-			setShieldHP(0.5 * HP);
-		//Infinite Duration, Staccable, CD = 20 s
-	}
-
-	virtual void Ultimate()  override {
-		animator.playAnimation("CosmicShot");
-		ostate = SKILL4;
-		if(manaCost(30) == true)
-			updateAttack(10);
-		//For one attack, CD = 60s
-	}
-};
+		
+	};
+}
 

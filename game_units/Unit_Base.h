@@ -9,8 +9,8 @@ class Lane;
 using LUCY::GameDataRef;
 
 namespace UNITS {
-
-	enum UnitState { IDLE, ATTACK, MOVE, HIT, DIE, SKILL1, SKILL2, SKILL3, SKILL4 };
+	
+	enum UnitState { IDLE, ATTACK, HIT, DIE, SKILL1, SKILL2, SKILL3, SKILL4 };
 
 	struct Stats
 	{
@@ -18,14 +18,13 @@ namespace UNITS {
 		float range;
 		float normalDamage;
 		float mp;
-		float movementSpeed;
 	};
 
 	class Base
 	{
-	protected:
+	private:
 		GameDataRef data;
-
+		
 		Stats		stats;
 		UnitState	state;
 		bool		stateIsChanged = false;
@@ -41,17 +40,18 @@ namespace UNITS {
 
 		// Health bar
 		sf::RectangleShape	base,
-			bar;
+							bar;
 
-		Base(GameDataRef data, Lane lanes[], int laneCount = 5);
-
+		
 	public:
+		Base(GameDataRef data, Lane lanes[], int laneCount = 5);
 
 		Stats getUnitStats() { return stats; }
 
 		virtual void update();
-		virtual void setup(sf::Vector2f spawnPosition) = 0;
 		virtual void draw(sf::RenderTarget& target);
+
+		void setup(sf::Vector2f spawnPosition);
 
 		void setState(UnitState state);
 		UnitState getState() { return state; }

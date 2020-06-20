@@ -60,8 +60,6 @@ private:
 	
 	std::unordered_map<std::string, AnimState*> states;
 
-	std::queue<AnimState*> queueStates;
-
 public:
 	~Animator();
 

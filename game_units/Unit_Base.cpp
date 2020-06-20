@@ -1,4 +1,4 @@
-#include "Base_Unit.h"
+#include "Unit_Base.h"
 
 #include "../Lane.h"
 
@@ -9,28 +9,22 @@ namespace UNITS
 
 	void Base::update()
 	{
-		charSprite.setOrigin(
-			charSprite.getLocalBounds().width / 2.0,
-			charSprite.getLocalBounds().height
-		);
+		animator.updateAnimation();
 
 		if (stateIsChanged) {
 			switch (state)
 			{
 			case IDLE:
-				animator.playAnimation("Idle");
+				animator.playAnimation("IDLE");
 				break;
 			case ATTACK:
-				animator.playAnimation("Attack");
+				animator.playAnimation("ATTACK");
 				break;
 			case HIT:
 				shader.loadFromFile("res/shader/hitflash.shader", sf::Shader::Fragment);
 				break;
-			case MOVE:
-				animator.playAnimation("Move");
-				break;
 			case DIE:
-				animator.playAnimation("Die");
+				animator.playAnimation("DIE");
 				break;
 			case SKILL1:
 				shader.loadFromFile("res/shader/outline.shader", sf::Shader::Fragment);
@@ -52,49 +46,50 @@ namespace UNITS
 				break;
 			}
 
-			stateIsChanged = false;
-		}
-
-		// Detect state changes
-			// ATTACK -> FIND MINIMUM DISTANCE ENEMY
-		/*float min = -1;
-		for (int i = 0; i < laneDataRef[laneNumber].getEnemyCount(); i++) {
-
-			float distance = laneDataRef[laneNumber].getEnemyUnit(i)->charSprite.getPosition().x - charSprite.getPosition().x;
-
-			if (distance <= stats.range && distance <= min && distance >= 0) {
-				if (state != ATTACK) {
-					state = ATTACK;
-					stateIsChanged = true;
-				}
+			// Detect state changes
+			for (int i = 0; i < laneDataRef[laneNumber].getEnemyCount(); i++) {
+				if (laneDataRef[laneNumber].getEnemyUnit(i)
 			}
 		}
-
-		if (min == -1) {
-			if (state != IDLE) {
-				state = IDLE;
-				stateIsChanged = true;
-			}
-		}*/
-
-		animator.updateAnimation();
-
 	}
 
 	void Base::draw(sf::RenderTarget & target)
 	{
-		if (state > 3) {
-			target.draw(charSprite, &shader);
-		}
-		else {
-			target.draw(charSprite);
-		}
+	}
+
+	void Base::setup(sf::Vector2f spawnPosition)
+	{
+		animator.bindSprite(&charSprite);
+
+		animator.addAnimationState(
+			"Idle",
+			data->assets.GetTexturePtr("Archer_Green"),
+			sf::IntRect(0, 51 * 1, 37, 51),
+			sf::Vector2i(37, 0), 0.2, 2, true, true
+		);
+
+		animator.addAnimationState(
+			"Move",
+			data->assets.GetTexturePtr("Archer_Green"),
+			sf::IntRect(0, 51 * 0, 37, 51),
+			sf::Vector2i(37, 0), 0.2, 3, true, false
+		);
+
+		animator.addAnimationState(
+			"Attack",
+			data->assets.GetTexturePtr("Archer_Green"),
+			sf::IntRect(0, 51 * 2, 37, 51),
+			sf::Vector2i(37, 0), 0.2, 6, false, false
+		);
+
+		charSprite.setScale(2, 2);
+		charSprite.setPosition(spawnPosition);
+		state = IDLE;
 	}
 
 	void Base::setState(UnitState state)
 	{
 		this->state = state;
-		this->stateIsChanged = true;
 	}
 
 	void Base::setUnitStats(float health, float normalDamage, float range)
