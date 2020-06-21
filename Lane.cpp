@@ -74,12 +74,14 @@ void Lane::removeDeadUnits()
 {
 	for (int i = 0; i < friendly_units.size(); i++) {
 		if (friendly_units[i]->getUnitStats().health <= 0) {
+			delete friendly_units[i];
 			friendly_units.erase(friendly_units.begin() + i);
 		}
 	}
 
 	for (int i = 0; i < enemy_units.size(); i++) {
 		if (enemy_units[i]->getUnitStats().health <= 0) {
+			delete enemy_units[i];
 			enemy_units.erase(enemy_units.begin() + i);
 		}
 	}

@@ -14,10 +14,6 @@
 
 #include "Lane.h"
 
-#define ENEMY_SPAWN_X data->window.getSize().x + 100
-#define BOTTOM_UI_HEIGHT 180
-#define LANE_HEIGHT ((data->window.getSize().y - BOTTOM_UI_HEIGHT) / TOTAL_LANES)
-
 namespace LUCY {
 
 	class GameState
@@ -54,6 +50,10 @@ namespace LUCY {
 		UI::Container bottom_ui;
 		UI::Container resources_ui;
 		UI::Container pause_menu;
+
+		UI::Button* unitSelectionRef[5];
+		int selectedUnit = -1;
+
 		UI::Alert alert;
 
 		sf::Text cashText, foodText;

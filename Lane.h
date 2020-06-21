@@ -8,6 +8,9 @@
 #include "projectiles/Projectile.h"
 
 #define TOTAL_LANES 5
+#define ENEMY_SPAWN_X data->window.getSize().x + 100
+#define BOTTOM_UI_HEIGHT 180
+#define LANE_HEIGHT ((data->window.getSize().y - BOTTOM_UI_HEIGHT) / TOTAL_LANES)
 
 class Lane
 {
@@ -26,6 +29,7 @@ private:
 	// Setiap unit hanya menyimpan value x : y nya tetap sama (1 baseline tiap lane)
 	//  jadi nilai y dari vector2f ini dipakai utk spawn unit friendly dan enemy
 	sf::Vector2f enemyLaneSpawnPoint;
+	int x_start;
 
 public:
 	Lane(){}

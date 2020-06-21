@@ -56,6 +56,8 @@ namespace UI {
 			}
 		}
 
+		sf::RectangleShape getShape() { return base_shape; }
+
 		UI_Origin getOrigin() { return origin; }
 
 		virtual ~Base() {}

@@ -4,12 +4,6 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 
-// Class singleton
-// Penggunaan: 
-//   Utils::get()->fungsi();
-
-// Last edit: Matthew Sutanto 28/05/2020 => First
-
 #define UTILS Utils::get()
 
 class Utils

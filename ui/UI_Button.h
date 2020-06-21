@@ -33,6 +33,8 @@ namespace UI {
 		bool enabled = true;
 		bool usingSecondary = false;
 
+		bool isOutlined = false;
+
 	public:
 		Button() {}
 
@@ -42,6 +44,8 @@ namespace UI {
 
 		void setText(std::string text);
 		void setFont(sf::Font* font);
+
+		void setOutline(float thickness, sf::Color color);
 
 		// Update kondisi.
 		void update(sf::RenderWindow &window);
@@ -84,6 +88,13 @@ namespace UI {
 		void setSecondary(bool isSecondary) {
 			if (usingColor)
 				usingSecondary = isSecondary;
+		}
+
+		void set(UI_Origin origin, sf::Vector2f size, sf::Texture* texture, sf::IntRect texRect) {
+			setOrigin(origin);
+			setSize(size);
+			setTexture(texture);
+			setTextureRect(texRect);
 		}
 	};
 }

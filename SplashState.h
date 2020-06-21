@@ -4,8 +4,6 @@
 #include <SFML/Graphics.hpp>
 #include "ui/UI_Button.h"
 
-#include "Camera.h"
-
 namespace LUCY
 {
 	class SplashState: public IState
@@ -21,7 +19,6 @@ namespace LUCY
 		UI::Button button;
 		UI::Button button1;
 
-		Camera camera;
 		sf::Sprite sf_logo;
 		sf::RectangleShape rect_mask;
 		sf::RectangleShape rect_omask;

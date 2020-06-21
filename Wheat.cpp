@@ -11,7 +11,6 @@ void LUCY::Wheat::Init()
 	m_state = Grow;
 	anim.Attach(m_texture, m_sprite, sf::Vector2i(64, 64));
 	anim.Change(1, 1.0f, 0, 0);
-	
 }
 
 void LUCY::Wheat::Planted()
@@ -32,11 +31,9 @@ void LUCY::Wheat::Pillaged()
 
 void LUCY::Wheat::HandleInput()
 {
-		
 		if (UTILS.isMouseOver(m_sprite.getPosition(), m_sprite.getGlobalBounds().width,
 			m_sprite.getGlobalBounds().height, m_data->window))
 		{
-			
 			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 			{
 				std::cout << "aaaa" << std::endl;

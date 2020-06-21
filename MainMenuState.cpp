@@ -53,12 +53,6 @@ void LUCY::MainMenuState::VInit()
 	_cam.setSize(sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
 	m_data->window.setView(_cam);
 
-	// Using camera.h
-	/*camera.set(sf::Vector2f(SCREEN_WIDTH / 2, 0), sf::Vector2f(SCREEN_WIDTH, SCREEN_HEIGHT));
-	camera.setRenderTarget(&m_data->window);
-	camera.translateCameraToPosition(sf::Vector2f(SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0),
-		sf::Vector2f(0, 5.0f));*/
-
 	_clock.restart();
 }
 
@@ -112,7 +106,6 @@ void LUCY::MainMenuState::VUpdate(float dt)
 		m_data->window.setView(_cam);
 	}
 
-	//camera.update();
 	for (int q = 0;q < 5;q++) {
 		_buttons[q].update(m_data->window);
 	}

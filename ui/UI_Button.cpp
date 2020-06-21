@@ -39,6 +39,12 @@ namespace UI {
 		this->text.setFont(*this->font);
 	}
 
+	void Button::setOutline(float thickness, sf::Color color)
+	{
+		base_shape.setOutlineThickness(thickness);
+		base_shape.setOutlineColor(color);
+	}
+
 	void Button::update(sf::RenderWindow& window)
 	{
 		this->text.setPosition(
@@ -69,6 +75,7 @@ namespace UI {
 			else
 				this->base_shape.setTexture(secondary_texture);
 		}
+
 
 		// Check apakah button hovered
 		if (hovered) {
