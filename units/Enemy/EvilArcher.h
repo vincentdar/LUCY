@@ -6,11 +6,10 @@ namespace UNITS {
 	class EvilArcher : public Enemies {
 
 	public:
-		EvilArcher(GameDataRef data, Lane* lane) : Enemies(data, lane) {}
+		EvilArcher(GameDataRef data, Lane* lane, int laneNumber) : Enemies(data, lane, laneNumber) {}
 
 		void setup(sf::Vector2f position) override {
-			BaseUnit::setUnit(0.75, 0.25, 3, 2, 1, 0.75, 0, 10);
-			lifes = 1;
+			Base::setUnitStats(100, 10, 500);
 
 			animator.bindSprite(&charSprite);
 
@@ -35,21 +34,19 @@ namespace UNITS {
 				sf::Vector2i(37, 0), 0.2, 6, false, false
 			);
 
-			animator.addAnimationState(
-				"Death",
-				data->assets.GetTexturePtr("Archer_Black"),
-				sf::IntRect(0, 53 * 2, 37, 53),
-				sf::Vector2i(37, 0), 0.2, 2, false, false
-			);
-
 			charSprite.setScale(2, 2);
 			charSprite.setPosition(position);
-			animator.playAnimation("Move");
+			setState(MOVE);
 		}
 
 		void update() {
 			Base::update();
-			charSprite.move(-1, 0);
+			if (state == MOVE)
+				charSprite.move(-1, 0);
+		}
+
+		void skill() {
+
 		}
 	};
 }

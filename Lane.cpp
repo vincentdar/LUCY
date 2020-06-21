@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Lane.h"
+#include "units/Friendly.h"
+#include "units/Enemies.h"
 
 Lane::~Lane() {
 	for (int i = 0; i < friendly_units.size(); i++) {
@@ -16,7 +18,7 @@ Lane::~Lane() {
 	enemy_units.clear();
 }
 
-void Lane::spawnEnemyUnit(UNITS::Base* unit) {
+void Lane::spawnEnemyUnit(UNITS::Enemies* unit) {
 	unit->setup(enemyLaneSpawnPoint);
 	enemy_units.push_back(unit);
 }
@@ -25,7 +27,7 @@ void Lane::spawnEnemyProjectile(UNITS::Projectile * proj) {
 	enemy_projectiles.push_back(proj);
 }
 
-void Lane::spawnFriendlyUnit(UNITS::Base* unit, float offset_x) {
+void Lane::spawnFriendlyUnit(UNITS::Friendly* unit, float offset_x) {
 	unit->setup(sf::Vector2f(offset_x, enemyLaneSpawnPoint.y));
 	friendly_units.push_back(unit);
 }
@@ -34,7 +36,7 @@ void Lane::spawnFriendlyProjectile(UNITS::Projectile * proj) {
 	friendly_projectiles.push_back(proj);
 }
 
-UNITS::Base* Lane::getEnemyUnit(int index) {
+UNITS::Enemies* Lane::getEnemyUnit(int index) {
 	if (index < 0 || index >= enemy_units.size()) {
 		return nullptr;
 	}
@@ -42,7 +44,7 @@ UNITS::Base* Lane::getEnemyUnit(int index) {
 	return enemy_units[index];
 }
 
-UNITS::Base* Lane::getFriendlyUnit(int index) {
+UNITS::Friendly* Lane::getFriendlyUnit(int index) {
 	if (index < 0 || index >= friendly_units.size()) {
 		return nullptr;
 	}
@@ -66,6 +68,21 @@ UNITS::Projectile * Lane::getEnemyProjectiles(int index)
 	}
 
 	return enemy_projectiles[index];
+}
+
+void Lane::removeDeadUnits()
+{
+	for (int i = 0; i < friendly_units.size(); i++) {
+		if (friendly_units[i]->getUnitStats().health <= 0) {
+			friendly_units.erase(friendly_units.begin() + i);
+		}
+	}
+
+	for (int i = 0; i < enemy_units.size(); i++) {
+		if (enemy_units[i]->getUnitStats().health <= 0) {
+			enemy_units.erase(enemy_units.begin() + i);
+		}
+	}
 }
 
 void Lane::setSpawnPosition(sf::Vector2f position) {

@@ -1,6 +1,7 @@
 #include "GameState.h"
 
 #include "units/Archer/Archer.h"
+#include "units/Enemy/EvilArcher.h"
 
 void LUCY::GameState::saveToFile(int slot)
 {
@@ -71,30 +72,28 @@ void LUCY::GameState::UISetup()
 	pause_menu.setTexture(data->assets.GetTexturePtr("UI_Box"));
 
 	// Adding pause UI components
-	pause_menu.addComponent("Pause_Resume",
-new UI::Button());
-pause_menu.addComponent("Pause_Exit",
-	new UI::Button());
+	pause_menu.addComponent("Pause_Resume", new UI::Button());
+	pause_menu.addComponent("Pause_Exit", new UI::Button());
 
-UI::Button* resumeButton = pause_menu.getComponent<UI::Button>("Pause_Resume");
-UI::Button* exitButton = pause_menu.getComponent<UI::Button>("Pause_Exit");
+	UI::Button* resumeButton = pause_menu.getComponent<UI::Button>("Pause_Resume");
+	UI::Button* exitButton = pause_menu.getComponent<UI::Button>("Pause_Exit");
 
-resumeButton->setOrigin(UI::TOPLEFT);
-resumeButton->setSize(sf::Vector2f(300, 70));
-resumeButton->setColor(sf::Color::Black, sf::Color::White, sf::Color::Magenta, sf::Color::White, sf::Color::White);
-resumeButton->setFont(data->assets.GetFontPtr("Press_Start"));
-resumeButton->setText("RESUME");
+	resumeButton->setOrigin(UI::TOPLEFT);
+	resumeButton->setSize(sf::Vector2f(300, 70));
+	resumeButton->setColor(sf::Color::Black, sf::Color::White, sf::Color::Magenta, sf::Color::White, sf::Color::White);
+	resumeButton->setFont(data->assets.GetFontPtr("Press_Start"));
+	resumeButton->setText("RESUME");
 
-exitButton->setOrigin(UI::TOPLEFT);
-exitButton->setSize(sf::Vector2f(300, 70));
-exitButton->setColor(sf::Color::Black, sf::Color::White, sf::Color::Magenta, sf::Color::White, sf::Color::White);
-exitButton->setFont(data->assets.GetFontPtr("Press_Start"));
-exitButton->setText("EXIT");
+	exitButton->setOrigin(UI::TOPLEFT);
+	exitButton->setSize(sf::Vector2f(300, 70));
+	exitButton->setColor(sf::Color::Black, sf::Color::White, sf::Color::Magenta, sf::Color::White, sf::Color::White);
+	exitButton->setFont(data->assets.GetFontPtr("Press_Start"));
+	exitButton->setText("EXIT");
 
-pause_menu.setComponentPosition("Pause_Resume",
-	sf::Vector2f(pause_menu.getSize().x / 2.0 - resumeButton->getSize().x / 2.0, 50));
-pause_menu.setComponentPosition("Pause_Exit",
-	sf::Vector2f(pause_menu.getSize().x / 2.0 - resumeButton->getSize().x / 2.0, 140));
+	pause_menu.setComponentPosition("Pause_Resume",
+		sf::Vector2f(pause_menu.getSize().x / 2.0 - resumeButton->getSize().x / 2.0, 50));
+	pause_menu.setComponentPosition("Pause_Exit",
+		sf::Vector2f(pause_menu.getSize().x / 2.0 - resumeButton->getSize().x / 2.0, 140));
 }
 
 void LUCY::GameState::displayPauseMenu()
@@ -162,7 +161,7 @@ void LUCY::GameState::VHandleInput()
 			bottom_ui.handleInput(event, data->window);
 
 			if (bottom_ui.getComponent<UI::Button>("Archer")->isClicked(event, data->window)) {
-				lanes[0].spawnEnemyUnit(new UNITS::Archer(data, &lanes[0]));
+				lanes[0].spawnEnemyUnit(new UNITS::EvilArcher(data, lanes, 0));
 			}
 
 			if (event.type == sf::Event::MouseButtonPressed) {
@@ -179,8 +178,7 @@ void LUCY::GameState::VHandleInput()
 					}
 
 					if (areaIsEmpty) {
-						lanes[laneNo].spawnFriendlyUnit(new UNITS::Archer(data, &lanes[laneNo]), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
-						lanes[laneNo].getFriendlyUnit(lanes[laneNo].getFriendlyCount() - 1)->setState(UNITS::MOVE);
+						lanes[laneNo].spawnFriendlyUnit(new UNITS::Archer(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
 					}
 
 				}
@@ -239,6 +237,8 @@ void LUCY::GameState::VUpdate(float dt)
 		for (int i = 0; i < lane.getFriendlyCount(); i++) {
 			lane.getFriendlyUnit(i)->update();
 		}
+
+		lane.removeDeadUnits();
 	}
 }
 
@@ -279,12 +279,12 @@ void LUCY::GameState::VDraw(float dt)
 		sf::Shader sh;
 		sh.loadFromFile("res/shader/tint.shader", sf::Shader::Fragment);
 		sh.setUniform("u_texture", sf::Shader::CurrentTexture);
-		
+
 		data->window.draw(spr, &sh);
 
 		pause_menu.draw(data->window);
 	}
-	else 
+	else
 		data->window.draw(spr);
 
 	alert.draw(data->window);

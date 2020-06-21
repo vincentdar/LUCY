@@ -4,16 +4,45 @@
 
 namespace UNITS
 {
-	Base::Base(GameDataRef data, Lane lanes[], int laneCount)
-		: data(data), laneDataRef(lanes), laneTotal(laneCount) {}
+	Base::Base(GameDataRef data, Lane lanes[], int laneNumber)
+		: data(data), laneDataRef(lanes), laneNumber(laneNumber), laneTotal(TOTAL_LANES) {}
 
 	void Base::update()
 	{
+		// Set origin ke bawah tengah, supaya pos sprite konsisten
 		charSprite.setOrigin(
 			charSprite.getLocalBounds().width / 2.0,
 			charSprite.getLocalBounds().height
 		);
 
+		// Update menurut State
+		updateStateActions();
+
+		processStateChanges();
+
+		triggerStateChanges();
+
+		animator.updateAnimation();
+	}
+
+	void Base::draw(sf::RenderTarget & target)
+	{
+		if (isHit) {
+			// Override existing shader
+			shader.loadFromFile("res/shader/hitflash.shader", sf::Shader::Fragment);
+			target.draw(charSprite, &shader);
+			isHit = false;
+		}
+		else if (state == SKILL) {
+			target.draw(charSprite, &shader);
+		}
+		else {
+			target.draw(charSprite);
+		}
+	}
+
+	void Base::processStateChanges()
+	{
 		if (stateIsChanged) {
 			switch (state)
 			{
@@ -23,30 +52,16 @@ namespace UNITS
 			case ATTACK:
 				animator.playAnimation("Attack");
 				break;
-			case HIT:
-				shader.loadFromFile("res/shader/hitflash.shader", sf::Shader::Fragment);
-				break;
 			case MOVE:
 				animator.playAnimation("Move");
 				break;
 			case DIE:
-				animator.playAnimation("Die");
+				//animator.playAnimation("Die");
+				//printf("DIE\n");
 				break;
-			case SKILL1:
+			case SKILL:
 				shader.loadFromFile("res/shader/outline.shader", sf::Shader::Fragment);
 				shader.setUniform("outline_color", sf::Glsl::Vec4(sf::Color::Yellow));
-				break;
-			case SKILL2:
-				shader.loadFromFile("res/shader/outline.shader", sf::Shader::Fragment);
-				shader.setUniform("outline_color", sf::Glsl::Vec4(sf::Color::Blue));
-				break;
-			case SKILL3:
-				shader.loadFromFile("res/shader/outline.shader", sf::Shader::Fragment);
-				shader.setUniform("outline_color", sf::Glsl::Vec4(sf::Color::Cyan));
-				break;
-			case SKILL4:
-				shader.loadFromFile("res/shader/outline.shader", sf::Shader::Fragment);
-				shader.setUniform("outline_color", sf::Glsl::Vec4(sf::Color::Red));
 				break;
 			default:
 				break;
@@ -55,45 +70,29 @@ namespace UNITS
 			stateIsChanged = false;
 		}
 
-		// Detect state changes
-			// ATTACK -> FIND MINIMUM DISTANCE ENEMY
-		/*float min = -1;
-		for (int i = 0; i < laneDataRef[laneNumber].getEnemyCount(); i++) {
-
-			float distance = laneDataRef[laneNumber].getEnemyUnit(i)->charSprite.getPosition().x - charSprite.getPosition().x;
-
-			if (distance <= stats.range && distance <= min && distance >= 0) {
-				if (state != ATTACK) {
-					state = ATTACK;
-					stateIsChanged = true;
-				}
-			}
-		}
-
-		if (min == -1) {
-			if (state != IDLE) {
-				state = IDLE;
-				stateIsChanged = true;
-			}
-		}*/
-
-		animator.updateAnimation();
-
+		std::cout << stateIsChanged << std::endl;
 	}
 
-	void Base::draw(sf::RenderTarget & target)
+	void Base::takeDamage(int damage)
 	{
-		if (state > 3) {
-			target.draw(charSprite, &shader);
+		isHit = true;
+		stats.health -= damage;
+		if (stats.health <= 0) {
+			this->setState(DIE);
 		}
-		else {
-			target.draw(charSprite);
-		}
+	}
+
+	void Base::triggerStateChanges() {}
+
+	void Base::updateStateActions()
+	{
+		
 	}
 
 	void Base::setState(UnitState state)
 	{
 		this->state = state;
+
 		this->stateIsChanged = true;
 	}
 

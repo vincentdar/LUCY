@@ -10,11 +10,11 @@ namespace UNITS {
 		float range = 100;
 
 	public:
-		Archer(LUCY::GameDataRef data, Lane* lane, int laneCount = 5) : Friendly(data, lane, laneCount) {}
+		Archer(LUCY::GameDataRef data, Lane* lane, int laneNumber) : Friendly(data, lane, laneNumber) {}
 
 		void setup(sf::Vector2f position) override {
 
-			Friendly::setUnitStats(100, 10, 50); //Sets unit info
+			Friendly::setUnitStats(100, 10, 600); //Sets unit info
 
 			animator.bindSprite(&charSprite);
 
@@ -41,14 +41,16 @@ namespace UNITS {
 
 			charSprite.setScale(2, 2);
 			charSprite.setPosition(position);
-			state = IDLE;
-			stateIsChanged = true;
+			setState(IDLE);
 		}
 
 		void update() {
 			Base::update();
 		}
 
+		void skill() override {
+			printf("SKILL\n");
+		}
 		
 	};
 }

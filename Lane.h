@@ -3,18 +3,21 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 
-#include "units/Base_Unit.h"
+#include "units/Friendly.h"
+#include "units/Enemies.h"
 #include "projectiles/Projectile.h"
+
+#define TOTAL_LANES 5
 
 class Lane
 {
 private:
 	// Lane menyimpan semua unit yg ada 
 	// Enemies
-	std::vector <UNITS::Base*> enemy_units;
+	std::vector <UNITS::Enemies*> enemy_units;
 
 	// Friendlies
-	std::vector <UNITS::Base*> friendly_units;
+	std::vector <UNITS::Friendly*> friendly_units;
 
 	// Projectiles
 	std::vector<UNITS::Projectile*> friendly_projectiles;
@@ -28,20 +31,22 @@ public:
 	Lane(){}
 	~Lane();
 
-	void spawnEnemyUnit(UNITS::Base* unit);
+	void spawnEnemyUnit(UNITS::Enemies* unit);
 	void spawnEnemyProjectile(UNITS::Projectile* proj);
 
-	void spawnFriendlyUnit(UNITS::Base* unit, float offset_x);
+	void spawnFriendlyUnit(UNITS::Friendly* unit, float offset_x);
 	void spawnFriendlyProjectile(UNITS::Projectile* proj);
 
-	UNITS::Base* getEnemyUnit(int index);
-	UNITS::Base* getFriendlyUnit(int index);
+	UNITS::Enemies* getEnemyUnit(int index);
+	UNITS::Friendly* getFriendlyUnit(int index);
 
 	UNITS::Projectile* getFriendlyProjectiles(int index);
 	UNITS::Projectile* getEnemyProjectiles(int index);
 
 	int getFriendlyCount() { return friendly_units.size(); }
 	int getEnemyCount() { return enemy_units.size(); }
+
+	void removeDeadUnits();
 
 	void setSpawnPosition(sf::Vector2f position);
 };

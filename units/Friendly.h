@@ -2,6 +2,8 @@
 
 #include "Base_Unit.h"
 
+class Lane;
+
 namespace UNITS {
 	class Friendly :
 		public Base 
@@ -11,7 +13,7 @@ namespace UNITS {
 		int unitCost, unitLevel = 1;
 
 	public:
-		Friendly(GameDataRef data, Lane* lane, int laneCount) : Base(data, lane, laneCount) {}
+		Friendly(GameDataRef data, Lane* lane, int laneNumber) : Base(data, lane, laneNumber) {}
 
 		void setCost(int cost) { this->unitCost = cost; }
 		int getCost() { return unitCost; }
@@ -20,5 +22,8 @@ namespace UNITS {
 		int getLevel() { return unitLevel; }
 
 		void incrementLevel() { this->unitLevel++; }
+
+		void triggerStateChanges() override;
+		void updateStateActions() override;
 	};
 }

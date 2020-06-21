@@ -15,7 +15,6 @@
 #include "Lane.h"
 
 #define ENEMY_SPAWN_X data->window.getSize().x + 100
-#define TOTAL_LANES 5
 #define BOTTOM_UI_HEIGHT 180
 #define LANE_HEIGHT ((data->window.getSize().y - BOTTOM_UI_HEIGHT) / TOTAL_LANES)
 
@@ -38,7 +37,7 @@ namespace LUCY {
 
 		// Spawn-related
 		int totalNumberOfFriendlyUnits;
-		Lane lanes[6];
+		Lane lanes[5];
 		int saveSlot;
 		int waveNumber;
 
