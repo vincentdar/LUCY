@@ -14,9 +14,10 @@ namespace LUCY
 	private:
 		GameDataRef m_data;
 		sf::Clock _clock;
-
+		sf::Sprite _logo;
 		sf::Sprite _background;
-		UI::Button _play;
+		sf::RectangleShape _menuBox;
+		UI::Button _buttons[5];
 		sf::View _cam;
 
 		//Camera camera;

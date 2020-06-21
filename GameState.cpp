@@ -1,6 +1,7 @@
 #include "GameState.h"
 
-#include "units/Archer.h"
+#include "units/Archer/Archer.h"
+#include "units/Enemy/EvilArcher.h"
 
 void LUCY::GameState::saveToFile(int slot)
 {
@@ -32,6 +33,7 @@ void LUCY::GameState::UISetup()
 	// Setup resources
 	foodStr = "Food: ";
 	cashStr = "Cash: ";
+
 	cashText.setPosition(resources_ui.getPosition().x + 20, resources_ui.getPosition().y + 30);
 	cashText.setFont(*data->assets.GetFontPtr("Press_Start"));
 	cashText.setCharacterSize(15);
@@ -70,10 +72,8 @@ void LUCY::GameState::UISetup()
 	pause_menu.setTexture(data->assets.GetTexturePtr("UI_Box"));
 
 	// Adding pause UI components
-	pause_menu.addComponent("Pause_Resume",
-		new UI::Button());
-	pause_menu.addComponent("Pause_Exit",
-		new UI::Button());
+	pause_menu.addComponent("Pause_Resume", new UI::Button());
+	pause_menu.addComponent("Pause_Exit", new UI::Button());
 
 	UI::Button* resumeButton = pause_menu.getComponent<UI::Button>("Pause_Resume");
 	UI::Button* exitButton = pause_menu.getComponent<UI::Button>("Pause_Exit");
@@ -90,16 +90,16 @@ void LUCY::GameState::UISetup()
 	exitButton->setFont(data->assets.GetFontPtr("Press_Start"));
 	exitButton->setText("EXIT");
 
-	pause_menu.setComponentPosition("Pause_Resume", 
+	pause_menu.setComponentPosition("Pause_Resume",
 		sf::Vector2f(pause_menu.getSize().x / 2.0 - resumeButton->getSize().x / 2.0, 50));
-	pause_menu.setComponentPosition("Pause_Exit", 
+	pause_menu.setComponentPosition("Pause_Exit",
 		sf::Vector2f(pause_menu.getSize().x / 2.0 - resumeButton->getSize().x / 2.0, 140));
 }
 
 void LUCY::GameState::displayPauseMenu()
 {
 	if (isPausing) {
-		
+
 	}
 }
 
@@ -131,10 +131,9 @@ void LUCY::GameState::VInit()
 		lanes[i].setSpawnPosition(sf::Vector2f(ENEMY_SPAWN_X, (i + 1) * LANE_HEIGHT));
 	}
 
-	for (Lane &lane : lanes) {
-		lane.spawnEnemyUnit(new Archer(data));
-	}
-	lanes[0].getEnemyUnit(0)->run();
+	/*for (int i = 0; i < TOTAL_LANES; i++) {
+		lanes[i].spawnEnemyUnit(new EvilArcher(data, &lanes[i]));
+	}*/
 
 	UISetup();
 }
@@ -143,7 +142,7 @@ void LUCY::GameState::VHandleInput()
 {
 	sf::Event event;
 	while (data->window.pollEvent(event)) {
-		
+
 		if (event.type == sf::Event::Closed) {
 			VExit();
 			data->window.close();
@@ -162,14 +161,30 @@ void LUCY::GameState::VHandleInput()
 			bottom_ui.handleInput(event, data->window);
 
 			if (bottom_ui.getComponent<UI::Button>("Archer")->isClicked(event, data->window)) {
-				lanes[0].spawnEnemyUnit(new Archer(data));
+				lanes[0].spawnEnemyUnit(new UNITS::EvilArcher(data, lanes, 0));
 			}
 
 			if (event.type == sf::Event::MouseButtonPressed) {
 				int laneNo = UTILS.screenPositionToLaneMap(sf::Mouse::getPosition(data->window), 0, TOTAL_LANES, LANE_HEIGHT);
-				if (laneNo != -1)
-					lanes[UTILS.screenPositionToLaneMap(sf::Mouse::getPosition(data->window), 0, TOTAL_LANES, LANE_HEIGHT)].spawnEnemyUnit(new Archer(data));
+				if (laneNo != -1) {
+
+					bool areaIsEmpty = true;
+					for (int i = 0; i < lanes[laneNo].getFriendlyCount(); i++) {
+						if (selectionArea.getGlobalBounds().intersects(
+							lanes[laneNo].getFriendlyUnit(i)->getUnitBounds())) {
+							areaIsEmpty = false;
+							break;
+						}
+					}
+
+					if (areaIsEmpty) {
+						lanes[laneNo].spawnFriendlyUnit(new UNITS::Archer(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+					}
+
+				}
+
 			}
+
 		}
 		// Pause inputs
 		else {
@@ -215,16 +230,15 @@ void LUCY::GameState::VUpdate(float dt)
 	if (index != -1)
 		selectionArea.setPosition(sf::Mouse::getPosition(data->window).x - 43, LANE_HEIGHT * index);
 
-	
-
-	std::cout << cashStr << std::endl;
-	std::cout << foodStr << std::endl;
-
-
 	for (Lane &lane : lanes) {
 		for (int i = 0; i < lane.getEnemyCount(); i++) {
 			lane.getEnemyUnit(i)->update();
 		}
+		for (int i = 0; i < lane.getFriendlyCount(); i++) {
+			lane.getFriendlyUnit(i)->update();
+		}
+
+		lane.removeDeadUnits();
 	}
 }
 
@@ -242,7 +256,11 @@ void LUCY::GameState::VDraw(float dt)
 		for (int j = 0; j < lanes[i].getEnemyCount(); j++) {
 			lanes[i].getEnemyUnit(j)->draw(renderTexture);
 		}
+		for (int j = 0; j < lanes[i].getFriendlyCount(); j++) {
+			lanes[i].getFriendlyUnit(j)->draw(renderTexture);
+		}
 	}
+
 	bottom_ui.draw(renderTexture);
 
 	resources_ui.draw(renderTexture);
@@ -261,12 +279,12 @@ void LUCY::GameState::VDraw(float dt)
 		sf::Shader sh;
 		sh.loadFromFile("res/shader/tint.shader", sf::Shader::Fragment);
 		sh.setUniform("u_texture", sf::Shader::CurrentTexture);
-		
+
 		data->window.draw(spr, &sh);
 
 		pause_menu.draw(data->window);
 	}
-	else 
+	else
 		data->window.draw(spr);
 
 	alert.draw(data->window);

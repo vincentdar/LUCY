@@ -2,7 +2,10 @@ knight 86 x 52
 archer 37 x 51
 archer revised 37 * 53
 demon 170 x 116
-assassin 54 x 36, knife 16 * 8
+assassin 54 x 36, knife 16 x 8
+defender 34 x 49
+spearman 71 x 51
+healer 42 x 52
 
 NOT USED YET
 kraken 182 x 160, 241 x 120, 135 x 188, 269 x 156, 251 x 174

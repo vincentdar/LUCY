@@ -59,12 +59,7 @@ void Animator::updateAnimation()
 	{
 		if (!current->getIsLooping())
 		{
-			if (!queueStates.empty() && !current->getAllowCancel()) {
-				current = queueStates.front();
-				queueStates.pop();
-			}
-			else
-				current = defaultState;
+			current = defaultState;
 		}
 		current->resetState();
 	}
