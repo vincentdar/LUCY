@@ -28,6 +28,14 @@ namespace UNITS
 		triggerStateChanges();
 
 		animator.updateAnimation();
+
+		base.setPosition(charSprite.getGlobalBounds().left, charSprite.getPosition().y - charSprite.getGlobalBounds().height - 5);
+		bar.setPosition(charSprite.getGlobalBounds().left, charSprite.getPosition().y - charSprite.getGlobalBounds().height - 5);
+		bar.setSize(sf::Vector2f(UTILS.getValueFromRange(0, stats.max_health, 0, 1, stats.health) * 100, 10));
+	}
+
+	void Base::setup(sf::Vector2f spawnPosition)
+	{
 	}
 
 	void Base::draw(sf::RenderTarget & target)
@@ -47,6 +55,9 @@ namespace UNITS
 			target.draw(charSprite);
 			charSprite.setColor(sf::Color::White);
 		}
+
+		target.draw(base);
+		target.draw(bar);
 	}
 
 	void Base::processStateChanges()

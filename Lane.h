@@ -53,4 +53,5 @@ public:
 	void removeDeadUnits();
 
 	void setSpawnPosition(sf::Vector2f position);
+	sf::Vector2f getSpawnPosition() { return enemyLaneSpawnPoint; }
 };

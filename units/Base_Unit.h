@@ -17,8 +17,9 @@ namespace UNITS {
 		float health;
 		float range;
 		float normalDamage;
-		float mp;
 		float movementSpeed;
+
+		float max_health;
 	};
 
 	class Base
@@ -57,7 +58,7 @@ namespace UNITS {
 		Stats getUnitStats() { return stats; }
 
 		virtual void update();
-		virtual void setup(sf::Vector2f spawnPosition) = 0;
+		virtual void setup(sf::Vector2f spawnPosition);
 		virtual void draw(sf::RenderTarget& target);
 		virtual void skill() = 0;
 

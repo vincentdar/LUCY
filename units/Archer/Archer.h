@@ -47,6 +47,8 @@ namespace UNITS {
 			charSprite.setScale(2, 2);
 			charSprite.setPosition(position);
 			setState(IDLE);
+
+			Friendly::setup(position);
 		}
 
 		void updateStateActions() override {

@@ -37,6 +37,8 @@ namespace UNITS {
 			charSprite.setScale(2, 2);
 			charSprite.setPosition(position);
 			setState(MOVE);
+
+			Enemies::setup(position);
 		}
 
 		void update() {
