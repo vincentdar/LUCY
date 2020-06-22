@@ -36,17 +36,9 @@ void LUCY::Wheat::HandleInput()
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
-			if (m_state == Seed)
+			if (m_state == Harvest)
 			{
-				m_state = Grow;
-			}
-			else if (m_state == Grow)
-			{
-				m_state = Harvest;
-			}
-			else if (m_state == Harvest)
-			{
-				m_state = Pillage;
+				
 			}
 			else if (m_state == Pillage)
 			{
@@ -59,27 +51,6 @@ void LUCY::Wheat::HandleInput()
 void LUCY::Wheat::Update(float dt)
 {
 	anim.Update(dt, m_sprite, true);
-	//if (m_state == Seed)
-	//{
-	//	//std::cout << "seed" << std::endl;
-	//	anim.Change(1, 1.0f, 3, 0);
-	//}
-	//else if (m_state == Grow)
-	//{
-	//	//std::cout << "Grow" << std::endl;
-	//	anim.Change(1, 1.0f, 0, 0);
-	//}
-	//else if (m_state == Harvest)
-	//{
-	//	//std::cout << "Harvest" << std::endl;
-	//	anim.Change(1, 1.0f, 1, 0);
-	//}
-	//else if (m_state == Pillage)
-	//{
-	//	//std::cout << "Pillage" << std::endl;
-	//	anim.Change(1, 1.0f, 2, 0);
-	//}
-
 	if (m_state == Seed) {
 		anim.Change(1, 1.0f, 3, 0);
 

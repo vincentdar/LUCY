@@ -13,7 +13,7 @@ namespace UNITS
 			for (int i = 0; i < laneDataRef[laneNumber].getEnemyCount(); i++)
 			{
 				int distance = laneDataRef[laneNumber].getEnemyUnit(i)->getPosition().x - charSprite.getPosition().x;
-				if (distance < stats.attackRange && distance < enemyWithMinDistance && distance > 0)
+				if (distance < stats.range && distance < enemyWithMinDistance && distance > 0)
 				{
 					enemyWithMinDistance = distance;
 					enemyUnit = laneDataRef[laneNumber].getEnemyUnit(i);
@@ -22,7 +22,7 @@ namespace UNITS
 
 			if (enemyUnit != nullptr) {
 				this->setState(ATTACK);
-				enemyUnit->takeDamage(stats.attack);
+				enemyUnit->takeDamage(stats.normalDamage);
 				enemyUnit = nullptr;
 				clock.restart();
 			}

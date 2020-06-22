@@ -7,11 +7,11 @@ namespace LUCY
 {
 	enum Crop_State
 	{
-		Seed = 0,
+		Seed,
 		Grow,
 		Harvest,
 		Pillage,
-		Withered
+		Withered,
 	};
 
 	class Wheat
@@ -27,7 +27,7 @@ namespace LUCY
 		sf::Clock m_clock;
 		Animation anim;
 	public:
-		Wheat(GameDataRef data): m_data(data) {}
+		Wheat(GameDataRef data) : m_data(data) {}
 		void Init();
 		void Planted();
 		void Harvested();

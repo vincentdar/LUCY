@@ -12,7 +12,7 @@ namespace UNITS
 
 		void setup(sf::Vector2f position) {
 
-			Friendly::setUnitStats(1, 1, 1, 1, 1, 1, 1, 1, 1, 1); //Sets unit info
+			Friendly::setUnitStats(1, 1, 1); //Sets unit info
 
 			animator.bindSprite(&charSprite);
 

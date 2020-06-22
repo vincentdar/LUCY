@@ -139,7 +139,7 @@ void LUCY::GameState::VInit()
 
 	renderTexture.create(data->window.getSize().x, data->window.getSize().y);
 
-	selectionArea.setSize(sf::Vector2f(86, LANE_HEIGHT));
+	selectionArea.setSize(sf::Vector2f(60, LANE_HEIGHT));
 	selectionArea.setFillColor(sf::Color(0, 255, 0, 100));
 	selectionArea.setOrigin(selectionArea.getGlobalBounds().width / 2.0, selectionArea.getGlobalBounds().height / 2.0);
 
@@ -308,7 +308,6 @@ void LUCY::GameState::VUpdate(float dt)
 	}
 
 	wheat.Update(1);
-	std::cout << wheat.getSprite().getPosition().x << wheat.getSprite().getPosition().y << std::endl;
 }
 
 void LUCY::GameState::VDraw(float dt)

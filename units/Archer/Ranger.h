@@ -1,15 +1,15 @@
 #pragma once
 
-#include "../Enemies.h"
+#include "Archer.h"
 
 namespace UNITS {
-	class EvilArcher : public Enemies {
-
+	class Ranger : public Archer {
 	public:
-		EvilArcher(GameDataRef data, Lane* lane, int laneNumber) : Enemies(data, lane, laneNumber) {}
+		Ranger(GameDataRef data, Lane* lane, int laneNumber) : Archer(data, lane, laneNumber) {}
 
-		void setup(sf::Vector2f position) override {
-			Base::setUnitStats(1000, 1, 500);
+		void setup(sf::Vector2f position) {
+			
+			Friendly::setUnitStats(90, 50, 600);
 
 			animator.bindSprite(&charSprite);
 
@@ -36,17 +36,7 @@ namespace UNITS {
 
 			charSprite.setScale(2, 2);
 			charSprite.setPosition(position);
-			setState(MOVE);
-		}
-
-		void update() {
-			Base::update();
-			if (state == MOVE)
-				charSprite.move(-1, 0);
-		}
-
-		void skill() {
-
+			setState(IDLE);
 		}
 	};
 }

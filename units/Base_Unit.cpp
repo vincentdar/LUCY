@@ -1,16 +1,20 @@
 #include "Base_Unit.h"
 
 #include "../Lane.h"
-#include "..\ui\UI_Base.h"
+
+#define UNIT_BOUND_SIZE sf::Vector2f(60, LANE_HEIGHT)
 
 namespace UNITS
 {
 	Base::Base(GameDataRef data, Lane lanes[], int laneNumber)
-		: data(data), laneDataRef(lanes), laneNumber(laneNumber), laneTotal(TOTAL_LANES) {}
+		: data(data), 
+		laneDataRef(lanes), 
+		laneNumber(laneNumber), 
+		laneTotal(TOTAL_LANES) {}
 
 	void Base::update()
 	{
-		// Set origin ke bawah tengah
+		// Set origin ke bawah tengah, supaya pos sprite konsisten
 		charSprite.setOrigin(
 			charSprite.getLocalBounds().width / 2.0,
 			charSprite.getLocalBounds().height
@@ -30,15 +34,18 @@ namespace UNITS
 	{
 		if (isHit) {
 			// Override existing shader
-			shader.loadFromFile("res/shader/hitflash.shader", sf::Shader::Fragment);
-			target.draw(charSprite, &shader);
+			//shader.loadFromFile("res/shader/hitflash.shader", sf::Shader::Fragment);
+			charSprite.setColor(sf::Color::Black);
 			isHit = false;
+			return;
 		}
-		else if (state == SKILL) {
+		
+		if (skillIsActivated) {
 			target.draw(charSprite, &shader);
 		}
 		else {
 			target.draw(charSprite);
+			charSprite.setColor(sf::Color::White);
 		}
 	}
 
@@ -58,11 +65,6 @@ namespace UNITS
 				break;
 			case DIE:
 				//animator.playAnimation("Die");
-				//printf("DIE\n");
-				break;
-			case SKILL:
-				shader.loadFromFile("res/shader/outline.shader", sf::Shader::Fragment);
-				shader.setUniform("outline_color", sf::Glsl::Vec4(sf::Color::Yellow));
 				break;
 			default:
 				break;
@@ -70,6 +72,12 @@ namespace UNITS
 
 			stateIsChanged = false;
 		}
+
+		if (skillIsActivated) {
+			shader.loadFromFile("res/shader/outline.shader", sf::Shader::Fragment);
+			shader.setUniform("outline_color", sf::Glsl::Vec4(sf::Color::Red));
+		}
+
 	}
 
 	void Base::takeDamage(int damage)
@@ -81,13 +89,6 @@ namespace UNITS
 		}
 	}
 
-	void Base::triggerStateChanges() {}
-
-	void Base::updateStateActions()
-	{
-		
-	}
-
 	void Base::setState(UnitState state)
 	{
 		this->state = state;
@@ -95,8 +96,20 @@ namespace UNITS
 		this->stateIsChanged = true;
 	}
 
-	void Base::setUnitStats(float health, float mp, float movementSpeed, float defense, float defenseUp, float attack, float attackUp, float attackRange, float attackSpeed, float shieldHP)
+	void Base::setUnitStats(float health, float normalDamage, float range)
 	{
-		stats = { health * 100, mp, movementSpeed, defense, defenseUp, attack, attackUp, attackRange, attackSpeed, shieldHP };
+		stats.health = health;
+		stats.normalDamage = normalDamage;
+		stats.range = range;
+	}
+
+	sf::FloatRect Base::getUnitBounds() {
+		return
+			sf::FloatRect(
+				sf::Vector2f(
+					charSprite.getPosition().x - (UNIT_BOUND_SIZE.x / 2.0),
+					charSprite.getPosition().y - charSprite.getGlobalBounds().height),
+				UNIT_BOUND_SIZE
+			);
 	}
 }
