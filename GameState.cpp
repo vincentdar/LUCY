@@ -7,7 +7,17 @@
 
 void LUCY::GameState::saveToFile(int slot)
 {
-
+	std::ofstream file("saved.txt");
+	if (file.is_open())
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			std::string buffer = std::to_string(i) + "\n" + lanes[i].LaneSerialize();
+			std::cout << buffer << std::endl;
+			file << buffer;
+		}
+		file.close();
+	}
 }
 
 void LUCY::GameState::loadFromFile(int slot)
@@ -173,6 +183,11 @@ void LUCY::GameState::VHandleInput()
 			if (event.key.code == sf::Keyboard::Escape) {
 				isPausing = !isPausing;
 			}
+		}
+
+		if (event.key.code == sf::Keyboard::J)
+		{
+			saveToFile(1);
 		}
 
 		// Non game inputs

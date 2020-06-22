@@ -53,5 +53,16 @@ public:
 	void removeDeadUnits();
 
 	void setSpawnPosition(sf::Vector2f position);
-	sf::Vector2f getSpawnPosition() { return enemyLaneSpawnPoint; }
+
+	std::string LaneSerialize()
+	{
+		std::string buffer;
+		for (auto i : friendly_units)
+		{
+			buffer += i->getType() + "$";
+			buffer += i->StatSerialize();
+			buffer += "\n";
+		}
+		return buffer;
+	}
 };

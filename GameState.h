@@ -14,6 +14,7 @@
 #include "Wheat.h"
 
 #include "Lane.h"
+#include <fstream>
 
 namespace LUCY {
 
@@ -87,6 +88,6 @@ namespace LUCY {
 		void VResume()			override;
 		void VPause()			override;
 		void VExit()			override;
-
+		//save sm load di cpp nya ya
 	};
 }
