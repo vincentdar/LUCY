@@ -1,8 +1,8 @@
 #include "GameState.h"
 
-#include "units/Friendly/Archer.h"
+#include "units/Archer/Archer.h"
 #include "units/Enemy/EvilArcher.h"
-#include "units/Friendly/GoldenKnight.h"
+#include "units/Knight/GoldenKnight.h"
 #include "units/Friendly/Assassin.h"
 
 void LUCY::GameState::saveToFile(int slot)
@@ -173,7 +173,6 @@ void LUCY::GameState::VHandleInput()
 
 		// Game Inputs
 		if (!isPausing) {
-			bottom_ui.handleInput(event, data->window);
 
 			// Bottom UI selection
 			if (bottom_ui.getComponent<UI::Button>("Archer")->isClicked(event, data->window)) {

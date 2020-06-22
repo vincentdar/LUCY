@@ -10,8 +10,7 @@ namespace UI {
 	protected:
 		// Bisa color atau texture. Tergantung yg di set terakhir
 		bool usingColor = false;
-		
-		sf::Color			main_color;
+
 		sf::Color			pressed;
 		sf::Color			hovered_color;
 		sf::Color			disabled;
