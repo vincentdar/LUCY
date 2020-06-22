@@ -2,7 +2,6 @@
 
 #include "../Game.h"
 #include "../Animator.h"
-#include "UnitStates.h"
 #include <SFML/Graphics.hpp>
 
 using LUCY::GameDataRef;
@@ -15,11 +14,19 @@ namespace UNITS {
 
 	struct Stats
 	{
-		float health;
-		float range;
-		float normalDamage;
+		float health;	
 		float mp;
 		float movementSpeed;
+		
+		float defense;
+		float defenseUp;
+
+		float attack;
+		float attackUp;
+		float attackRange;
+		float attackSpeed;
+
+		float shieldHP;	
 	};
 
 	class Base
@@ -27,7 +34,9 @@ namespace UNITS {
 	protected:
 		GameDataRef data;
 
+		// Unit stats
 		Stats		stats;
+		float		doT;		// Damage over time (if any)?
 
 		// Process State
 		UnitState	state;
@@ -47,6 +56,7 @@ namespace UNITS {
 
 		// Health bar
 		sf::RectangleShape	base, bar;
+		sf::Text	level;
 
 		sf::Clock clock;
 
@@ -67,10 +77,42 @@ namespace UNITS {
 		void setState(UnitState state);
 		UnitState getState() { return state; }
 
-		void setUnitStats(float health, float normalDamage, float range);
+		void setUnitStats(
+			float health,
+			float mp,
+			float movementSpeed,
+
+			float defense,
+			float defenseUp,
+
+			float attack,
+			float attackUp,
+			float attackRange,
+			float attackSpeed,
+
+			float shieldHP
+		);
 
 		sf::FloatRect getUnitBounds() { return charSprite.getGlobalBounds(); }
 		sf::Vector2f getPosition() { return charSprite.getPosition(); }
+
+		float getHP() { return stats.health; }
+		void setHP(float hp) { stats.health *= hp; }
+
+		float getAtk() { return stats.attack; }
+		void setAttack(float atk) { stats.attack *= atk; }
+
+		float getDef() { return stats.defense; }
+		void setDef(float def) { stats.defense *= def; }
+
+		float getRange() { return stats.attackRange; }
+		void setRange(float range) { stats.attackRange = range; }
+
+		float getAttackSpeed() { return stats.attackSpeed; }
+		void setAttackSpeed(float as) { stats.attackSpeed = as; }
+
+		int getCurrentLane() { return laneNumber; }
+		void setCurrentLane(int lane) { laneNumber = lane; }
 	};
 
 }

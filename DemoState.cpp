@@ -6,20 +6,22 @@
 //{
 //	DemoState::DemoState(GameDataRef data) : m_data(data)
 //	{
-//		
+//
 //	}
 //
 //	void DemoState::VInit()
 //	{
-//		units.push_back(new UNITS::Archer(m_data, nullptr));
+//		units.push_back(new Archer(m_data));
 //		units.back()->setup(sf::Vector2f(50, 50));
-//		
-//		INPUT.registerKey("Attack"	, sf::Keyboard::Enter);
-//		INPUT.registerKey("Move"	, sf::Keyboard::A);
-//		INPUT.registerKey("Skill1"	, sf::Keyboard::Num1);
-//		INPUT.registerKey("Skill2"	, sf::Keyboard::Num2);
-//		INPUT.registerKey("Skill3"	, sf::Keyboard::Num3);
-//		INPUT.registerKey("Skill4"	, sf::Keyboard::Num4);
+//		units.push_back(new Assassin(m_data));
+//		units.back()->setup(sf::Vector2f(50, 50));
+//
+//		INPUT.registerKey("Attack", sf::Keyboard::Enter);
+//		INPUT.registerKey("Move", sf::Keyboard::A);
+//		INPUT.registerKey("Skill1", sf::Keyboard::Num1);
+//		INPUT.registerKey("Skill2", sf::Keyboard::Num2);
+//		INPUT.registerKey("Skill3", sf::Keyboard::Num3);
+//		INPUT.registerKey("Skill4", sf::Keyboard::Num4);
 //
 //		cam.set(
 //			sf::Vector2f(SCREEN_WIDTH / 2.0, SCREEN_HEIGHT / 2.0),

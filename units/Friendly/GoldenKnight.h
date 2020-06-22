@@ -10,13 +10,13 @@ namespace UNITS
 		: public Friendly
 	{
 	public:
-		GoldenKnight(LUCY::GameDataRef data, Lane* lane, int laneNumber) : Friendly(data, lane, laneNumber) {  }
+		GoldenKnight(LUCY::GameDataRef data, Lane lanes[], int laneNumber) : Friendly(data, lanes, laneNumber) {  }
 
 		void skill() {}
 
 		void setup(sf::Vector2f position) {
 
-			Friendly::setUnitStats(100, 30, 200);
+			Friendly::setUnitStats(1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 
 			animator.bindSprite(&charSprite);
 

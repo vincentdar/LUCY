@@ -13,7 +13,7 @@ namespace UNITS
 			for (int i = 0; i < laneDataRef[laneNumber].getFriendlyCount(); i++)
 			{
 				int distance = charSprite.getPosition().x - laneDataRef[laneNumber].getFriendlyUnit(i)->getPosition().x;
-				if (distance < stats.range && distance < friendlyWithMinDistance && distance > 0)
+				if (distance < stats.attackRange && distance < friendlyWithMinDistance && distance > 0)
 				{
 					friendlyWithMinDistance = distance;
 					friendlyUnit = laneDataRef[laneNumber].getFriendlyUnit(i);
@@ -22,7 +22,7 @@ namespace UNITS
 
 			if (friendlyUnit != nullptr) {
 				this->setState(ATTACK);
-				friendlyUnit->takeDamage(stats.normalDamage);
+				friendlyUnit->takeDamage(stats.attack);
 				friendlyUnit = nullptr;
 				clock.restart();
 			}

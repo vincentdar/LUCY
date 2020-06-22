@@ -7,14 +7,13 @@ namespace UNITS {
 		public Friendly
 	{
 	private:
-		float range = 100;
 
 	public:
-		Archer(LUCY::GameDataRef data, Lane* lane, int laneNumber) : Friendly(data, lane, laneNumber) {}
+		Archer(LUCY::GameDataRef data, Lane lanes[], int laneNumber) : Friendly(data, lanes, laneNumber) {}
 
 		void setup(sf::Vector2f position) override {
 
-			Friendly::setUnitStats(100, 10, 600); //Sets unit info
+			Friendly::setUnitStats(1, 1, 1, 1, 1, 1 ,1, 1, 1, 1); //Sets unit info
 
 			animator.bindSprite(&charSprite);
 

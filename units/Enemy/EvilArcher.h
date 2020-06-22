@@ -9,7 +9,7 @@ namespace UNITS {
 		EvilArcher(GameDataRef data, Lane* lane, int laneNumber) : Enemies(data, lane, laneNumber) {}
 
 		void setup(sf::Vector2f position) override {
-			Base::setUnitStats(100, 10, 500);
+			Enemies::setUnitStats(1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 
 			animator.bindSprite(&charSprite);
 

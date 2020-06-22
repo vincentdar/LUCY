@@ -10,7 +10,7 @@ namespace UNITS
 
 	void Base::update()
 	{
-		// Set origin ke bawah tengah, supaya pos sprite konsisten
+		// Set origin ke bawah tengah
 		charSprite.setOrigin(
 			charSprite.getLocalBounds().width / 2.0,
 			charSprite.getLocalBounds().height
@@ -70,8 +70,6 @@ namespace UNITS
 
 			stateIsChanged = false;
 		}
-
-		std::cout << stateIsChanged << std::endl;
 	}
 
 	void Base::takeDamage(int damage)
@@ -97,10 +95,8 @@ namespace UNITS
 		this->stateIsChanged = true;
 	}
 
-	void Base::setUnitStats(float health, float normalDamage, float range)
+	void Base::setUnitStats(float health, float mp, float movementSpeed, float defense, float defenseUp, float attack, float attackUp, float attackRange, float attackSpeed, float shieldHP)
 	{
-		stats.health = health;
-		stats.normalDamage = normalDamage;
-		stats.range = range;
+		stats = { health * 100, mp, movementSpeed, defense, defenseUp, attack, attackUp, attackRange, attackSpeed, shieldHP };
 	}
 }

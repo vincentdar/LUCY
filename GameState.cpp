@@ -1,8 +1,9 @@
 #include "GameState.h"
 
-#include "units/Archer/Archer.h"
+#include "units/Friendly/Archer.h"
 #include "units/Enemy/EvilArcher.h"
-#include "units/Knight/GoldenKnight.h"
+#include "units/Friendly/GoldenKnight.h"
+#include "units/Friendly/Assassin.h"
 
 void LUCY::GameState::saveToFile(int slot)
 {
@@ -25,20 +26,23 @@ void LUCY::GameState::UISetup()
 	// Add UI components
 	bottom_ui.addComponent("Archer", new UI::Button());
 	bottom_ui.addComponent("Knight", new UI::Button());
+	bottom_ui.addComponent("Assassin", new UI::Button());
 
 	// Archer
 	UI::Button* btn1 = bottom_ui.getComponent<UI::Button>("Archer");
 	UI::Button* btn2 = bottom_ui.getComponent<UI::Button>("Knight");
+	UI::Button* btn3 = bottom_ui.getComponent<UI::Button>("Assassin");
 	btn1->set(UI::TOPLEFT, sf::Vector2f(37 * 2.2, 53 * 2.2), data->assets.GetTexturePtr("Archer_Green"), sf::IntRect(0, 53, 37, 53));
-
 	btn2->set(UI::TOPLEFT, sf::Vector2f(37 * 2.2, 53 * 2.2), data->assets.GetTexturePtr("Knight_Gold"), sf::IntRect(61, 0, -37, 53));
+	btn3->set(UI::TOPLEFT, sf::Vector2f(37 * 2.2, 53 * 2.2), data->assets.GetTexturePtr("Assassin_Green"), sf::IntRect(0, 0, 37, 36));
 
 	bottom_ui.setComponentPosition("Archer", sf::Vector2f(40, bottom_ui.getSize().y / 2.0 - btn1->getSize().y / 2.0));
-	bottom_ui.setComponentPosition("Knight", sf::Vector2f(40 + 5 + btn1->getSize().x, bottom_ui.getSize().y / 2.0 - btn1->getSize().y / 2.0));
+	bottom_ui.setComponentPosition("Knight", sf::Vector2f(45 + btn1->getSize().x, bottom_ui.getSize().y / 2.0 - btn1->getSize().y / 2.0));
+	bottom_ui.setComponentPosition("Assassin", sf::Vector2f(45 + btn1->getSize().x + btn2->getSize().x, bottom_ui.getSize().y / 2.0 - btn1->getSize().y / 2.0));
 
 	unitSelectionRef[0] = btn1;
 	unitSelectionRef[1] = btn2;
-	unitSelectionRef[2] = nullptr;
+	unitSelectionRef[2] = btn3;
 	unitSelectionRef[3] = nullptr;
 	unitSelectionRef[4] = nullptr;
 
@@ -111,9 +115,6 @@ void LUCY::GameState::UISetup()
 
 void LUCY::GameState::displayPauseMenu()
 {
-	if (isPausing) {
-
-	}
 }
 
 void LUCY::GameState::onExitClear()
@@ -140,7 +141,7 @@ void LUCY::GameState::VInit()
 	background.setTexture(*data->assets.GetTexturePtr("Grass"));
 	background.setPosition(sf::Vector2f(0, 0));
 
-	for (int i = 0; i < 6; i++) {
+	for (int i = 0; i < TOTAL_LANES; i++) {
 		lanes[i].setSpawnPosition(sf::Vector2f(ENEMY_SPAWN_X, (i + 1) * LANE_HEIGHT));
 	}
 
@@ -197,6 +198,17 @@ void LUCY::GameState::VHandleInput()
 					selectedUnit = 1;
 				}
 			}
+			if (bottom_ui.getComponent<UI::Button>("Assassin")->isClicked(event, data->window)) {
+				for (int i = 0; i < 5; i++) {
+					if (unitSelectionRef[i] != nullptr)
+						unitSelectionRef[i]->setOutline(0, sf::Color());
+				}
+
+				if (selectedUnit != 2) {
+					unitSelectionRef[2]->setOutline(5, sf::Color::White);
+					selectedUnit = 2;
+				}
+			}
 
 			// Selection area highlighting.
 			if (event.type == sf::Event::MouseButtonPressed) {
@@ -219,6 +231,9 @@ void LUCY::GameState::VHandleInput()
 						}
 						else if (selectedUnit == 1) {
 							lanes[laneNo].spawnFriendlyUnit(new UNITS::GoldenKnight(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+						}
+						else if (selectedUnit == 2) {
+							lanes[laneNo].spawnFriendlyUnit(new UNITS::Assassin(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
 						}
 
 						
