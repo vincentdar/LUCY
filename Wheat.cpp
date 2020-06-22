@@ -31,70 +31,83 @@ void LUCY::Wheat::Pillaged()
 
 void LUCY::Wheat::HandleInput()
 {
-		if (UTILS.isMouseOver(m_sprite.getPosition(), m_sprite.getGlobalBounds().width,
-			m_sprite.getGlobalBounds().height, m_data->window))
+	if (UTILS.isMouseOver(m_sprite.getPosition(), m_sprite.getGlobalBounds().width,
+		m_sprite.getGlobalBounds().height, m_data->window))
+	{
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
 		{
-			if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+			if (m_state == Seed)
 			{
-				std::cout << "aaaa" << std::endl;
-				if (m_state == Seed)
-				{
-					m_state = Grow;
-				}
-				else if (m_state == Grow)
-				{
-					m_state = Harvest;
-				}
-				else if (m_state == Harvest)
-				{
-					m_state = Pillage;
-				}
-				else if (m_state == Pillage)
-				{
-					m_state = Seed;
-				}
+				m_state = Grow;
 			}
-			//switch (m_state)
-			//{
-			//case Seed:
-			//	Planted();
-			//	break;
-			//case Grow:
-			//	//Just let it grow
-			//	break;
-			//case Harvest:
-			//	Harvested();
-			//	break;
-			//case Pillage:
-			//	Pillaged();
-			//	break;
-			//default:
-			//	break;
-			//}
+			else if (m_state == Grow)
+			{
+				m_state = Harvest;
+			}
+			else if (m_state == Harvest)
+			{
+				m_state = Pillage;
+			}
+			else if (m_state == Pillage)
+			{
+				m_state = Seed;
+			}
 		}
+	}
 }
 
 void LUCY::Wheat::Update(float dt)
 {
 	anim.Update(dt, m_sprite, true);
-	if (m_state == Seed)
-	{
-		//std::cout << "seed" << std::endl;
+	//if (m_state == Seed)
+	//{
+	//	//std::cout << "seed" << std::endl;
+	//	anim.Change(1, 1.0f, 3, 0);
+	//}
+	//else if (m_state == Grow)
+	//{
+	//	//std::cout << "Grow" << std::endl;
+	//	anim.Change(1, 1.0f, 0, 0);
+	//}
+	//else if (m_state == Harvest)
+	//{
+	//	//std::cout << "Harvest" << std::endl;
+	//	anim.Change(1, 1.0f, 1, 0);
+	//}
+	//else if (m_state == Pillage)
+	//{
+	//	//std::cout << "Pillage" << std::endl;
+	//	anim.Change(1, 1.0f, 2, 0);
+	//}
+
+	if (m_state == Seed) {
 		anim.Change(1, 1.0f, 3, 0);
+
+		// Grow now!
+		if (m_clock.getElapsedTime().asSeconds() >= 10) {
+			m_clock.restart();
+			m_state = Grow;
+		}
 	}
-	else if (m_state == Grow)
-	{
-		//std::cout << "Grow" << std::endl;
+
+	else if (m_state == Grow) {
 		anim.Change(1, 1.0f, 0, 0);
+
+		if (m_clock.getElapsedTime().asSeconds() >= 10) {
+			m_clock.restart();
+			m_state = Harvest;
+		}
 	}
-	else if (m_state == Harvest)
-	{
-		//std::cout << "Harvest" << std::endl;
+
+	else if (m_state == Harvest) {
 		anim.Change(1, 1.0f, 1, 0);
+
+		if (m_clock.getElapsedTime().asSeconds() >= 10) {
+			m_clock.restart();
+				m_state = Withered;
+		}
 	}
-	else if (m_state == Pillage)
-	{
-		//std::cout << "Pillage" << std::endl;
+	else if (m_state == Pillage || m_state == Withered) {
 		anim.Change(1, 1.0f, 2, 0);
 	}
 }

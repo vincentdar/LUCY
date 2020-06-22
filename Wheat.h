@@ -10,7 +10,8 @@ namespace LUCY
 		Seed = 0,
 		Grow,
 		Harvest,
-		Pillage
+		Pillage,
+		Withered
 	};
 
 	class Wheat

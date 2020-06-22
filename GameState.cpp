@@ -59,22 +59,20 @@ void LUCY::GameState::UISetup()
 	cashText.setPosition(resources_ui.getPosition().x + 20, resources_ui.getPosition().y + 30);
 	cashText.setFont(*data->assets.GetFontPtr("Press_Start"));
 	cashText.setCharacterSize(15);
+
 	foodText.setPosition(resources_ui.getPosition().x + 20, resources_ui.getPosition().y + 80);
 	foodText.setFont(*data->assets.GetFontPtr("Press_Start"));
 	foodText.setCharacterSize(15);
-
-	
-
 	// UI
 
 	// Opening alert setup
 	alert.setSize(sf::Vector2f(800, 300));
 	alert.setOrigin(UI::CENTERED);
 	alert.setPosition(sf::Vector2f(data->window.getSize().x / 2.0, 0.0));
-	alert.setTitle("Hello World!");
-	alert.setContent("Welcome to the game!\nHere's how to play!");
-	alert.setTitleCharacterSize(40);
-	alert.setContentCharacterSize(25);
+	alert.setTitle("How to play:");
+	alert.setContent("Plant seeds and harvest crops by clicking on the left grid,\nClick on the heroes to select and spawn them on the field!\nFarming gets you food and killing enemies gets you money.");
+	alert.setTitleCharacterSize(30);
+	alert.setContentCharacterSize(20);
 	alert.setFont(data->assets.GetFontPtr("Press_Start"));
 	alert.setTexture(data->assets.GetTexturePtr("UI_Box"));
 	alert.init();
@@ -113,8 +111,15 @@ void LUCY::GameState::UISetup()
 		sf::Vector2f(pause_menu.getSize().x / 2.0 - resumeButton->getSize().x / 2.0, 140));
 }
 
-void LUCY::GameState::displayPauseMenu()
+void LUCY::GameState::GridSetup()
 {
+	for (int i = 0; i < 5; i++) {
+		for (int j = 0; j < 5; j++) {
+			farmGrid[i][j] = 0;
+		}
+	}
+
+	
 }
 
 void LUCY::GameState::onExitClear()
@@ -150,6 +155,8 @@ void LUCY::GameState::VInit()
 	}
 
 	UISetup();
+
+	wheat.Init();
 }
 
 void LUCY::GameState::VHandleInput()
@@ -243,7 +250,7 @@ void LUCY::GameState::VHandleInput()
 
 		}
 		// Pause inputs
-		else {
+		else{
 			pause_menu.handleInput(event, data->window);
 
 			if (pause_menu.getComponent<UI::Button>("Pause_Resume")->isClicked(event, data->window)) {
@@ -252,7 +259,10 @@ void LUCY::GameState::VHandleInput()
 			else if (pause_menu.getComponent<UI::Button>("Pause_Exit")->isClicked(event, data->window)) {
 				VExit();
 			}
+
 		}
+
+		wheat.HandleInput();
 	}
 
 }
@@ -296,6 +306,9 @@ void LUCY::GameState::VUpdate(float dt)
 
 		lane.removeDeadUnits();
 	}
+
+	wheat.Update(1);
+	std::cout << wheat.getSprite().getPosition().x << wheat.getSprite().getPosition().y << std::endl;
 }
 
 void LUCY::GameState::VDraw(float dt)
@@ -307,7 +320,6 @@ void LUCY::GameState::VDraw(float dt)
 
 	renderTexture.draw(background);
 
-
 	for (int i = 0; i < TOTAL_LANES; i++) {
 		for (int j = 0; j < lanes[i].getEnemyCount(); j++) {
 			lanes[i].getEnemyUnit(j)->draw(renderTexture);
@@ -316,6 +328,7 @@ void LUCY::GameState::VDraw(float dt)
 			lanes[i].getFriendlyUnit(j)->draw(renderTexture);
 		}
 	}
+
 
 	bottom_ui.draw(renderTexture);
 
@@ -326,6 +339,8 @@ void LUCY::GameState::VDraw(float dt)
 	renderTexture.draw(foodText);
 
 	renderTexture.draw(selectionArea);
+
+	renderTexture.draw(wheat.getSprite());
 
 	renderTexture.display();
 

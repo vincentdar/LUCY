@@ -3,8 +3,8 @@
 // Matthew: Resolution ku 1366 x 768 ui :(
 //#define SCREEN_WIDTH 1920
 //#define SCREEN_HEIGHT 1080
-#define SCREEN_WIDTH 1280
-#define SCREEN_HEIGHT 720
+#define SCREEN_WIDTH sf::VideoMode::getDesktopMode().width
+#define SCREEN_HEIGHT sf::VideoMode::getDesktopMode().height
 
 #define ASSET_CONF "res/Assets.conf"
 

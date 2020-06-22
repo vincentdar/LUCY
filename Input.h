@@ -7,14 +7,6 @@
 
 #define INPUT Input::get()
 
-// Singleton class input
-// Class ini menyimpan data semua input yg diterima,
-//  dan bisa diberi label untuk akses lebih mudah.
-
-// Last edit: 
-//		Matthew Sutanto, 28/05/2020 => First
-//		Matthew Sutanto, 31/05/2020 => Nambah namespace LUCY. biar keren.
-
 namespace LUCY {
 
 	enum InputMode {

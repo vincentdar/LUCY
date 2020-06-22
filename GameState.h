@@ -11,6 +11,7 @@
 #include "ui/UI_Textfield.h"
 #include "ui/UI_Text.h"
 #include "ui/UI_Alert.h"
+#include "Wheat.h"
 
 #include "Lane.h"
 
@@ -62,11 +63,18 @@ namespace LUCY {
 
 		// Functions untuk create UI dll
 		void UISetup();
-		void displayPauseMenu();
+
+		// Farm
+		int farmGrid[5][5];
+		sf::FloatRect gridSize;
+
+		void GridSetup();
+
+		Wheat wheat;
 
 	public:
 		GameState(GameDataRef data, int saveSlot = -1) 
-			: data(data), saveSlot(saveSlot) {}
+			: data(data), saveSlot(saveSlot), wheat(data) {}
 
 		// Fungsi khusus di GameState
 		void onExitClear();

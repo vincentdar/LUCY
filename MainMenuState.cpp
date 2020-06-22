@@ -13,8 +13,8 @@ void LUCY::MainMenuState::VInit()
 
 	//logo
 	_logo.setTexture(*m_data->assets.GetTexturePtr("LogoGame"));
-	_logo.setOrigin(_logo.getLocalBounds().width / 2.0, _logo.getLocalBounds().height / 2.0);
-	_logo.setPosition(m_data->window.getSize().x/2.0,m_data->window.getSize().y/4.5);
+	_logo.setOrigin(_logo.getLocalBounds().width / 2.0, _logo.getLocalBounds().height / 1.6);
+	_logo.setPosition(m_data->window.getSize().x /2.0, m_data->window.getSize().y/ 3.5);
 	UTILS.getScaleToSize(*m_data->assets.GetTexturePtr("LogoGame"), sf::Vector2f(820, 400));
 	sf::Vector2f scaleSize = UTILS.getScaleToSize(*m_data->assets.GetTexturePtr("LogoGame"),sf::Vector2f(820, 400));
 	_logo.scale(scaleSize);
@@ -22,7 +22,7 @@ void LUCY::MainMenuState::VInit()
 	//menu box 
 	_menuBox.setSize(sf::Vector2f(350.0f, 500.0f));
 	_menuBox.setOrigin(_menuBox.getLocalBounds().width / 2.0, _menuBox.getLocalBounds().height / 2.0);
-	_menuBox.setPosition(m_data->window.getSize().x / 2.0, m_data->window.getSize().y/1.6);
+	_menuBox.setPosition(m_data->window.getSize().x / 2.0, m_data->window.getSize().y / 2.0 + 100);
 	_menuBox.setFillColor(sf::Color(0, 0, 0, 80));
 
 	//buttons
@@ -38,15 +38,17 @@ void LUCY::MainMenuState::VInit()
 		_buttons[q].setSize(sf::Vector2f(300.0f, 75.0f));
 		_buttons[q].init();
 	}
-	_buttons[0].setPosition(sf::Vector2f(492.0f, 250.0f));
+	float buttonCentered = m_data->window.getSize().x / 2.0 - _buttons[0].getSize().x / 2.0;
+
+	_buttons[0].setPosition(sf::Vector2f(buttonCentered, 250.0f));
 	_buttons[0].setTexture(m_data->assets.GetTexturePtr("startButton"));
-	_buttons[1].setPosition(sf::Vector2f(492.0f, 330.0f));
+	_buttons[1].setPosition(sf::Vector2f(buttonCentered, 330.0f));
 	_buttons[1].setTexture(m_data->assets.GetTexturePtr("loadButton"));
-	_buttons[2].setPosition(sf::Vector2f(492.0f, 410.0f));
+	_buttons[2].setPosition(sf::Vector2f(buttonCentered, 410.0f));
 	_buttons[2].setTexture(m_data->assets.GetTexturePtr("optionsButton"));
-	_buttons[3].setPosition(sf::Vector2f(492.0f, 490.0f));
+	_buttons[3].setPosition(sf::Vector2f(buttonCentered, 490.0f));
 	_buttons[3].setTexture(m_data->assets.GetTexturePtr("creditsButton"));
-	_buttons[4].setPosition(sf::Vector2f(492.0f, 570.0f));
+	_buttons[4].setPosition(sf::Vector2f(buttonCentered, 570.0f));
 	_buttons[4].setTexture(m_data->assets.GetTexturePtr("exitButton"));
 	
 	_cam.setCenter(sf::Vector2f(SCREEN_WIDTH / 2, 0));
@@ -92,7 +94,7 @@ void LUCY::MainMenuState::VHandleInput()
 
 		}
 		else if (_buttons[4].isClicked(event, m_data->window)) { // Exit Button
-
+			m_data->window.close();
 		}
 	}
 }
