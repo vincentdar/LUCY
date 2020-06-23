@@ -4,34 +4,101 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 
-namespace UTILS {
-	// Check number ada diantara min dan max
-	bool isInBetween(float number, float min, float max);
+#define UTILS Utils::get()
+
+class Utils
+{
+private:
+	static Utils* instance;
+
+public:
+	Utils() {}
+
+	// Copying is no-no;
+	Utils(const Utils& utils) = delete;
+	void operator=(const Utils& utils) = delete;
+
+	static Utils& get() {
+		if (instance == nullptr) {
+			instance = new Utils();
+		}
+		return *instance;
+	}
+
+	bool isInBetween(float number, float min, float max) {
+		return (number >= min && number <= max);
+	}
 
 	// Get mouse over
-	bool isMouseOver(sf::Vector2f objPos, float width, float height, sf::RenderWindow& window);
+	bool isMouseOver(sf::Vector2f objPos, float width, float height, sf::RenderWindow& window) {
+		return (isInBetween(sf::Mouse::getPosition(window).x, objPos.x, objPos.x + width) &&
+			isInBetween(sf::Mouse::getPosition(window).y, objPos.y, objPos.y + height));
+	}
 
-	// Normalize vector2f (not used)
-	void normalizeVector2f(sf::Vector2f &range);
+	void normalizeVector2f(sf::Vector2f &range) {
+		// Get vector length
+		double vec_magnitude = sqrt(pow(range.x, 2) + pow(range.y, 2));
 
-	// Menghapus space di dpn string
-	void clearSpacesInFront(std::string& str);
+		range.x = float(range.x / vec_magnitude);
+		range.y = float(range.y / vec_magnitude);
+	}
 
-	// Utk convert posisi di screen jadi lane keberapa
-	int screenPositionToLaneMap(sf::Vector2i position, int start, int laneCount, int height);
+	void clearSpacesInFront(std::string& str) {
+		while (str[0] == ' ' || str[0] == '\t') {
+			str.erase(str.begin());
+		}
+	}
 
-	// Untuk ubah string ke lowercase
-	std::string getLowercase(std::string str);
+	int screenPositionToLaneMap(sf::Vector2i position, int start, int laneCount, int height) {
+		if (position.y < start || position.y >= start + laneCount * height) {
+			return -1;
+		}
+		else {
+			return (position.y - start) / (height - start);
+		}
+	}
 
-	// Cari factor utk scale sprite ke size tertentu
-	sf::Vector2f getScaleToSize(sf::Texture& tex, const sf::Vector2f& target);
+	std::string getLowercase(std::string str) {
+		for (int i = 0; i < str.length(); i++) {
+			str[i] = tolower(str[i]);
+		}
 
-	// Rumus lerp
-	sf::Vector2f lerp(sf::Vector2f position, sf::Vector2f target, float time);
+		return str;
+	}
 
-	// Cari panjang text
-	float getTextWidth(sf::Text& text);
+	sf::Vector2f getScaleToSize(sf::Texture& tex, const sf::Vector2f& target) {
+		return
+		{
+			target.x / tex.getSize().x,
+			target.y / tex.getSize().y
+		};
+	}
 
-	// Cari value oldVal dari range yang berbeda
-	float getValueFromRange(float oldMin, float oldMax, float newMin, float newMax, float oldVal);
-}
+	sf::Vector2f lerp(sf::Vector2f position, sf::Vector2f target, float time)
+	{
+		return (position + (target - position) * time);
+	}
+
+	float getTextWidth(sf::Text& text) 
+	{
+		return text.findCharacterPos(
+			text.getString().getSize()
+		).x - text.getGlobalBounds().left;
+	}
+
+	float getValueFromRange(float oldMin, float oldMax, float newMin, float newMax, float oldVal) {
+		float oldRange = oldMax - oldMin;
+		float newRange = newMax - newMin;
+
+		if (oldRange == 0) {
+			return newMin;
+		}
+
+		return (oldVal - oldMin) * newRange / oldRange + newMin;
+	}
+
+	/*
+		TODO : isInRange, isCollided.. etc
+	*/
+
+};

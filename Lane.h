@@ -5,7 +5,6 @@
 
 #include "units/Friendly.h"
 #include "units/Enemies.h"
-#include "Wheat.h"
 #include "projectiles/Projectile.h"
 
 #define TOTAL_LANES 5
@@ -27,46 +26,55 @@ private:
 	std::vector<UNITS::Projectile*> friendly_projectiles;
 	std::vector<UNITS::Projectile*> enemy_projectiles;
 
-	// Misc
-	std::vector<LUCY::Wheat*> wheatList;
-
-	// Setiap unit hanya menyimpan value x, y nya tetap sama (1 baseline tiap lane)
+	// Setiap unit hanya menyimpan value x : y nya tetap sama (1 baseline tiap lane)
 	//  jadi nilai y dari vector2f ini dipakai utk spawn unit friendly dan enemy
 	sf::Vector2f enemyLaneSpawnPoint;
 	int x_start;
+
+	LUCY::GameDataRef m_data;
 
 public:
 	Lane(){}
 	~Lane();
 
-	// Spawner (add to vector as ptr)
+	void Initialize(LUCY::GameDataRef data)
+	{
+		m_data = data;
+	}
+
 	void spawnEnemyUnit(UNITS::Enemies* unit);
 	void spawnEnemyProjectile(UNITS::Projectile* proj);
 
 	void spawnFriendlyUnit(UNITS::Friendly* unit, float offset_x);
 	void spawnFriendlyProjectile(UNITS::Projectile* proj);
 
-	void spawnWheat(GameDataRef data, float offset_x);
-	void removeWheat(int index);
-
-	// Getter dari vector
 	UNITS::Enemies* getEnemyUnit(int index);
 	UNITS::Friendly* getFriendlyUnit(int index);
+
 	UNITS::Projectile* getFriendlyProjectiles(int index);
 	UNITS::Projectile* getEnemyProjectiles(int index);
-	LUCY::Wheat* getWheat(int index);
 
-	// Getter size
 	int getFriendlyCount() { return friendly_units.size(); }
 	int getEnemyCount() { return enemy_units.size(); }
-	int getWheatCount() { return wheatList.size(); }
-	int getEnemyProjectilesCount() { return enemy_projectiles.size(); }
-	int getFriendlyProjectilesCount() { return friendly_projectiles.size(); }
 
-	// Remove apapun yang sudah "waktunya"
 	void removeDeadUnits();
 
-	// Set spawn point lane tsb.
 	void setSpawnPosition(sf::Vector2f position);
-	sf::Vector2f getSpawnPosition() { return enemyLaneSpawnPoint; }
+
+	std::string LaneSerialize()
+	{
+		std::string buffer;
+		for (auto i : friendly_units)
+		{
+			buffer += i->getType() + "$";
+			buffer += i->StatSerialize();
+			buffer += "\n";
+		}
+		return buffer;
+	}
+
+	void LoadUnserialize(std::string buffer, int lane)
+	{
+		
+	}
 };
