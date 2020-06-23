@@ -87,10 +87,13 @@ void LUCY::MainMenuState::VHandleInput()
 		else if (_buttons[1].isClicked(event, m_data->window)) { // Load Game Button
 
 		}
-		else if (_buttons[2].isClicked(event, m_data->window)) { // Credits Button
+		else if (_buttons[2].isClicked(event, m_data->window)) { // Options Button
 
 		}
-		else if (_buttons[3].isClicked(event, m_data->window)) { // Exit Button
+		else if (_buttons[3].isClicked(event, m_data->window)) { // Credits Button
+
+		}
+		else if (_buttons[4].isClicked(event, m_data->window)) { // Exit Button
 			m_data->window.close();
 		}
 	}

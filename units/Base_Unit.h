@@ -62,7 +62,7 @@ namespace UNITS {
 		virtual void draw(sf::RenderTarget& target);
 		virtual void skill() = 0;
 
-		virtual void processStateChanges();
+		void processStateChanges();
 		virtual void takeDamage(int damage);
 		virtual void triggerStateChanges() {}
 		virtual void updateStateActions() {}
