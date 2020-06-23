@@ -4,7 +4,6 @@
 #include "Game.h"
 #include "ui/UI_Button.h"
 #include "IState.h"
-#include "Camera.h"
 #include "Utils.h"
 
 namespace LUCY
@@ -17,7 +16,7 @@ namespace LUCY
 		sf::Sprite _logo;
 		sf::Sprite _background;
 		sf::RectangleShape _menuBox;
-		UI::Button _buttons[5];
+		UI::Button _buttons[4];
 		sf::View _cam;
 
 		//Camera camera;

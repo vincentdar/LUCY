@@ -6,12 +6,15 @@ namespace UNITS {
 	class Healer :
 		public Friendly
 	{
+	protected:
+		sf::Clock skillTimer;
+		int numOfAttacks = 0;
 	public:
 		Healer(GameDataRef data, Lane* lane, int laneNumber) :Friendly(data, lane, laneNumber) {}
 
 		void setup(sf::Vector2f position) {
 
-			Friendly::setUnitStats(25, 200, 500);
+			Friendly::setUnitStats(250, 700, 500);
 			animator.bindSprite(&charSprite);
 			//42 x 52 Healer
 			animator.addAnimationState(
@@ -38,6 +41,38 @@ namespace UNITS {
 			charSprite.setScale(2, 2);
 			charSprite.setPosition(position);
 			setState(IDLE);
+
+			Friendly::setup(position);
+		}
+
+		void updateStateActions() override {
+
+			if (state == ATTACK) {
+				if (clock.getElapsedTime().asSeconds() >= 2.0) {
+					this->setState(IDLE);
+					numOfAttacks++;
+					clock.restart();
+				}
+			}
+
+			if (skillIsActivated) {
+				if (skillTimer.getElapsedTime().asSeconds() >= .0) {
+					skillIsActivated = false;
+					numOfAttacks = 0;
+				}
+			}
+
+		}
+
+		void triggerStateChanges() override {
+			Friendly::triggerStateChanges();
+
+			if (!skillIsActivated) {
+				if (numOfAttacks >= 8) {
+					skillIsActivated = true;
+					skill();
+				}
+			}
 		}
 
 		void update() {
@@ -45,6 +80,7 @@ namespace UNITS {
 		}
 
 		void skill() override {
+			//Nge heal, how to access other's HP ?
 			printf("SKILL\n");
 		}
 	};

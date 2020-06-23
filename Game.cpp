@@ -39,7 +39,7 @@ namespace LUCY
 				frameTime = newTime - currentTime;
 
 				// Show fps:
-				printf("FPS: %f\n", (1 / frameTime));
+				//printf("FPS: %f\n", (1 / frameTime));
 
 				if (frameTime > 0.25f)
 				{

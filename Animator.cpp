@@ -88,6 +88,8 @@ Animator::AnimState::AnimState(sf::Texture * texture, sf::IntRect start, float d
 
 void Animator::AnimState::advanceToNextFrame(sf::Vector2i &dim)
 {
+	if (texture == nullptr) { return; }
+
 	if (counter == frameCount - 1) isDone = true;
 	else isDone = false;
 

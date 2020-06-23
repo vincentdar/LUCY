@@ -8,8 +8,6 @@
 #include "ui/UI_Base.h"
 #include "ui/UI_Container.h"
 #include "ui/UI_Button.h"
-#include "ui/UI_Textfield.h"
-#include "ui/UI_Text.h"
 #include "ui/UI_Alert.h"
 #include "Wheat.h"
 
@@ -70,14 +68,12 @@ namespace LUCY {
 
 		void GridSetup();
 
-		Wheat wheat;
-
 	public:
 		GameState(GameDataRef data, int saveSlot = -1) 
-			: data(data), saveSlot(saveSlot), wheat(data) {}
+			: data(data), saveSlot(saveSlot) {}
 
 		// Fungsi khusus di GameState
-		void onExitClear();
+		void clearUnitSelection();
 
 		// Fungsi dlm game loop
 		void VHandleInput()		override;

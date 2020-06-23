@@ -4,6 +4,7 @@
 #include "units/Enemy/EvilArcher.h"
 #include "units/Knight/GoldenKnight.h"
 #include "units/Friendly/Assassin.h"
+#include "units/Enemy/EvilAssassin.h"
 
 void LUCY::GameState::saveToFile(int slot)
 {
@@ -27,23 +28,30 @@ void LUCY::GameState::UISetup()
 	bottom_ui.addComponent("Archer", new UI::Button());
 	bottom_ui.addComponent("Knight", new UI::Button());
 	bottom_ui.addComponent("Assassin", new UI::Button());
+	bottom_ui.addComponent("Wheat", new UI::Button());
 
 	// Archer
 	UI::Button* btn1 = bottom_ui.getComponent<UI::Button>("Archer");
 	UI::Button* btn2 = bottom_ui.getComponent<UI::Button>("Knight");
 	UI::Button* btn3 = bottom_ui.getComponent<UI::Button>("Assassin");
+
+	UI::Button* btnWheat = bottom_ui.getComponent<UI::Button>("Wheat");
+
 	btn1->set(UI::TOPLEFT, sf::Vector2f(37 * 2.2, 53 * 2.2), data->assets.GetTexturePtr("Archer_Green"), sf::IntRect(0, 53, 37, 53));
 	btn2->set(UI::TOPLEFT, sf::Vector2f(37 * 2.2, 53 * 2.2), data->assets.GetTexturePtr("Knight_Gold"), sf::IntRect(61, 0, -37, 53));
 	btn3->set(UI::TOPLEFT, sf::Vector2f(37 * 2.2, 53 * 2.2), data->assets.GetTexturePtr("Assassin_Green"), sf::IntRect(0, 0, 37, 36));
+	btnWheat->set(UI::TOPLEFT, sf::Vector2f(37 * 2.2, 53 * 2.2), data->assets.GetTexturePtr("Wheat"), sf::IntRect(0, 0, 64, 64));
 
 	bottom_ui.setComponentPosition("Archer", sf::Vector2f(40, bottom_ui.getSize().y / 2.0 - btn1->getSize().y / 2.0));
-	bottom_ui.setComponentPosition("Knight", sf::Vector2f(45 + btn1->getSize().x, bottom_ui.getSize().y / 2.0 - btn1->getSize().y / 2.0));
-	bottom_ui.setComponentPosition("Assassin", sf::Vector2f(45 + btn1->getSize().x + btn2->getSize().x, bottom_ui.getSize().y / 2.0 - btn1->getSize().y / 2.0));
+	bottom_ui.setComponentPosition("Knight", sf::Vector2f(45 + 53 * 2.2, bottom_ui.getSize().y / 2.0 - btn1->getSize().y / 2.0));
+	bottom_ui.setComponentPosition("Assassin", sf::Vector2f(45 + 2 * 53 * 2.2, bottom_ui.getSize().y / 2.0 - btn1->getSize().y / 2.0));
+
+	bottom_ui.setComponentPosition("Wheat", sf::Vector2f(45 + 3 * 53 * 2.2, bottom_ui.getSize().y / 2.0 - btn1->getSize().y / 2.0));
 
 	unitSelectionRef[0] = btn1;
 	unitSelectionRef[1] = btn2;
 	unitSelectionRef[2] = btn3;
-	unitSelectionRef[3] = nullptr;
+	unitSelectionRef[3] = btnWheat;
 	unitSelectionRef[4] = nullptr;
 
 	// Setup container resource
@@ -122,9 +130,12 @@ void LUCY::GameState::GridSetup()
 	
 }
 
-void LUCY::GameState::onExitClear()
+void LUCY::GameState::clearUnitSelection()
 {
-
+	for (int i = 0; i < 5; i++) {
+		if (unitSelectionRef[i] != nullptr)
+			unitSelectionRef[i]->setOutline(0, sf::Color());
+	}
 }
 
 void LUCY::GameState::VInit()
@@ -151,12 +162,10 @@ void LUCY::GameState::VInit()
 	}
 
 	for (int i = 0; i < TOTAL_LANES; i++) {
-		lanes[i].spawnEnemyUnit(new UNITS::EvilArcher(data, lanes, i));
+		lanes[i].spawnEnemyUnit(new UNITS::EvilAssassin(data, lanes, i));
 	}
 
 	UISetup();
-
-	wheat.Init();
 }
 
 void LUCY::GameState::VHandleInput()
@@ -183,40 +192,39 @@ void LUCY::GameState::VHandleInput()
 
 			// Bottom UI selection
 			if (bottom_ui.getComponent<UI::Button>("Archer")->isClicked(event, data->window)) {
-				for (int i = 0; i < 5; i++) {
-					if (unitSelectionRef[i] != nullptr)
-						unitSelectionRef[i]->setOutline(0, sf::Color());
-				}
+				clearUnitSelection();
 
 				if (selectedUnit != 0) {
 					unitSelectionRef[0]->setOutline(5, sf::Color::White);
 					selectedUnit = 0;
 				}
 			}
-			if (bottom_ui.getComponent<UI::Button>("Knight")->isClicked(event, data->window)) {
-				for (int i = 0; i < 5; i++) {
-					if (unitSelectionRef[i] != nullptr)
-						unitSelectionRef[i]->setOutline(0, sf::Color());
-				}
+			else if (bottom_ui.getComponent<UI::Button>("Knight")->isClicked(event, data->window)) {
+				clearUnitSelection();
 				
 				if (selectedUnit != 1) {
 					unitSelectionRef[1]->setOutline(5, sf::Color::White);
 					selectedUnit = 1;
 				}
 			}
-			if (bottom_ui.getComponent<UI::Button>("Assassin")->isClicked(event, data->window)) {
-				for (int i = 0; i < 5; i++) {
-					if (unitSelectionRef[i] != nullptr)
-						unitSelectionRef[i]->setOutline(0, sf::Color());
-				}
+			else if (bottom_ui.getComponent<UI::Button>("Assassin")->isClicked(event, data->window)) {
+				clearUnitSelection();
 
 				if (selectedUnit != 2) {
 					unitSelectionRef[2]->setOutline(5, sf::Color::White);
 					selectedUnit = 2;
 				}
 			}
+			else if (bottom_ui.getComponent<UI::Button>("Wheat")->isClicked(event, data->window)) {
+				clearUnitSelection();
 
-			// Selection area highlighting.
+				if (selectedUnit != 3) {
+					unitSelectionRef[3]->setOutline(5, sf::Color::White);
+					selectedUnit = 3;
+				}
+			}
+
+			// Selection area highlighting and what to do on click.
 			if (event.type == sf::Event::MouseButtonPressed) {
 				int laneNo = UTILS::screenPositionToLaneMap(sf::Mouse::getPosition(data->window), 0, TOTAL_LANES, LANE_HEIGHT);
 				if (laneNo != -1) {
@@ -241,9 +249,14 @@ void LUCY::GameState::VHandleInput()
 						else if (selectedUnit == 2) {
 							lanes[laneNo].spawnFriendlyUnit(new UNITS::Assassin(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
 						}
+						else if (selectedUnit == 3) {
+							lanes[laneNo].spawnWheat(data, selectionArea.getPosition().x);
+						}
 
 						
 					}
+
+
 				}
 
 			}
@@ -261,10 +274,7 @@ void LUCY::GameState::VHandleInput()
 			}
 
 		}
-
-		wheat.HandleInput();
 	}
-
 }
 
 void LUCY::GameState::VUpdate(float dt)
@@ -303,11 +313,12 @@ void LUCY::GameState::VUpdate(float dt)
 		for (int i = 0; i < lane.getFriendlyCount(); i++) {
 			lane.getFriendlyUnit(i)->update();
 		}
+		for (int i = 0; i < lane.getWheatCount(); i++) {
+			lane.getWheat(i)->Update(1);
+		}
 
 		lane.removeDeadUnits();
 	}
-
-	wheat.Update(1);
 }
 
 void LUCY::GameState::VDraw(float dt)
@@ -326,8 +337,10 @@ void LUCY::GameState::VDraw(float dt)
 		for (int j = 0; j < lanes[i].getFriendlyCount(); j++) {
 			lanes[i].getFriendlyUnit(j)->draw(renderTexture);
 		}
+		for (int j = 0; j < lanes[i].getWheatCount(); j++) {
+			lanes[i].getWheat(j)->Draw(renderTexture);
+		}
 	}
-
 
 	bottom_ui.draw(renderTexture);
 
@@ -338,8 +351,6 @@ void LUCY::GameState::VDraw(float dt)
 	renderTexture.draw(foodText);
 
 	renderTexture.draw(selectionArea);
-
-	renderTexture.draw(wheat.getSprite());
 
 	renderTexture.display();
 
