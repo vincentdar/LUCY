@@ -91,9 +91,9 @@ namespace UI {
 		virtual void update(sf::RenderWindow& window) {
 			if (isTranslating) {
 
-				float time_percentage = UTILS.getValueFromRange(0, move_duration, 0, 1, timer.getElapsedTime().asSeconds());
+				float time_percentage = UTILS::getValueFromRange(0, move_duration, 0, 1, timer.getElapsedTime().asSeconds());
 
-				sf::Vector2f lerpedVec = UTILS.lerp(base_shape.getPosition(), move_target, time_percentage);
+				sf::Vector2f lerpedVec = UTILS::lerp(base_shape.getPosition(), move_target, time_percentage);
 
 				base_shape.setPosition(lerpedVec);
 

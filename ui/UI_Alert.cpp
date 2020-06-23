@@ -29,14 +29,14 @@ namespace UI
 
 		this->title.setPosition(
 			sf::Vector2f(
-				base_shape.getPosition().x - UTILS.getTextWidth(this->title) / 2.0,
+				base_shape.getPosition().x - UTILS::getTextWidth(this->title) / 2.0,
 				base_shape.getGlobalBounds().top + base_shape.getGlobalBounds().height / 5.0
 			)
 		);
 
 		this->content.setPosition(
 			sf::Vector2f(
-				base_shape.getPosition().x - UTILS.getTextWidth(this->content) / 2.0,
+				base_shape.getPosition().x - UTILS::getTextWidth(this->content) / 2.0,
 				base_shape.getPosition().y - content.findCharacterPos(0).y
 			)
 		);
@@ -55,14 +55,14 @@ namespace UI
 
 		this->title.setPosition(
 			sf::Vector2f(
-				base_shape.getPosition().x - UTILS.getTextWidth(this->title) / 2.0,
+				base_shape.getPosition().x - UTILS::getTextWidth(this->title) / 2.0,
 				base_shape.getGlobalBounds().top + base_shape.getGlobalBounds().height / 5.0
 			)
 		);
 
 		this->content.setPosition(
 			sf::Vector2f(
-				base_shape.getPosition().x - UTILS.getTextWidth(this->content) / 2.0,
+				base_shape.getPosition().x - UTILS::getTextWidth(this->content) / 2.0,
 				base_shape.getPosition().y
 			)
 		);
@@ -81,7 +81,7 @@ namespace UI
 	{
 		if (isShown && event.type == sf::Event::MouseButtonPressed) {
 			
-			if (UTILS.isMouseOver(
+			if (UTILS::isMouseOver(
 				sf::Vector2f(
 					base_shape.getGlobalBounds().left,
 					base_shape.getGlobalBounds().top ),

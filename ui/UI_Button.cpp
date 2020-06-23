@@ -48,7 +48,7 @@ namespace UI {
 	void Button::update(sf::RenderWindow& window)
 	{
 		this->text.setPosition(
-			base_shape.getGlobalBounds().left + base_shape.getGlobalBounds().width / 2.0 - UTILS.getTextWidth(text) / 2.0,
+			base_shape.getGlobalBounds().left + base_shape.getGlobalBounds().width / 2.0 - UTILS::getTextWidth(text) / 2.0,
 			base_shape.getGlobalBounds().top + base_shape.getGlobalBounds().height / 2.0 - 15
 		);
 
@@ -101,14 +101,14 @@ namespace UI {
 
 	bool Button::isClicked(sf::Event& event, sf::RenderWindow& window)
 	{
-		return (UTILS.isMouseOver(
+		return (UTILS::isMouseOver(
 			sf::Vector2f(base_shape.getGlobalBounds().left, base_shape.getGlobalBounds().top),
 			base_shape.getSize().x, base_shape.getSize().y, window) && event.type == sf::Event::MouseButtonPressed);
 	}
 
 	bool Button::isHovered(sf::Event& event, sf::RenderWindow& window)
 	{
-		return UTILS.isMouseOver(
+		return UTILS::isMouseOver(
 			sf::Vector2f(base_shape.getGlobalBounds().left, base_shape.getGlobalBounds().top),
 			base_shape.getSize().x, base_shape.getSize().y, window);
 	}

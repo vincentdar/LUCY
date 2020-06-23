@@ -32,7 +32,7 @@ namespace UNITS
 		// Healthbar update
 		base.setPosition(charSprite.getGlobalBounds().left, charSprite.getPosition().y - charSprite.getGlobalBounds().height - 5);
 		bar.setPosition(charSprite.getGlobalBounds().left, charSprite.getPosition().y - charSprite.getGlobalBounds().height - 5);
-		bar.setSize(sf::Vector2f(UTILS.getValueFromRange(0, stats.max_health, 0, 1, stats.health) * 100, 10));
+		bar.setSize(sf::Vector2f(UTILS::getValueFromRange(0, stats.max_health, 0, 1, stats.health) * 100, 10));
 	}
 
 	void Base::setup(sf::Vector2f spawnPosition)

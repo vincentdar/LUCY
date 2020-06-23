@@ -15,8 +15,8 @@ void LUCY::MainMenuState::VInit()
 	_logo.setTexture(*m_data->assets.GetTexturePtr("LogoGame"));
 	_logo.setOrigin(_logo.getLocalBounds().width / 2.0, _logo.getLocalBounds().height / 1.6);
 	_logo.setPosition(m_data->window.getSize().x /2.0, m_data->window.getSize().y/ 3.5);
-	UTILS.getScaleToSize(*m_data->assets.GetTexturePtr("LogoGame"), sf::Vector2f(820, 400));
-	sf::Vector2f scaleSize = UTILS.getScaleToSize(*m_data->assets.GetTexturePtr("LogoGame"),sf::Vector2f(820, 400));
+	UTILS::getScaleToSize(*m_data->assets.GetTexturePtr("LogoGame"), sf::Vector2f(820, 400));
+	sf::Vector2f scaleSize = UTILS::getScaleToSize(*m_data->assets.GetTexturePtr("LogoGame"),sf::Vector2f(820, 400));
 	_logo.scale(scaleSize);
 
 	//menu box 

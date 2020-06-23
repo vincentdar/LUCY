@@ -31,7 +31,7 @@ void LUCY::Wheat::Pillaged()
 
 void LUCY::Wheat::HandleInput()
 {
-	if (UTILS.isMouseOver(m_sprite.getPosition(), m_sprite.getGlobalBounds().width,
+	if (UTILS::isMouseOver(m_sprite.getPosition(), m_sprite.getGlobalBounds().width,
 		m_sprite.getGlobalBounds().height, m_data->window))
 	{
 		if (sf::Mouse::isButtonPressed(sf::Mouse::Left))

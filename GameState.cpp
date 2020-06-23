@@ -218,7 +218,7 @@ void LUCY::GameState::VHandleInput()
 
 			// Selection area highlighting.
 			if (event.type == sf::Event::MouseButtonPressed) {
-				int laneNo = UTILS.screenPositionToLaneMap(sf::Mouse::getPosition(data->window), 0, TOTAL_LANES, LANE_HEIGHT);
+				int laneNo = UTILS::screenPositionToLaneMap(sf::Mouse::getPosition(data->window), 0, TOTAL_LANES, LANE_HEIGHT);
 				if (laneNo != -1) {
 
 					bool areaIsEmpty = true;
@@ -290,7 +290,7 @@ void LUCY::GameState::VUpdate(float dt)
 		return;
 	}
 
-	int index = UTILS.screenPositionToLaneMap(sf::Mouse::getPosition(data->window), 0, TOTAL_LANES, LANE_HEIGHT);
+	int index = UTILS::screenPositionToLaneMap(sf::Mouse::getPosition(data->window), 0, TOTAL_LANES, LANE_HEIGHT);
 
 	selectionArea.setOrigin(0, 0);
 	if (index != -1)

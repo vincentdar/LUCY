@@ -54,13 +54,13 @@ namespace UI
 
 		if (origin == CENTERED) {
 			this->displayedText.setPosition(
-				base_shape.getPosition().x - UTILS.getTextWidth(displayedText) / 2.0,
+				base_shape.getPosition().x - UTILS::getTextWidth(displayedText) / 2.0,
 				base_shape.getPosition().y - displayedText.getGlobalBounds().height / 2.0
 			);
 		}
 		else {
 			this->displayedText.setPosition(
-				base_shape.getPosition().x + base_shape.getSize().x / 2.0 - UTILS.getTextWidth(displayedText) / 2.0,
+				base_shape.getPosition().x + base_shape.getSize().x / 2.0 - UTILS::getTextWidth(displayedText) / 2.0,
 				base_shape.getPosition().y + 20
 			);
 		}
@@ -70,7 +70,7 @@ namespace UI
 	{
 		if (!fieldIsSelected) {
 			if (event.type == sf::Event::MouseButtonPressed &&
-				UTILS.isMouseOver(base_shape.getPosition(), base_shape.getSize().x, base_shape.getSize().y, window)) {
+				UTILS::isMouseOver(base_shape.getPosition(), base_shape.getSize().x, base_shape.getSize().y, window)) {
 				fieldIsSelected = true;
 			}
 			return;

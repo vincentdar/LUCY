@@ -102,7 +102,7 @@ namespace LUCY
 		while (std::getline(inStream, line)) {
 
 			// Clear whitespace didpn
-			UTILS.clearSpacesInFront(line);
+			UTILS::clearSpacesInFront(line);
 
 			// Check if it is a comment.
 			if (line[0] == '#') {
@@ -124,11 +124,11 @@ namespace LUCY
 				}
 
 				// Check tipe apa dia.
-				UTILS.clearSpacesInFront(pathName);
+				UTILS::clearSpacesInFront(pathName);
 
 				if (pathName.length() == 0) {
 					// Its a typename!
-					std::string asset = UTILS.getLowercase(assetName);
+					std::string asset = UTILS::getLowercase(assetName);
 					if (asset == "texture") {
 						state = TEXTURES;
 					}
