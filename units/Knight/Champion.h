@@ -9,40 +9,51 @@ namespace UNITS {
 
 		void setup(sf::Vector2f position) {
 
+			Friendly::setup(position);
 			Friendly::setUnitStats(175, 80, 50);
+		}
 
-			animator.bindSprite(&charSprite);
+		void updateStateActions() override {
 
-			animator.addAnimationState(
-				"Idle",
-				data->assets.GetTexturePtr("Knight_Gold"),
-				sf::IntRect(0, 52 * 2, 86, 52),
-				sf::Vector2i(86, 0), 0.2, 2, true, true);
+			if (state == ATTACK) {
+				if (clock.getElapsedTime().asSeconds() >= 2.0) {
+					this->setState(IDLE);
+					numOfAttacks++;
+					clock.restart();
+				}
+			}
 
-			animator.addAnimationState(
-				"Move",
-				data->assets.GetTexturePtr("Knight_Gold"),
-				sf::IntRect(0, 52 * 1, 86, 52),
-				sf::Vector2i(86, 0), 0.2, 3, false, false);
-
-			animator.addAnimationState(
-				"Attack",
-				data->assets.GetTexturePtr("Knight_Gold"),
-				sf::IntRect(0, 52 * 0, 86, 52),
-				sf::Vector2i(86, 0), 0.2, 2, false, false);
-
-			charSprite.setScale(2, 2);
-			charSprite.setPosition(position);
-			setState(IDLE);
+			if (skillIsActivated) {
+				if (skillTimer.getElapsedTime().asSeconds() >= 20.0) {
+					skillIsActivated = false;
+					stats.normalDamage -= attackUp;
+					numOfAttacks = 0;
+				}
+			}
 
 		}
 
-		void update() {
-			Base::update;
+		void triggerStateChanges() override {
+			Friendly::triggerStateChanges();
+
+			if (!skillIsActivated) {
+				if (numOfAttacks >= 25) {
+					skillIsActivated = true;
+					skill();
+				}
+			}
 		}
 
 		void skill() override {
-			printf("SKILL\n");
+			attackUp = stats.normalDamage * 100;
+			stats.normalDamage += attackUp;
+			stats.health += attackUp;
+			skillTimer.restart();
+			printf("SKILL USED\n");
+		}
+
+		void update() override {
+			Base::update();
 		}
 		
 	};

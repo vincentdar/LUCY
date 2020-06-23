@@ -18,7 +18,7 @@ namespace UNITS {
 		float range;
 		float normalDamage;
 		float movementSpeed;
-
+		float attackSpeed;
 		float max_health;
 	};
 
@@ -62,7 +62,7 @@ namespace UNITS {
 		virtual void draw(sf::RenderTarget& target);
 		virtual void skill() = 0;
 
-		void processStateChanges();
+		virtual void processStateChanges();
 		virtual void takeDamage(int damage);
 		virtual void triggerStateChanges() {}
 		virtual void updateStateActions() {}

@@ -7,12 +7,17 @@ namespace UNITS
 	class Enemies : public Base 
 	{
 	protected:
+		sf::Clock interval;
+		bool isAttacking;
 
 	public:
-		Enemies(GameDataRef data, Lane* lane, int laneNumber) : Base(data, lane, laneNumber) {}
+		Enemies(GameDataRef data, Lane* lane, int laneNumber) : Base(data, lane, laneNumber) {
+			interval.restart();
+			isAttacking = false;
+		}
 
 		void triggerStateChanges() override;
-		void updateStateActions() override;
+		virtual void updateStateActions() override;
 
 		void setup(sf::Vector2f spawnPosition) override {
 			stats.max_health = stats.health;

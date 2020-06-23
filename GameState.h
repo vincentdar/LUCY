@@ -8,13 +8,10 @@
 #include "ui/UI_Base.h"
 #include "ui/UI_Container.h"
 #include "ui/UI_Button.h"
-#include "ui/UI_Textfield.h"
-#include "ui/UI_Text.h"
 #include "ui/UI_Alert.h"
 #include "Wheat.h"
 
 #include "Lane.h"
-#include <fstream>
 
 namespace LUCY {
 
@@ -71,14 +68,12 @@ namespace LUCY {
 
 		void GridSetup();
 
-		Wheat wheat;
-
 	public:
 		GameState(GameDataRef data, int saveSlot = -1) 
-			: data(data), saveSlot(saveSlot), wheat(data) {}
+			: data(data), saveSlot(saveSlot) {}
 
 		// Fungsi khusus di GameState
-		void onExitClear();
+		void clearUnitSelection();
 
 		// Fungsi dlm game loop
 		void VHandleInput()		override;
@@ -88,9 +83,6 @@ namespace LUCY {
 		void VResume()			override;
 		void VPause()			override;
 		void VExit()			override;
-		//save sm load di cpp nya ya
 
-		//FACTORY
-		void UnitFactories(std::string buffer, int lane);
 	};
 }

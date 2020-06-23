@@ -6,6 +6,12 @@ namespace UNITS {
 	class Spearman
 		: public Friendly
 	{
+	protected:
+		int numOfAttacks = 0;
+		float attackUp;
+
+		sf::Clock skillTimer;
+
 	public:
 		Spearman(GameDataRef data, Lane* lane, int laneNumber) : Friendly(data, lane, laneNumber) {}
 		void setup(sf::Vector2f position) {
@@ -36,14 +42,47 @@ namespace UNITS {
 			charSprite.setPosition(position);
 			setState(IDLE);
 
+			Friendly::setup(position);
 		}
 
-		void update() {
-			Base::update();
+		void updateStateActions() override {
+
+			if (state == ATTACK) {
+				if (clock.getElapsedTime().asSeconds() >= 2.0) {
+					this->setState(IDLE);
+					numOfAttacks++;
+					clock.restart();
+				}
+			}
+
+			if (skillIsActivated) {
+				if (skillTimer.getElapsedTime().asSeconds() >= 30.0) {
+					skillIsActivated = false;
+					numOfAttacks = 0;
+				}
+			}
+
+		}
+
+		void triggerStateChanges() override {
+			Friendly::triggerStateChanges();
+
+			if (!skillIsActivated) {
+				if (numOfAttacks >= 5) {
+					skillIsActivated = true;
+					skill();
+				}
+			}
 		}
 
 		void skill() override {
-			printf("SKILL\n");
+			stats.range += 1200;
+			skillTimer.restart();
+			printf("SKILL USED\n");
+		}
+
+		void update() override {
+			Base::update();
 		}
 	};
 }

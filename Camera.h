@@ -55,7 +55,7 @@ public:
 
 		directionOfTranslation = translateTarget - view.getCenter();
 		// Normalize
-		UTILS.normalizeVector2f(directionOfTranslation);
+		UTILS::normalizeVector2f(directionOfTranslation);
 	}
 
 	void translateCameraToPosition(sf::Vector2f target, sf::Vector2f step) {
