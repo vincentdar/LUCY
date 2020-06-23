@@ -16,14 +16,14 @@ namespace UNITS
 
 		void setup(sf::Vector2f position) {
 
-			Friendly::setUnitStats(100, 500, 300); //Sets unit info
+			Friendly::setUnitStats(100, 500, 300);
 
 			animator.bindSprite(&charSprite);
 
 			animator.addAnimationState(
 				"Idle",
 				data->assets.GetTexturePtr("Assassin_Green"),
-				sf::IntRect(0, 36 * 0, 54, 36),
+				sf::IntRect(54 * 3, 36 * 0, 54, 36),
 				sf::Vector2i(54, 0), 0.2, 2, true, true
 			);
 
@@ -37,7 +37,7 @@ namespace UNITS
 			animator.addAnimationState(
 				"Attack",
 				data->assets.GetTexturePtr("Assassin_Green"),
-				sf::IntRect(0, 52 * 3, 54, 36),
+				sf::IntRect(0, 36 * 3, 54, 36),
 				sf::Vector2i(54, 0), 0.2, 2, false, false
 			);
 

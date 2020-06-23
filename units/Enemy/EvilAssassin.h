@@ -12,37 +12,35 @@ namespace UNITS {
 
 		void setup(sf::Vector2f position) override {
 			
-			Base::setUnitStats(50, 40, 50);
+			Base::setUnitStats(50, 30, 100);
 
 			animator.bindSprite(&charSprite);
 
 			animator.addAnimationState(
 				"Idle",
 				data->assets.GetTexturePtr("Assassin_Red"),
-				sf::IntRect(0, 52 * 2, 86, 52),
-				sf::Vector2i(86, 0), 0.2, 2, true, true
+				sf::IntRect(54 * 3, 36 * 0, 54, 36),
+				sf::Vector2i(54, 0), 0.2, 2, true, true
 			);
 
 			animator.addAnimationState(
 				"Move",
 				data->assets.GetTexturePtr("Assassin_Red"),
-				sf::IntRect(0, 52 * 1, 86, 52),
-				sf::Vector2i(86, 0), 0.2, 2, true, false
-			);
+				sf::IntRect(0, 36 * 0, 54, 36),
+				sf::Vector2i(54, 0), 0.2, 2, true, false
+			);	
 
 			animator.addAnimationState(
 				"Attack",
 				data->assets.GetTexturePtr("Assassin_Red"),
-				sf::IntRect(0, 52 * 1, 86, 52),
-				sf::Vector2i(86, 0), 0.2, 2, true, false
+				sf::IntRect(0, 36 * 2, 54, 36),
+				sf::Vector2i(54, 0), 0.2, 5, false, false
 			);
 
 			charSprite.setScale(2, 2);
 			charSprite.setPosition(position);
 			setState(MOVE);
 
-			// Custom skill setup
-			shader.loadFromFile("res/shader/invisible.shader", sf::Shader::Fragment);
 			skillIsActivated = true;
 
 			initialDamage = stats.normalDamage * 10;
@@ -52,6 +50,14 @@ namespace UNITS {
 			Base::update();
 			if (state == MOVE) {
 				charSprite.move(-1, 0);
+			}
+		}
+
+		void processStateChanges() override {
+			Base::processStateChanges();
+			if (skillIsActivated) {
+				// Custom skill setup
+				shader.loadFromFile("res/shader/invisible.shader", sf::Shader::Fragment);
 			}
 		}
 
@@ -100,6 +106,8 @@ namespace UNITS {
 					}
 				}
 			}
+
+			
 		}
 		
 	};
