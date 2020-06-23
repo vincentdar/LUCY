@@ -147,7 +147,7 @@ void LUCY::GameState::VInit()
 	background.setPosition(sf::Vector2f(0, 0));
 
 	for (int i = 0; i < TOTAL_LANES; i++) {
-		lanes[i].setSpawnPosition(sf::Vector2f(ENEMY_SPAWN_X, (i + 1) * LANE_HEIGHT));
+		lanes[i].setSpawnPosition(sf::Vector2f(ENEMY_SPAWN_X - 100, (i + 1) * LANE_HEIGHT));
 	}
 
 	for (int i = 0; i < TOTAL_LANES; i++) {

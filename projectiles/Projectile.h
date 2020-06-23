@@ -20,6 +20,8 @@ namespace UNITS
 
 		Lane*	currentLane;
 
+		sf::Sprite sprite;
+
 		Projectile(Lane* ref,
 			float speed = 1,
 			float damage = 1,
