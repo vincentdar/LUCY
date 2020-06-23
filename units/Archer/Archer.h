@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../Friendly.h"
-#include "../../projectiles/Arrow.h"
 
 namespace UNITS {
 	class Archer :
@@ -20,7 +19,7 @@ namespace UNITS {
 
 		void setup(sf::Vector2f position) override {
 
-			Friendly::setUnitStats(100, 10, 600); //Sets unit info
+			Friendly::setUnitStats(100, 1, 600); //Sets unit info
 
 			animator.bindSprite(&charSprite);
 
@@ -73,27 +72,8 @@ namespace UNITS {
 		}
 
 		void triggerStateChanges() override {
-			// Detect enemy state.
-			bool enemyExists = false;
-			if (state != ATTACK) {
-				int enemyWithMinDistance = stats.range;
-				for (int i = 0; i < laneDataRef[laneNumber].getEnemyCount(); i++)
-				{
-					int distance = laneDataRef[laneNumber].getEnemyUnit(i)->getPosition().x - charSprite.getPosition().x;
-					if (distance < stats.range && distance > 0)
-					{
-						enemyExists = true;
-					}
-				}
+			Friendly ::triggerStateChanges();
 
-				if (enemyExists) {
-					this->setState(ATTACK);
-					//laneDataRef[laneNumber].spawnFriendlyProjectile(new Arrow());
-;					clock.restart();
-				}
-			}
-			
-			// Set skill activated or not.
 			if (!skillIsActivated) {
 				if (numOfAttacks >= 10) {
 					skillIsActivated = true;
@@ -103,7 +83,7 @@ namespace UNITS {
 		}
 
 		void skill() override {
-			attackUp = stats.normalDamage * 0.5;
+			attackUp = stats.normalDamage * 999;
 			stats.normalDamage += attackUp;
 			skillTimer.restart();
 			printf("SKILL USED\n");

@@ -18,7 +18,7 @@ namespace UNITS {
 		float range;
 		float normalDamage;
 		float movementSpeed;
-		float attackSpeed;
+
 		float max_health;
 	};
 

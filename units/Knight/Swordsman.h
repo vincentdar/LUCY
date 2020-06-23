@@ -5,56 +5,43 @@
 namespace UNITS {
 	class Swordsman : public GoldenKnight {
 	public:
-		Swordsman(GameDataRef data, Lane* lane, int laneNumber) : GoldenKnight(data, lane, laneNumber) {
-			skillTimer.restart();
-		}
+		Swordsman(GameDataRef data, Lane* lane, int laneNumber) : GoldenKnight(data, lane, laneNumber) {}
 
 		void setup(sf::Vector2f position) {
-			Friendly::setup(position);
-			Friendly::setUnitStats(2000, 3000, 100);
+			Friendly::setUnitStats(100, 150, 80);
+
+			animator.bindSprite(&charSprite);
+
+			animator.addAnimationState(
+				"Idle",
+				data->assets.GetTexturePtr("Knight_Gold"),
+				sf::IntRect(0, 52 * 2, 86, 52),
+				sf::Vector2i(86, 0), 0.2, 2, true, true);
+
+			animator.addAnimationState(
+				"Move",
+				data->assets.GetTexturePtr("Knight_Gold"),
+				sf::IntRect(0, 52 * 1, 86, 52),
+				sf::Vector2i(86, 0), 0.2, 3, false, false);
+
+			animator.addAnimationState(
+				"Attack",
+				data->assets.GetTexturePtr("Knight_Gold"),
+				sf::IntRect(0, 52 * 0, 86, 52),
+				sf::Vector2i(86, 0), 0.2, 2, false, false);
+
+			charSprite.setScale(2, 2);
+			charSprite.setPosition(position);
+			setState(IDLE);
+
 		}
 
-		void updateStateActions() override {
-
-			if (state == ATTACK) {
-				if (clock.getElapsedTime().asSeconds() >= 2.0) {
-					this->setState(IDLE);
-					numOfAttacks++;
-					clock.restart();
-				}
-			}
-
-			if (skillIsActivated) {
-				if (skillTimer.getElapsedTime().asSeconds() >= 5.0) {
-					skillIsActivated = false;
-					stats.normalDamage -= attackUp;
-					numOfAttacks = 0;
-				}
-			}
-
-		}
-
-		void triggerStateChanges() override {
-			Friendly::triggerStateChanges();
-
-			if (!skillIsActivated) {
-				if (numOfAttacks >= 10) {
-					skillIsActivated = true;
-					skill();
-				}
-			}
+		void update() {
+			Base::update();
 		}
 
 		void skill() override {
-			attackUp = stats.normalDamage * 20;
-			stats.normalDamage += attackUp;
-			stats.health += attackUp;
-			skillTimer.restart();
-			printf("SKILL USED\n");
-		}
-
-		void update() override {
-			Base::update();
+			printf("SKILL\n");
 		}
 	};
 }

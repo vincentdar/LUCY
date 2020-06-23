@@ -37,11 +37,14 @@ public:
 	Lane(){}
 	~Lane();
 
+<<<<<<< HEAD
 	void Initialize(LUCY::GameDataRef data)
 	{
 		m_data = data;
 	}
 
+=======
+>>>>>>> parent of 0f3a50a... Removed unneeded files. Added units, now FIX>>??????Who knows awkaowkokaok
 	void spawnEnemyUnit(UNITS::Enemies* unit);
 	void spawnEnemyProjectile(UNITS::Projectile* proj);
 

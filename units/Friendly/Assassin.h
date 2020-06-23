@@ -7,16 +7,12 @@ namespace UNITS
 	class Assassin :
 		public Friendly
 	{
-	protected:
-		int numOfAttacks = 0;
-		float attackUp;
-
 	public:
 		Assassin(LUCY::GameDataRef data, Lane* lanes, int laneCount) : Friendly(data, lanes, laneCount) {}
 
 		void setup(sf::Vector2f position) {
 
-			Friendly::setUnitStats(100, 500, 300); //Sets unit info
+			Friendly::setUnitStats(1, 1, 1); //Sets unit info
 
 			animator.bindSprite(&charSprite);
 
@@ -46,8 +42,6 @@ namespace UNITS
 			charSprite.setScale(2, 2);
 			charSprite.setPosition(position);
 			setState(IDLE);
-
-			Friendly::setup(position);
 		}
 
 		void update() {

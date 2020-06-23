@@ -9,7 +9,7 @@ namespace UNITS {
 		EvilArcher(GameDataRef data, Lane* lane, int laneNumber) : Enemies(data, lane, laneNumber) {}
 
 		void setup(sf::Vector2f position) override {
-			Base::setUnitStats(1000, 10, 500);
+			Base::setUnitStats(1000, 1, 500);
 
 			animator.bindSprite(&charSprite);
 
@@ -45,15 +45,6 @@ namespace UNITS {
 			Base::update();
 			if (state == MOVE)
 				charSprite.move(-1, 0);
-		}
-
-		void updateStateActions() override {
-			if (state == ATTACK) {
-				if (clock.getElapsedTime().asSeconds() >= 2.0) {
-					this->setState(MOVE);
-					clock.restart();
-				}
-			}
 		}
 
 		void skill() {

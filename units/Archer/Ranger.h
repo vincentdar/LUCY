@@ -8,50 +8,35 @@ namespace UNITS {
 		Ranger(GameDataRef data, Lane* lane, int laneNumber) : Archer(data, lane, laneNumber) {}
 
 		void setup(sf::Vector2f position) {
-			Archer::setup(position);
-			Friendly::setUnitStats(500, 1500, 300);
-		}
+			
+			Friendly::setUnitStats(90, 50, 600);
 
-		void updateStateActions() override {
+			animator.bindSprite(&charSprite);
 
-			if (state == ATTACK) {
-				if (clock.getElapsedTime().asSeconds() >= 2.0) {
-					this->setState(IDLE);
-					numOfAttacks++;
-					clock.restart();
-				}
-			}
+			animator.addAnimationState(
+				"Idle",
+				data->assets.GetTexturePtr("Archer_Black"),
+				sf::IntRect(0, 53 * 1, 37, 53),
+				sf::Vector2i(37, 0), 0.2, 2, true, true
+			);
 
-			if (skillIsActivated) {
-				if (skillTimer.getElapsedTime().asSeconds() >= 2.0) {
-					skillIsActivated = false;
-					stats.normalDamage -= attackUp;
-					numOfAttacks = 0;
-				}
-			}
+			animator.addAnimationState(
+				"Move",
+				data->assets.GetTexturePtr("Archer_Black"),
+				sf::IntRect(0, 53 * 0, 37, 53),
+				sf::Vector2i(37, 0), 0.2, 3, true, false
+			);
 
-		}
+			animator.addAnimationState(
+				"Attack",
+				data->assets.GetTexturePtr("Archer_Black"),
+				sf::IntRect(0, 53 * 2, 37, 53),
+				sf::Vector2i(37, 0), 0.2, 6, false, false
+			);
 
-		void triggerStateChanges() override {
-			Friendly::triggerStateChanges();
-
-			if (!skillIsActivated) {
-				if (numOfAttacks >= 5) {
-					skillIsActivated = true;
-					skill();
-				}
-			}
-		}
-
-		void skill() override {
-			attackUp = stats.normalDamage * 35;
-			stats.normalDamage += attackUp;
-			skillTimer.restart();
-			printf("SKILL USED\n");
-		}
-
-		void update() override {
-			Base::update();
+			charSprite.setScale(2, 2);
+			charSprite.setPosition(position);
+			setState(IDLE);
 		}
 	};
 }
