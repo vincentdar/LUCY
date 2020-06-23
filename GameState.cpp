@@ -4,16 +4,122 @@
 #include "units/Enemy/EvilArcher.h"
 #include "units/Knight/GoldenKnight.h"
 #include "units/Friendly/Assassin.h"
-#include "units/Enemy/EvilAssassin.h"
 
 void LUCY::GameState::saveToFile(int slot)
 {
-
+	std::ofstream file("saved.txt");
+	if (file.is_open())
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			std::string buffer = std::to_string(i) + "\n" + lanes[i].LaneSerialize();
+			std::cout << buffer << std::endl;
+			file << buffer;
+		}
+		file.close();
+	}
+	else
+	{
+		std::cout << "File for saving doesn't exist" << std::endl;
+	}
 }
 
 void LUCY::GameState::loadFromFile(int slot)
 {
+	std::ifstream file("saved.txt");
+	int lane = 0;
+	if (file.is_open())
+	{
+		while (!file.eof())
+		{
+			std::string buffer;
+			
+			file >> buffer;
+			if (buffer.find('$') == std::string::npos)
+			{
+				if (buffer.length() > 0)
+				{
+					lane = std::stoi(buffer);
+					std::cout << lane << std::endl;
+				}
+			}
+			else
+			{
+				if (buffer.length() > 0)
+				{
+					UnitFactories(buffer, lane);
+				}
+			}
 
+		}
+		file.close();
+	}
+	else
+	{
+		std::cout << "File for saving doesn't exist" << std::endl;
+	}
+}
+
+void LUCY::GameState::UnitFactories(std::string buffer, int lane_id)
+{
+	std::cout << buffer << std::endl;
+	UNITS::Friendly* pFriend = nullptr;
+	std::vector<std::string> string_var_vector;
+	std::string string_var;
+	for (int i = 0; i < buffer.length(); i++)
+	{
+		if (buffer.at(i) == '$')
+		{
+			string_var_vector.push_back(std::move(string_var));
+
+			string_var.empty();
+			string_var.shrink_to_fit();
+		}
+		else
+		{
+			string_var.push_back(buffer.at(i));
+		}
+	}
+
+	
+	//FACTORY
+	if (string_var_vector.at(0) == "Archer")
+	{
+		//need setup for finish load
+		pFriend = new UNITS::Archer(data, lanes, lane_id);
+		pFriend->StatUnserialize(
+			string_var_vector[3],
+			string_var_vector[4],
+			string_var_vector[5],
+			string_var_vector[6],
+			string_var_vector[7]
+		);
+		lanes[lane_id].spawnFriendlyUnit(pFriend, std::stof(string_var_vector[1]));
+	}
+	else if (string_var_vector.at(0) == "GoldenKnight")
+	{
+		pFriend = new UNITS::GoldenKnight(data, lanes, lane_id);
+		pFriend->StatUnserialize(
+			string_var_vector[3],
+			string_var_vector[4],
+			string_var_vector[5],
+			string_var_vector[6],
+			string_var_vector[7]
+		);
+		lanes[lane_id].spawnFriendlyUnit(pFriend, std::stof(string_var_vector[1]));
+	}
+	else if (string_var_vector.at(0) == "Assassin")
+	{
+		pFriend = new UNITS::Assassin(data, lanes, lane_id);
+		pFriend->StatUnserialize(
+			string_var_vector[3],
+			string_var_vector[4],
+			string_var_vector[5],
+			string_var_vector[6],
+			string_var_vector[7]
+		);
+		lanes[lane_id].spawnFriendlyUnit(pFriend, std::stof(string_var_vector[1]));
+	}
 }
 
 void LUCY::GameState::UISetup()
@@ -28,30 +134,23 @@ void LUCY::GameState::UISetup()
 	bottom_ui.addComponent("Archer", new UI::Button());
 	bottom_ui.addComponent("Knight", new UI::Button());
 	bottom_ui.addComponent("Assassin", new UI::Button());
-	bottom_ui.addComponent("Wheat", new UI::Button());
 
 	// Archer
 	UI::Button* btn1 = bottom_ui.getComponent<UI::Button>("Archer");
 	UI::Button* btn2 = bottom_ui.getComponent<UI::Button>("Knight");
 	UI::Button* btn3 = bottom_ui.getComponent<UI::Button>("Assassin");
-
-	UI::Button* btnWheat = bottom_ui.getComponent<UI::Button>("Wheat");
-
 	btn1->set(UI::TOPLEFT, sf::Vector2f(37 * 2.2, 53 * 2.2), data->assets.GetTexturePtr("Archer_Green"), sf::IntRect(0, 53, 37, 53));
 	btn2->set(UI::TOPLEFT, sf::Vector2f(37 * 2.2, 53 * 2.2), data->assets.GetTexturePtr("Knight_Gold"), sf::IntRect(61, 0, -37, 53));
 	btn3->set(UI::TOPLEFT, sf::Vector2f(37 * 2.2, 53 * 2.2), data->assets.GetTexturePtr("Assassin_Green"), sf::IntRect(0, 0, 37, 36));
-	btnWheat->set(UI::TOPLEFT, sf::Vector2f(37 * 2.2, 53 * 2.2), data->assets.GetTexturePtr("Wheat"), sf::IntRect(0, 0, 64, 64));
 
 	bottom_ui.setComponentPosition("Archer", sf::Vector2f(40, bottom_ui.getSize().y / 2.0 - btn1->getSize().y / 2.0));
-	bottom_ui.setComponentPosition("Knight", sf::Vector2f(45 + 53 * 2.2, bottom_ui.getSize().y / 2.0 - btn1->getSize().y / 2.0));
-	bottom_ui.setComponentPosition("Assassin", sf::Vector2f(45 + 2 * 53 * 2.2, bottom_ui.getSize().y / 2.0 - btn1->getSize().y / 2.0));
-
-	bottom_ui.setComponentPosition("Wheat", sf::Vector2f(45 + 3 * 53 * 2.2, bottom_ui.getSize().y / 2.0 - btn1->getSize().y / 2.0));
+	bottom_ui.setComponentPosition("Knight", sf::Vector2f(45 + btn1->getSize().x, bottom_ui.getSize().y / 2.0 - btn1->getSize().y / 2.0));
+	bottom_ui.setComponentPosition("Assassin", sf::Vector2f(45 + btn1->getSize().x + btn2->getSize().x, bottom_ui.getSize().y / 2.0 - btn1->getSize().y / 2.0));
 
 	unitSelectionRef[0] = btn1;
 	unitSelectionRef[1] = btn2;
 	unitSelectionRef[2] = btn3;
-	unitSelectionRef[3] = btnWheat;
+	unitSelectionRef[3] = nullptr;
 	unitSelectionRef[4] = nullptr;
 
 	// Setup container resource
@@ -130,12 +229,9 @@ void LUCY::GameState::GridSetup()
 	
 }
 
-void LUCY::GameState::clearUnitSelection()
+void LUCY::GameState::onExitClear()
 {
-	for (int i = 0; i < 5; i++) {
-		if (unitSelectionRef[i] != nullptr)
-			unitSelectionRef[i]->setOutline(0, sf::Color());
-	}
+
 }
 
 void LUCY::GameState::VInit()
@@ -158,14 +254,16 @@ void LUCY::GameState::VInit()
 	background.setPosition(sf::Vector2f(0, 0));
 
 	for (int i = 0; i < TOTAL_LANES; i++) {
-		lanes[i].setSpawnPosition(sf::Vector2f(ENEMY_SPAWN_X - 100, (i + 1) * LANE_HEIGHT));
+		lanes[i].setSpawnPosition(sf::Vector2f(ENEMY_SPAWN_X, (i + 1) * LANE_HEIGHT));
 	}
 
 	for (int i = 0; i < TOTAL_LANES; i++) {
-		lanes[i].spawnEnemyUnit(new UNITS::EvilAssassin(data, lanes, i));
+		lanes[i].spawnEnemyUnit(new UNITS::EvilArcher(data, lanes, i));
 	}
 
 	UISetup();
+
+	wheat.Init();
 }
 
 void LUCY::GameState::VHandleInput()
@@ -184,6 +282,15 @@ void LUCY::GameState::VHandleInput()
 			}
 		}
 
+		if (event.key.code == sf::Keyboard::J)
+		{
+			saveToFile(1);
+		}
+		if (event.key.code == sf::Keyboard::K)
+		{
+			loadFromFile(1);
+		}
+
 		// Non game inputs
 		alert.handleInput(event, data->window);
 
@@ -192,41 +299,42 @@ void LUCY::GameState::VHandleInput()
 
 			// Bottom UI selection
 			if (bottom_ui.getComponent<UI::Button>("Archer")->isClicked(event, data->window)) {
-				clearUnitSelection();
+				for (int i = 0; i < 5; i++) {
+					if (unitSelectionRef[i] != nullptr)
+						unitSelectionRef[i]->setOutline(0, sf::Color());
+				}
 
 				if (selectedUnit != 0) {
 					unitSelectionRef[0]->setOutline(5, sf::Color::White);
 					selectedUnit = 0;
 				}
 			}
-			else if (bottom_ui.getComponent<UI::Button>("Knight")->isClicked(event, data->window)) {
-				clearUnitSelection();
+			if (bottom_ui.getComponent<UI::Button>("Knight")->isClicked(event, data->window)) {
+				for (int i = 0; i < 5; i++) {
+					if (unitSelectionRef[i] != nullptr)
+						unitSelectionRef[i]->setOutline(0, sf::Color());
+				}
 				
 				if (selectedUnit != 1) {
 					unitSelectionRef[1]->setOutline(5, sf::Color::White);
 					selectedUnit = 1;
 				}
 			}
-			else if (bottom_ui.getComponent<UI::Button>("Assassin")->isClicked(event, data->window)) {
-				clearUnitSelection();
+			if (bottom_ui.getComponent<UI::Button>("Assassin")->isClicked(event, data->window)) {
+				for (int i = 0; i < 5; i++) {
+					if (unitSelectionRef[i] != nullptr)
+						unitSelectionRef[i]->setOutline(0, sf::Color());
+				}
 
 				if (selectedUnit != 2) {
 					unitSelectionRef[2]->setOutline(5, sf::Color::White);
 					selectedUnit = 2;
 				}
 			}
-			else if (bottom_ui.getComponent<UI::Button>("Wheat")->isClicked(event, data->window)) {
-				clearUnitSelection();
 
-				if (selectedUnit != 3) {
-					unitSelectionRef[3]->setOutline(5, sf::Color::White);
-					selectedUnit = 3;
-				}
-			}
-
-			// Selection area highlighting and what to do on click.
+			// Selection area highlighting.
 			if (event.type == sf::Event::MouseButtonPressed) {
-				int laneNo = UTILS::screenPositionToLaneMap(sf::Mouse::getPosition(data->window), 0, TOTAL_LANES, LANE_HEIGHT);
+				int laneNo = UTILS.screenPositionToLaneMap(sf::Mouse::getPosition(data->window), 0, TOTAL_LANES, LANE_HEIGHT);
 				if (laneNo != -1) {
 
 					bool areaIsEmpty = true;
@@ -249,14 +357,9 @@ void LUCY::GameState::VHandleInput()
 						else if (selectedUnit == 2) {
 							lanes[laneNo].spawnFriendlyUnit(new UNITS::Assassin(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
 						}
-						else if (selectedUnit == 3) {
-							lanes[laneNo].spawnWheat(data, selectionArea.getPosition().x);
-						}
 
 						
 					}
-
-
 				}
 
 			}
@@ -274,7 +377,10 @@ void LUCY::GameState::VHandleInput()
 			}
 
 		}
+
+		wheat.HandleInput();
 	}
+
 }
 
 void LUCY::GameState::VUpdate(float dt)
@@ -300,7 +406,7 @@ void LUCY::GameState::VUpdate(float dt)
 		return;
 	}
 
-	int index = UTILS::screenPositionToLaneMap(sf::Mouse::getPosition(data->window), 0, TOTAL_LANES, LANE_HEIGHT);
+	int index = UTILS.screenPositionToLaneMap(sf::Mouse::getPosition(data->window), 0, TOTAL_LANES, LANE_HEIGHT);
 
 	selectionArea.setOrigin(0, 0);
 	if (index != -1)
@@ -313,12 +419,11 @@ void LUCY::GameState::VUpdate(float dt)
 		for (int i = 0; i < lane.getFriendlyCount(); i++) {
 			lane.getFriendlyUnit(i)->update();
 		}
-		for (int i = 0; i < lane.getWheatCount(); i++) {
-			lane.getWheat(i)->Update(1);
-		}
 
 		lane.removeDeadUnits();
 	}
+
+	wheat.Update(1);
 }
 
 void LUCY::GameState::VDraw(float dt)
@@ -337,10 +442,8 @@ void LUCY::GameState::VDraw(float dt)
 		for (int j = 0; j < lanes[i].getFriendlyCount(); j++) {
 			lanes[i].getFriendlyUnit(j)->draw(renderTexture);
 		}
-		for (int j = 0; j < lanes[i].getWheatCount(); j++) {
-			lanes[i].getWheat(j)->Draw(renderTexture);
-		}
 	}
+
 
 	bottom_ui.draw(renderTexture);
 
@@ -351,6 +454,8 @@ void LUCY::GameState::VDraw(float dt)
 	renderTexture.draw(foodText);
 
 	renderTexture.draw(selectionArea);
+
+	renderTexture.draw(wheat.getSprite());
 
 	renderTexture.display();
 
