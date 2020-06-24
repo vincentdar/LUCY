@@ -9,21 +9,20 @@ namespace UNITS
 			// If enemy is close, setState attack
 			// SAMPLE MELEE ATTACK!1!1
 			int enemyWithMinDistance = INT_MAX;
-			Enemies* enemyUnit = nullptr;
 			for (int i = 0; i < laneDataRef[laneNumber].getEnemyCount(); i++)
 			{
 				int distance = laneDataRef[laneNumber].getEnemyUnit(i)->getPosition().x - charSprite.getPosition().x;
 				if (distance < stats.range && distance < enemyWithMinDistance && distance > 0)
 				{
 					enemyWithMinDistance = distance;
-					enemyUnit = laneDataRef[laneNumber].getEnemyUnit(i);
+					targetedEntity = laneDataRef[laneNumber].getEnemyUnit(i);
 				}
 			}
 
-			if (enemyUnit != nullptr) {
+			if (targetedEntity != nullptr) {
 				this->setState(ATTACK);
-				enemyUnit->takeDamage(stats.normalDamage);
-				enemyUnit = nullptr;
+				targetedEntity->takeDamage(stats.normalDamage);
+				targetedEntity = nullptr;
 				clock.restart();
 			}
 		}
@@ -32,7 +31,7 @@ namespace UNITS
 	void Friendly::updateStateActions()
 	{
 		if (state == ATTACK) {
-			if (clock.getElapsedTime().asSeconds() >= 2.0) {
+			if (clock.getElapsedTime().asSeconds() >= stats.attackSpeed) {
 				this->setState(IDLE);
 				clock.restart();
 			}

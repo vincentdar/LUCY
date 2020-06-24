@@ -71,6 +71,8 @@ namespace LUCY {
 
 		// Fungsi khusus di GameState
 		void clearUnitSelection();
+		bool isSelectedAreaEmpty(int laneNo);
+		void bottomUISelection(sf::Event& event);
 
 		// Fungsi dlm game loop
 		void VHandleInput()		override;

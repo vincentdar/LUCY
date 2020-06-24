@@ -5,7 +5,6 @@
 #include "AssetManager.h"
 #include "StateMachine.h"
 #include "Macro.h"
-#include "Logger.h"
 
 namespace LUCY
 {

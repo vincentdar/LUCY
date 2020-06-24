@@ -52,7 +52,10 @@ namespace UNITS {
 
 		sf::Clock clock;
 
+		Base* targetedEntity = nullptr;
+
 		Base(GameDataRef data, Lane lanes[], int laneNumber);
+
 	public:
 
 		Stats getUnitStats() { return stats; }
@@ -69,7 +72,7 @@ namespace UNITS {
 		void setState(UnitState state);
 		UnitState getState() { return state; }
 
-		void setUnitStats(float health, float normalDamage, float range);
+		void setUnitStats(float health, float normalDamage, float range, float ms, float as);
 
 		sf::FloatRect getUnitBounds();
 		sf::Vector2f getPosition() { return charSprite.getPosition(); }

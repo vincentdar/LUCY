@@ -38,11 +38,5 @@ namespace UNITS {
 			charSprite.setPosition(position);
 			setState(MOVE);
 		}
-
-		void update() {
-			Base::update();
-			if (state == MOVE)
-				charSprite.move(-1, 0);
-		}
 	};
 }

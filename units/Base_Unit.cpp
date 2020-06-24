@@ -21,11 +21,11 @@ namespace UNITS
 		);
 
 		// Update menurut State
-		updateStateActions();
-
 		processStateChanges();
 
 		triggerStateChanges();
+
+		updateStateActions();
 
 		animator.updateAnimation();
 
@@ -34,9 +34,7 @@ namespace UNITS
 		bar.setSize(sf::Vector2f(UTILS::getValueFromRange(0, stats.max_health, 0, 1, stats.health) * 100, 10));
 	}
 
-	void Base::setup(sf::Vector2f spawnPosition)
-	{
-	}
+	void Base::setup(sf::Vector2f spawnPosition) {}
 
 	void Base::draw(sf::RenderTarget & target)
 	{
@@ -54,7 +52,6 @@ namespace UNITS
 		}
 		else {
 			target.draw(charSprite);
-			charSprite.setColor(sf::Color::White);
 		}
 
 		target.draw(base);
@@ -108,11 +105,13 @@ namespace UNITS
 		this->stateIsChanged = true;
 	}
 
-	void Base::setUnitStats(float health, float normalDamage, float range)
+	void Base::setUnitStats(float health, float normalDamage, float range, float ms, float as)
 	{
 		stats.health = health;
 		stats.normalDamage = normalDamage;
 		stats.range = range;
+		stats.movementSpeed = ms;
+		stats.attackSpeed = as;
 	}
 
 	sf::FloatRect Base::getUnitBounds() {

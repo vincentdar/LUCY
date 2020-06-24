@@ -1,10 +1,12 @@
 #include "GameState.h"
 
 #include "units/Archer/Archer.h"
-#include "units/Enemy/EvilArcher.h"
 #include "units/Knight/GoldenKnight.h"
 #include "units/Friendly/Assassin.h"
+
+#include "units/Enemy/EvilArcher.h"
 #include "units/Enemy/EvilAssassin.h"
+#include "units/Enemy/EvilSpearmen.h"
 
 void LUCY::GameState::saveToFile(int slot)
 {
@@ -121,7 +123,6 @@ void LUCY::GameState::UnitFactories(std::string buffer, int lane_id)
 	}
 }
 
-
 void LUCY::GameState::UISetup()
 {
 	// Setup container unit
@@ -233,6 +234,70 @@ void LUCY::GameState::clearUnitSelection()
 	}
 }
 
+bool LUCY::GameState::isSelectedAreaEmpty(int laneNo)
+{
+	bool areaIsEmpty = true;
+
+	// Check friendly
+	for (int i = 0; i < lanes[laneNo].getFriendlyCount(); i++) {
+		if (selectionArea.getGlobalBounds().intersects(
+			lanes[laneNo].getFriendlyUnit(i)->getUnitBounds()))
+		{
+			areaIsEmpty = false;
+			break;
+		}
+	}
+
+	// Check wheat
+	for (int i = 0; i < lanes[laneNo].getWheatCount(); i++) {
+		if (selectionArea.getGlobalBounds().intersects(
+			lanes[laneNo].getWheat(i)->getSprite().getGlobalBounds()))
+		{
+			areaIsEmpty = false;
+			break;
+		}
+	}
+
+	return areaIsEmpty;
+}
+
+void LUCY::GameState::bottomUISelection(sf::Event& event)
+{
+	// Bottom UI selection
+	if (bottom_ui.getComponent<UI::Button>("Archer")->isClicked(event, data->window)) {
+		clearUnitSelection();
+
+		if (selectedUnit != 0) {
+			unitSelectionRef[0]->setOutline(5, sf::Color::White);
+			selectedUnit = 0;
+		}
+	}
+	else if (bottom_ui.getComponent<UI::Button>("Knight")->isClicked(event, data->window)) {
+		clearUnitSelection();
+
+		if (selectedUnit != 1) {
+			unitSelectionRef[1]->setOutline(5, sf::Color::White);
+			selectedUnit = 1;
+		}
+	}
+	else if (bottom_ui.getComponent<UI::Button>("Assassin")->isClicked(event, data->window)) {
+		clearUnitSelection();
+
+		if (selectedUnit != 2) {
+			unitSelectionRef[2]->setOutline(5, sf::Color::White);
+			selectedUnit = 2;
+		}
+	}
+	else if (bottom_ui.getComponent<UI::Button>("Wheat")->isClicked(event, data->window)) {
+		clearUnitSelection();
+
+		if (selectedUnit != 3) {
+			unitSelectionRef[3]->setOutline(5, sf::Color::White);
+			selectedUnit = 3;
+		}
+	}
+}
+
 void LUCY::GameState::VInit()
 {
 	// Default resource setup (klo load nanti dioverwrite
@@ -256,9 +321,15 @@ void LUCY::GameState::VInit()
 		lanes[i].setSpawnPosition(sf::Vector2f(ENEMY_SPAWN_X - 100, (i + 1) * LANE_HEIGHT));
 	}
 
-	for (int i = 0; i < TOTAL_LANES; i++) {
+	/*for (int i = 0; i < TOTAL_LANES; i++) {
 		lanes[i].spawnEnemyUnit(new UNITS::EvilAssassin(data, lanes, i));
-	}
+	}*/
+
+	lanes[0].spawnEnemyUnit(new UNITS::EvilAssassin(data, lanes, 0));
+	lanes[1].spawnEnemyUnit(new UNITS::EvilArcher(data, lanes, 1));
+	lanes[2].spawnEnemyUnit(new UNITS::EvilArcher(data, lanes, 2));
+	lanes[3].spawnEnemyUnit(new UNITS::EvilAssassin(data, lanes, 3));
+	lanes[4].spawnEnemyUnit(new UNITS::EvilSpearmen(data, lanes, 4));
 
 	UISetup();
 }
@@ -285,55 +356,15 @@ void LUCY::GameState::VHandleInput()
 		// Game Inputs
 		if (!isPausing) {
 
-			// Bottom UI selection
-			if (bottom_ui.getComponent<UI::Button>("Archer")->isClicked(event, data->window)) {
-				clearUnitSelection();
-
-				if (selectedUnit != 0) {
-					unitSelectionRef[0]->setOutline(5, sf::Color::White);
-					selectedUnit = 0;
-				}
-			}
-			else if (bottom_ui.getComponent<UI::Button>("Knight")->isClicked(event, data->window)) {
-				clearUnitSelection();
-				
-				if (selectedUnit != 1) {
-					unitSelectionRef[1]->setOutline(5, sf::Color::White);
-					selectedUnit = 1;
-				}
-			}
-			else if (bottom_ui.getComponent<UI::Button>("Assassin")->isClicked(event, data->window)) {
-				clearUnitSelection();
-
-				if (selectedUnit != 2) {
-					unitSelectionRef[2]->setOutline(5, sf::Color::White);
-					selectedUnit = 2;
-				}
-			}
-			else if (bottom_ui.getComponent<UI::Button>("Wheat")->isClicked(event, data->window)) {
-				clearUnitSelection();
-
-				if (selectedUnit != 3) {
-					unitSelectionRef[3]->setOutline(5, sf::Color::White);
-					selectedUnit = 3;
-				}
-			}
+			// Bottom UI seelction
+			bottomUISelection(event);
 
 			// Selection area highlighting and what to do on click.
 			if (event.type == sf::Event::MouseButtonPressed) {
 				int laneNo = UTILS::screenPositionToLaneMap(sf::Mouse::getPosition(data->window), 0, TOTAL_LANES, LANE_HEIGHT);
 				if (laneNo != -1) {
 
-					bool areaIsEmpty = true;
-					for (int i = 0; i < lanes[laneNo].getFriendlyCount(); i++) {
-						if (selectionArea.getGlobalBounds().intersects(
-							lanes[laneNo].getFriendlyUnit(i)->getUnitBounds())) {
-							areaIsEmpty = false;
-							break;
-						}
-					}
-
-					if (areaIsEmpty) {
+					if (isSelectedAreaEmpty(laneNo)) {
 
 						if (selectedUnit == 0) {
 							lanes[laneNo].spawnFriendlyUnit(new UNITS::Archer(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
@@ -348,17 +379,26 @@ void LUCY::GameState::VHandleInput()
 							lanes[laneNo].spawnWheat(data, selectionArea.getPosition().x);
 						}
 
-						
 					}
+					else {
+						// Harvest wheat
+						for (int i = 0; i < lanes[laneNo].getWheatCount(); i++) {
+							if (selectionArea.getGlobalBounds().intersects(
+								lanes[laneNo].getWheat(i)->getSprite().getGlobalBounds()) &&
+								lanes[laneNo].getWheat(i)->getCurrentState() == LUCY::Crop_State::Harvest)
+							{
+								food += lanes[laneNo].getWheat(i)->getValue();
+							}
+						}
 
-
+					}
 				}
 
-			}
 
+			}
 		}
 		// Pause inputs
-		else{
+		else {
 			pause_menu.handleInput(event, data->window);
 
 			if (pause_menu.getComponent<UI::Button>("Pause_Resume")->isClicked(event, data->window)) {
@@ -405,9 +445,12 @@ void LUCY::GameState::VUpdate(float dt)
 		for (int i = 0; i < lane.getWheatCount(); i++) {
 			lane.getWheat(i)->Update(1);
 		}
-
-		lane.removeDeadUnits();
 	}
+
+	for (int i = 0; i < TOTAL_LANES; i++) {
+		lanes[i].removeDeadUnits();
+	}
+
 }
 
 void LUCY::GameState::VDraw(float dt)

@@ -26,7 +26,7 @@ namespace LUCY
 		sf::Sprite m_sprite;
 		sf::IntRect rect;
 		Crop_State m_state;
-		int value = 0;
+		int value = 100;
 
 		GameDataRef m_data;
 		sf::Clock m_clock;
@@ -51,7 +51,7 @@ namespace LUCY
 
 		Crop_State getCurrentState() { return m_state; }
 
-		// Pas mau save, savedTime = clock.getElapsed. Klo dah disimpen + state otomatis bisa ngelanjut hitungan e
+		int getValue() { return value; }
 
 	};
 }

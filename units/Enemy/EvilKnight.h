@@ -9,7 +9,7 @@ namespace UNITS {
 		EvilKnight(GameDataRef data, Lane* lane, int laneNumber) : Enemies(data, lane, laneNumber) {}
 
 		void setup(sf::Vector2f position) override {
-			Base::setUnitStats(150, 30, 70);	
+			Base::setUnitStats(150, 30, 100, 0.2, 2.0);	
 
 			animator.bindSprite(&charSprite);
 
@@ -44,12 +44,6 @@ namespace UNITS {
 			charSprite.setScale(2, 2);
 			charSprite.setPosition(position);
 			setState(MOVE);
-		}
-
-		void update() {
-			Base::update();
-			if (state == MOVE)
-				charSprite.move(-1, 0);
 		}
 	};
 }

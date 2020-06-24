@@ -20,7 +20,7 @@ namespace UNITS {
 
 		void setup(sf::Vector2f position) override {
 
-			Friendly::setUnitStats(100, 10, 600); //Sets unit info
+			Friendly::setUnitStats(100, 15, 600, 0.2, 1.4); //Sets unit info
 
 			animator.bindSprite(&charSprite);
 
@@ -54,10 +54,12 @@ namespace UNITS {
 
 		void updateStateActions() override {
 
+			//Friendly::updateStateActions();
+
 			if (state == ATTACK) {
-				if (clock.getElapsedTime().asSeconds() >= 2.0) {
-					this->setState(IDLE);
+				if (clock.getElapsedTime().asSeconds() >= stats.attackSpeed) {
 					numOfAttacks++;
+					this->setState(IDLE);
 					clock.restart();
 				}
 			}
@@ -65,7 +67,7 @@ namespace UNITS {
 			if (skillIsActivated) {
 				if (skillTimer.getElapsedTime().asSeconds() >= 5.0) {
 					skillIsActivated = false;
-					//stats.normalDamage -= attackUp;
+					stats.normalDamage -= attackUp;
 					numOfAttacks = 0;
 				}
 			}
@@ -73,27 +75,8 @@ namespace UNITS {
 		}
 
 		void triggerStateChanges() override {
-			// Detect enemy state.
-			bool enemyExists = false;
-			if (state != ATTACK) {
-				int enemyWithMinDistance = stats.range;
-				for (int i = 0; i < laneDataRef[laneNumber].getEnemyCount(); i++)
-				{
-					int distance = laneDataRef[laneNumber].getEnemyUnit(i)->getPosition().x - charSprite.getPosition().x;
-					if (distance < stats.range && distance > 0)
-					{
-						enemyExists = true;
-					}
-				}
-
-				if (enemyExists) {
-					this->setState(ATTACK);
-					//laneDataRef[laneNumber].spawnFriendlyProjectile(new Arrow());
-;					clock.restart();
-				}
-			}
+			Friendly::triggerStateChanges();
 			
-			// Set skill activated or not.
 			if (!skillIsActivated) {
 				if (numOfAttacks >= 10) {
 					skillIsActivated = true;

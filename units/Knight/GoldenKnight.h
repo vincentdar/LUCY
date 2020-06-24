@@ -7,10 +7,8 @@ namespace UNITS {
 		: public Friendly
 	{
 	protected:
-		int numOfAttacks = 0;
-		float attackUp;
-
 		sf::Clock skillTimer;
+		float attackUp;
 
 	public:
 		GoldenKnight(GameDataRef data, Lane* lane, int laneNumber) : Friendly(data, lane, laneNumber) { 
@@ -19,7 +17,7 @@ namespace UNITS {
 
 		void setup(sf::Vector2f position) {
 
-			Friendly::setUnitStats(10000, 600, 100);
+			Friendly::setUnitStats(180, 15, 100, 0.2, 2.0);
 
 			animator.bindSprite(&charSprite);
 
@@ -49,19 +47,12 @@ namespace UNITS {
 		}
 		void updateStateActions() override {
 
-			if (state == ATTACK) {
-				if (clock.getElapsedTime().asSeconds() >= 2.0) {
-					this->setState(IDLE);
-					numOfAttacks++;
-					clock.restart();
-				}
-			}
+			Friendly::updateStateActions();
 
 			if (skillIsActivated) {
-				if (skillTimer.getElapsedTime().asSeconds() >= 10.0) {
+				if (skillTimer.getElapsedTime().asSeconds() >= 5.0) {
 					skillIsActivated = false;
-					stats.normalDamage -= attackUp;
-					numOfAttacks = 0;
+					stats.attackSpeed /= 2;
 				}
 			}
 
@@ -71,7 +62,7 @@ namespace UNITS {
 			Friendly::triggerStateChanges();
 
 			if (!skillIsActivated) {
-				if (numOfAttacks >= 15) {
+				if (stats.health <= stats.max_health * 0.3) {
 					skillIsActivated = true;
 					skill();
 				}
@@ -79,11 +70,8 @@ namespace UNITS {
 		}
 
 		void skill() override {
-			attackUp = stats.normalDamage * 50;
-			stats.normalDamage += attackUp;
-			stats.health += attackUp;
+			stats.attackSpeed *= 2;
 			skillTimer.restart();
-			printf("SKILL USED\n");
 		}
 
 		void update() override {
