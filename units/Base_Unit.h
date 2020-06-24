@@ -81,6 +81,7 @@ namespace UNITS {
 
 		std::string StatSerialize() {
 			return
+				std::to_string(charSprite.getPosition().x) + "$" +
 				std::to_string(stats.health) + "$" +
 				std::to_string(stats.range) + "$" +
 				std::to_string(stats.normalDamage) + "$" +

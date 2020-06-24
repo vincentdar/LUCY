@@ -73,6 +73,7 @@ void LUCY::GameState::UnitFactories(std::string buffer, int lane_id)
 	std::string string_var;
 	for (int i = 0; i < buffer.length(); i++)
 	{
+		std::cout << "Size: " << buffer.length() << std::endl;
 		if (buffer.at(i) == '$')
 		{
 			string_var_vector.push_back(std::move(string_var));
@@ -86,17 +87,20 @@ void LUCY::GameState::UnitFactories(std::string buffer, int lane_id)
 		}
 	}
 
+	for (int i = 0; i < string_var_vector.size(); i++) {
+		std::cout << string_var_vector[i] << " ";
+	}
+
 	//FACTORY
 	if (string_var_vector.at(0) == "Archer")
 	{
-		//need setup for finish load
 		pFriend = new UNITS::Archer(data, lanes, lane_id);
 		pFriend->StatUnserialize(
+			string_var_vector[2],
 			string_var_vector[3],
 			string_var_vector[4],
 			string_var_vector[5],
-			string_var_vector[6],
-			string_var_vector[7]
+			string_var_vector[6]
 		);
 		lanes[lane_id].spawnFriendlyUnit(pFriend, std::stof(string_var_vector[1]));
 	}
@@ -104,11 +108,11 @@ void LUCY::GameState::UnitFactories(std::string buffer, int lane_id)
 	{
 		pFriend = new UNITS::GoldenKnight(data, lanes, lane_id);
 		pFriend->StatUnserialize(
+			string_var_vector[2],
 			string_var_vector[3],
 			string_var_vector[4],
 			string_var_vector[5],
-			string_var_vector[6],
-			string_var_vector[7]
+			string_var_vector[6]
 		);
 		lanes[lane_id].spawnFriendlyUnit(pFriend, std::stof(string_var_vector[1]));
 	}
@@ -116,11 +120,11 @@ void LUCY::GameState::UnitFactories(std::string buffer, int lane_id)
 	{
 		pFriend = new UNITS::Assassin(data, lanes, lane_id);
 		pFriend->StatUnserialize(
+			string_var_vector[2],
 			string_var_vector[3],
 			string_var_vector[4],
 			string_var_vector[5],
-			string_var_vector[6],
-			string_var_vector[7]
+			string_var_vector[6]
 		);
 		lanes[lane_id].spawnFriendlyUnit(pFriend, std::stof(string_var_vector[1]));
 	}
@@ -132,11 +136,6 @@ void LUCY::GameState::VInit()
 	// Default resource setup (klo load nanti dioverwrite
 	food = 100;
 	seed = 5;
-
-	// Load game?
-	if (isLoad) {
-		loadFromFile();
-	}
 
 	renderTexture.create(data->window.getSize().x, data->window.getSize().y);
 
@@ -158,11 +157,16 @@ void LUCY::GameState::VInit()
 	lanes[3].spawnEnemyUnit(new UNITS::EvilAssassin(data, lanes, 3));
 	lanes[4].spawnEnemyUnit(new UNITS::EvilSpearmen(data, lanes, 4));
 
+	if (isLoad) {
+		loadFromFile();
+	}
+
 	UISetup();
 }
 
 void LUCY::GameState::VHandleInput()
 {
+
 	sf::Event event;
 	while (data->window.pollEvent(event)) {
 
@@ -337,6 +341,7 @@ void LUCY::GameState::VDraw(float dt)
 			lanes[i].getEnemyUnit(j)->draw(renderTexture);
 		}
 		for (int j = 0; j < lanes[i].getFriendlyCount(); j++) {
+			//std::cout << "Type: " << lanes[i].getFriendlyUnit(j)->getType() << std::endl;
 			lanes[i].getFriendlyUnit(j)->draw(renderTexture);
 		}
 		for (int j = 0; j < lanes[i].getWheatCount(); j++) {
