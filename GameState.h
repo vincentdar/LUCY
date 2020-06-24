@@ -20,19 +20,17 @@ namespace LUCY {
 	private:
 
 		// Save To File
-		void saveToFile(int slot);
-		void loadFromFile(int slot);
+		void saveToFile();
+		void loadFromFile();
 
 		// Resources 
-		int food;
-		int seed;
+		int food, seed;
 
 		bool isPausing = false;
+		bool isLoad;
 
 		// Spawn-related
-		int totalNumberOfFriendlyUnits;
 		Lane lanes[5];
-		int saveSlot;
 		int waveNumber;
 
 		GameDataRef data;
@@ -65,8 +63,8 @@ namespace LUCY {
 		void UnitFactories(std::string buffer, int lane_id);
 
 	public:
-		GameState(GameDataRef data, int saveSlot = -1) 
-			: data(data), saveSlot(saveSlot) {}
+		GameState(GameDataRef data, bool isLoad = false)
+			: data(data), isLoad(isLoad) {}
 
 		// Fungsi khusus di GameState
 		void clearUnitSelection();

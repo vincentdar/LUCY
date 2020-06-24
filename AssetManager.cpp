@@ -64,10 +64,8 @@ namespace LUCY
 	void AssetManager::LoadSoundBuffer(const std::string& name, const std::string& fileName)
 	{
 		sf::SoundBuffer sb;
-		printf("Success1!");
 		if (sb.loadFromFile(fileName))
 		{
-			printf("Success!");
 			m_soundBuffers[name] = sb;
 		}
 	}

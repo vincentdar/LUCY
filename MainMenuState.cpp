@@ -85,7 +85,7 @@ void LUCY::MainMenuState::VHandleInput()
 			m_data->machine.AddState(StateRef(new LoadingState<GameState>(m_data, 3)), false);
 		}
 		else if (_buttons[1].isClicked(event, m_data->window)) { // Load Game Button
-
+			m_data->machine.AddState(StateRef(new LoadingState<GameState>(m_data, 3, true)), false);
 		}
 		else if (_buttons[2].isClicked(event, m_data->window)) { // Options Button
 

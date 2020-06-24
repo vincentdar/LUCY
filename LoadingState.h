@@ -10,18 +10,20 @@ namespace LUCY
 	class LoadingState : public IState
 	{
 	private:
-		GameDataRef		data;
-		float			time;
+		GameDataRef	data;
+		float time;
 
-		sf::Clock		clock;
-		float			prevTime = 0;
+		sf::Clock clock;
+		float prevTime = 0;
 
-		sf::Text		loadingText;
-		int				dotCount = 0;
+		sf::Text loadingText;
+		int	dotCount = 0;
+
+		bool isLoad;
 
 	public:
-		LoadingState(GameDataRef data, float time)
-			: data(data), time(time) {}
+		LoadingState(GameDataRef data, float time, bool isLoad = false)
+			: data(data), time(time), isLoad(isLoad) {}
 
 		void VInit() {
 			data->window.setView(data->window.getDefaultView());
@@ -45,6 +47,12 @@ namespace LUCY
 			while (data->window.pollEvent(event)) {
 				if (event.type == sf::Event::Closed) {
 					data->window.close();
+				}
+				// Abort loading.
+				else if (event.type == sf::Event::KeyPressed) {
+					if (event.key.code == sf::Keyboard::Escape) {
+						data->machine.RemoveState();
+					}
 				}
 			}
 		}
@@ -76,7 +84,7 @@ namespace LUCY
 		void VPause() {}
 
 		void VExit() {
-			data->machine.AddState(StateRef(new Destination(data)), true);
+			data->machine.AddState(StateRef(new Destination(data, isLoad)), true);
 		}
 	};
 }

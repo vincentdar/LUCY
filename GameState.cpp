@@ -11,7 +11,7 @@
 #include "units/Enemy/EvilSpearmen.h"
 
 // Save/load
-void LUCY::GameState::saveToFile(int slot)
+void LUCY::GameState::saveToFile()
 {
 	std::ofstream file("saved.txt");
 	if (file.is_open())
@@ -30,7 +30,7 @@ void LUCY::GameState::saveToFile(int slot)
 	}
 }
 
-void LUCY::GameState::loadFromFile(int slot)
+void LUCY::GameState::loadFromFile()
 {
 	std::ifstream file("saved.txt");
 	int lane = 0;
@@ -134,8 +134,8 @@ void LUCY::GameState::VInit()
 	seed = 5;
 
 	// Load game?
-	if (saveSlot != -1) {
-		loadFromFile(saveSlot);
+	if (isLoad) {
+		loadFromFile();
 	}
 
 	renderTexture.create(data->window.getSize().x, data->window.getSize().y);
@@ -182,6 +182,8 @@ void LUCY::GameState::VHandleInput()
 
 		// Game Inputs
 		if (!isPausing) {
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) { saveToFile(); }
 
 			// Bottom UI seelction
 			bottomUISelection(event);
