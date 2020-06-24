@@ -78,11 +78,14 @@ namespace UNITS {
 		void skill() override {
 			stats.range += 1200;
 			skillTimer.restart();
-			printf("SKILL USED\n");
 		}
 
 		void update() override {
 			Base::update();
+		}
+
+		std::string getType() override {
+			return "Spearmen";
 		}
 	};
 }

@@ -103,16 +103,18 @@ namespace UNITS {
 		}
 
 		void skill() override {
-			attackUp = stats.normalDamage * 0.5;
+			attackUp = stats.normalDamage * 2;
 			stats.normalDamage += attackUp;
 			skillTimer.restart();
-			printf("SKILL USED\n");
 		}
 
 		void update() override {
 			Base::update();
 		}
 		
+		std::string getType() override {
+			return "Archer";
+		}
 	};
 }
 

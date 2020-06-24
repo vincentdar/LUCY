@@ -73,6 +73,27 @@ namespace UNITS {
 
 		sf::FloatRect getUnitBounds();
 		sf::Vector2f getPosition() { return charSprite.getPosition(); }
+
+		std::string StatSerialize() {
+			return
+				std::to_string(stats.health) + "$" +
+				std::to_string(stats.range) + "$" +
+				std::to_string(stats.normalDamage) + "$" +
+				std::to_string(stats.movementSpeed) + "$" + 
+				std::to_string(stats.max_health) + "$";
+		}
+
+		void StatUnserialize(const std::string& health,
+							const std::string& range, 
+							const std::string& normalDamage, 
+							const std::string& movementSpeed, 
+							const std::string& max_health) {
+			stats.health = std::stof(health);
+			stats.range = std::stof(range);
+			stats.normalDamage = std::stof(normalDamage);
+			stats.movementSpeed = std::stof(movementSpeed);
+			stats.max_health = std::stof(max_health);
+		}
 	};
 
 }

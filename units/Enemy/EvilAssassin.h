@@ -33,7 +33,7 @@ namespace UNITS {
 			animator.addAnimationState(
 				"Attack",
 				data->assets.GetTexturePtr("Assassin_Red"),
-				sf::IntRect(0, 36 * 3, 54, 36),
+				sf::IntRect(0, 36 * 2, 54, 36),
 				sf::Vector2i(54, 0), 0.2, 5, false, false
 			);
 
@@ -64,9 +64,11 @@ namespace UNITS {
 
 		void draw(sf::RenderTarget& target) override {
 			if (isHit) {
-				// Black blinking krn tidak bs 2 shader
-				charSprite.setColor(sf::Color::Black);
+				// Override existing shader
+				shader.loadFromFile("res/shader/hitflash.shader", sf::Shader::Fragment);
+				//charSprite.setColor(sf::Color::Black);
 				isHit = false;
+				target.draw(charSprite, &shader);
 				return;
 			}
 
@@ -82,9 +84,7 @@ namespace UNITS {
 			target.draw(bar);
 		}
 
-		void skill() {
-			
-		}
+		void skill() {}
 
 		void updateStateActions() override
 		{

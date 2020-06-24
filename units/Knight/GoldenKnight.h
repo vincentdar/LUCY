@@ -89,5 +89,9 @@ namespace UNITS {
 		void update() override {
 			Base::update();
 		}
+
+		std::string getType() override {
+			return "Knight";
+		}
 	};
 }

@@ -42,9 +42,10 @@ namespace UNITS
 	{
 		if (isHit) {
 			// Override existing shader
-			//shader.loadFromFile("res/shader/hitflash.shader", sf::Shader::Fragment);
-			charSprite.setColor(sf::Color::Black);
+			shader.loadFromFile("res/shader/hitflash.shader", sf::Shader::Fragment);
+			//charSprite.setColor(sf::Color::Black);
 			isHit = false;
+			target.draw(charSprite, &shader);
 			return;
 		}
 		

@@ -8,13 +8,119 @@
 
 void LUCY::GameState::saveToFile(int slot)
 {
-
+	std::ofstream file("saved.txt");
+	if (file.is_open())
+	{
+		for (int i = 0; i < 5; i++)
+		{
+			std::string buffer = std::to_string(i) + "\n" + lanes[i].LaneSerialize();
+			std::cout << buffer << std::endl;
+			file << buffer;
+		}
+		file.close();
+	}
+	else
+	{
+		std::cout << "File for saving doesn't exist" << std::endl;
+	}
 }
 
 void LUCY::GameState::loadFromFile(int slot)
 {
+	std::ifstream file("saved.txt");
+	int lane = 0;
+	if (file.is_open())
+	{
+		while (!file.eof())
+		{
+			std::string buffer;
 
+			file >> buffer;
+			if (buffer.find('$') == std::string::npos)
+			{
+				if (buffer.length() > 0)
+				{
+					lane = std::stoi(buffer);
+					std::cout << lane << std::endl;
+				}
+			}
+			else
+			{
+				if (buffer.length() > 0)
+				{
+					UnitFactories(buffer, lane);
+				}
+			}
+		}
+		file.close();
+	}
+	else
+	{
+		std::cout << "File for saving doesn't exist" << std::endl;
+	}
 }
+
+void LUCY::GameState::UnitFactories(std::string buffer, int lane_id)
+{
+	std::cout << buffer << std::endl;
+	UNITS::Friendly* pFriend = nullptr;
+	std::vector<std::string> string_var_vector;
+	std::string string_var;
+	for (int i = 0; i < buffer.length(); i++)
+	{
+		if (buffer.at(i) == '$')
+		{
+			string_var_vector.push_back(std::move(string_var));
+
+			string_var.empty();
+			string_var.shrink_to_fit();
+		}
+		else
+		{
+			string_var.push_back(buffer.at(i));
+		}
+	}
+
+	//FACTORY
+	if (string_var_vector.at(0) == "Archer")
+	{
+		//need setup for finish load
+		pFriend = new UNITS::Archer(data, lanes, lane_id);
+		pFriend->StatUnserialize(
+			string_var_vector[3],
+			string_var_vector[4],
+			string_var_vector[5],
+			string_var_vector[6],
+			string_var_vector[7]
+		);
+		lanes[lane_id].spawnFriendlyUnit(pFriend, std::stof(string_var_vector[1]));
+	}
+	else if (string_var_vector.at(0) == "Knight")
+	{
+		pFriend = new UNITS::GoldenKnight(data, lanes, lane_id);
+		pFriend->StatUnserialize(
+			string_var_vector[3],
+			string_var_vector[4],
+			string_var_vector[5],
+			string_var_vector[6],
+			string_var_vector[7]
+		);
+		lanes[lane_id].spawnFriendlyUnit(pFriend, std::stof(string_var_vector[1]));
+	}
+	else if (string_var_vector.at(0) == "Assassin")
+	{
+		pFriend = new UNITS::Assassin(data, lanes, lane_id);
+		pFriend->StatUnserialize(
+			string_var_vector[3],
+			string_var_vector[4],
+			string_var_vector[5],
+			string_var_vector[6],
+			string_var_vector[7]
+		);
+		lanes[lane_id].spawnFriendlyUnit(pFriend, std::stof(string_var_vector[1]));
+	}
+}
+
 
 void LUCY::GameState::UISetup()
 {
@@ -117,17 +223,6 @@ void LUCY::GameState::UISetup()
 		sf::Vector2f(pause_menu.getSize().x / 2.0 - resumeButton->getSize().x / 2.0, 50));
 	pause_menu.setComponentPosition("Pause_Exit",
 		sf::Vector2f(pause_menu.getSize().x / 2.0 - resumeButton->getSize().x / 2.0, 140));
-}
-
-void LUCY::GameState::GridSetup()
-{
-	for (int i = 0; i < 5; i++) {
-		for (int j = 0; j < 5; j++) {
-			farmGrid[i][j] = 0;
-		}
-	}
-
-	
 }
 
 void LUCY::GameState::clearUnitSelection()
@@ -285,15 +380,9 @@ void LUCY::GameState::VUpdate(float dt)
 
 	resources_ui.update(data->window);
 
-	std::stringstream oss;
-	oss << food;
+	foodText.setString(foodStr + std::to_string(food));
 
-	foodText.setString(foodStr + oss.str());
-
-	oss.str(std::string());
-	oss << cash;
-
-	cashText.setString(cashStr + oss.str());
+	cashText.setString(cashStr + std::to_string(cash));
 
 	if (isPausing) {
 		pause_menu.update(data->window);

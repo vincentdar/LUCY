@@ -69,4 +69,22 @@ public:
 	// Set spawn point lane tsb.
 	void setSpawnPosition(sf::Vector2f position);
 	sf::Vector2f getSpawnPosition() { return enemyLaneSpawnPoint; }
+
+	// File serialization
+	std::string LaneSerialize()
+	{
+		std::string buffer;
+		for (auto i : friendly_units)
+		{
+			buffer += i->getType() + "$";
+			buffer += i->StatSerialize();
+			buffer += "\n";
+		}
+		return buffer;
+		return "";
+	}
+
+	void LoadUnserialize(std::string buffer, int lane)
+	{
+	}
 };

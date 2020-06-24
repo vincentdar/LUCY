@@ -83,6 +83,10 @@ namespace UNITS {
 			//Nge heal, how to access other's HP ?
 			printf("SKILL\n");
 		}
+
+		std::string getType() override {
+			return "Healer";
+		}
 	};
 
 }

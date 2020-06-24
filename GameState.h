@@ -62,11 +62,8 @@ namespace LUCY {
 		// Functions untuk create UI dll
 		void UISetup();
 
-		// Farm
-		int farmGrid[5][5];
-		sf::FloatRect gridSize;
-
-		void GridSetup();
+		// Unit factories utk load game
+		void UnitFactories(std::string buffer, int lane_id);
 
 	public:
 		GameState(GameDataRef data, int saveSlot = -1) 

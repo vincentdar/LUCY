@@ -34,5 +34,9 @@ namespace UNITS {
 			bar.setSize(sf::Vector2f(100, 10));
 			bar.setFillColor(sf::Color::Green);
 		}
+
+		virtual std::string getType() = 0;
+
+		
 	};
 }
