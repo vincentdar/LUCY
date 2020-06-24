@@ -32,10 +32,7 @@ namespace LUCY
 		sf::Clock m_clock;
 		Animation anim;
 
-		sf::Shader shader;
-
-		// Time utk di loadgame lagi
-		int savedTime = 0;
+		sf::Shader m_shader;
 
 	public:
 		Wheat(GameDataRef data, sf::Vector2f position) : m_data(data), position(position) {}
@@ -44,12 +41,13 @@ namespace LUCY
 		void Harvested();
 		void Pillaged();
 		void Remove();
-		void HandleInput();
 		void Update(float dt);
 		void Draw(sf::RenderTarget& target);
 		sf::Sprite& getSprite();
 
 		Crop_State getCurrentState() { return m_state; }
+
+		sf::Vector2f getPosition() { return m_sprite.getPosition(); }
 
 		int getValue() { return value; }
 

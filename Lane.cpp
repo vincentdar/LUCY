@@ -22,18 +22,6 @@ Lane::~Lane() {
 	}
 
 	wheatList.clear();
-
-	for (int i = 0; i < enemy_projectiles.size(); i++) {
-		delete enemy_projectiles[i];
-	}
-
-	enemy_projectiles.clear();
-
-	for (int i = 0; i < friendly_projectiles.size(); i++) {
-		delete friendly_projectiles[i];
-	}
-
-	friendly_projectiles.clear();
 }
 
 void Lane::spawnEnemyUnit(UNITS::Enemies* unit) {
@@ -41,17 +29,9 @@ void Lane::spawnEnemyUnit(UNITS::Enemies* unit) {
 	enemy_units.push_back(unit);
 }
 
-void Lane::spawnEnemyProjectile(UNITS::Projectile * proj) {
-	enemy_projectiles.push_back(proj);
-}
-
 void Lane::spawnFriendlyUnit(UNITS::Friendly* unit, float offset_x) {
 	unit->setup(sf::Vector2f(offset_x, enemyLaneSpawnPoint.y));
 	friendly_units.push_back(unit);
-}
-
-void Lane::spawnFriendlyProjectile(UNITS::Projectile * proj) {
-	friendly_projectiles.push_back(proj);
 }
 
 void Lane::spawnWheat(GameDataRef data, float offset_x)
@@ -81,24 +61,6 @@ UNITS::Friendly* Lane::getFriendlyUnit(int index) {
 	return friendly_units[index];
 }
 
-UNITS::Projectile * Lane::getFriendlyProjectiles(int index)
-{
-	if (index < 0 || index >= friendly_projectiles.size()) {
-		return nullptr;
-	}
-	
-	return friendly_projectiles[index];
-}
-
-UNITS::Projectile * Lane::getEnemyProjectiles(int index)
-{
-	if (index < 0 || index >= enemy_projectiles.size()) {
-		return nullptr;
-	}
-
-	return enemy_projectiles[index];
-}
-
 LUCY::Wheat* Lane::getWheat(int index)
 {
 	assert(index >= 0 && index < wheatList.size());
@@ -106,6 +68,7 @@ LUCY::Wheat* Lane::getWheat(int index)
 	return wheatList[index];
 }
 
+// Remove dead units : semua unit yang statenya dihapus, diremove dari arraynya.
 void Lane::removeDeadUnits()
 {
 	for (int i = 0; i < friendly_units.size(); i++) {

@@ -5,7 +5,6 @@
 
 #include "units/Base_Unit.h"
 
-#include "ui/UI_Base.h"
 #include "ui/UI_Container.h"
 #include "ui/UI_Button.h"
 #include "ui/UI_Alert.h"
@@ -26,7 +25,7 @@ namespace LUCY {
 
 		// Resources 
 		int food;
-		int cash;
+		int seed;
 
 		bool isPausing = false;
 
@@ -50,14 +49,14 @@ namespace LUCY {
 		UI::Container resources_ui;
 		UI::Container pause_menu;
 
-		UI::Button* unitSelectionRef[5];
+		UI::Button* unitBtnRef[7];
 		int selectedUnit = -1;
 
 		UI::Alert alert;
 
 		sf::Text cashText, foodText;
 
-		std::string cashStr, foodStr;
+		std::string seedStr, foodStr;
 
 		// Functions untuk create UI dll
 		void UISetup();

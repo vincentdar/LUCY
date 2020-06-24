@@ -47,6 +47,8 @@ namespace UNITS {
 		sf::Sprite		charSprite;
 		sf::FloatRect	unitBounds;
 
+		sf::Sound		sfx;
+
 		// Health bar
 		sf::RectangleShape	base, bar;
 

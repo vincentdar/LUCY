@@ -1,7 +1,6 @@
 #pragma once
 
 #include "../Friendly.h"
-#include "../../projectiles/Arrow.h"
 
 namespace UNITS {
 	class Archer :

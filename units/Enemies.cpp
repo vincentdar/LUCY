@@ -45,6 +45,14 @@ namespace UNITS
 	{
 		Base::update();
 		
-		
+		// Musuh bisa menginjak wheat jadi busuk
+		for (int i = 0; i < laneDataRef[laneNumber].getWheatCount(); i++)
+		{
+			LUCY::Wheat* wh = laneDataRef[laneNumber].getWheat(i);
+			if (wh->getSprite().getGlobalBounds().intersects(charSprite.getGlobalBounds()))
+			{
+				wh->Pillaged();
+			}
+		}
 	}
 }

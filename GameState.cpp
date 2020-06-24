@@ -3,11 +3,14 @@
 #include "units/Archer/Archer.h"
 #include "units/Knight/GoldenKnight.h"
 #include "units/Friendly/Assassin.h"
+//#include "units/Healer/Healer.h"
+//#include "units/Spearmen/Spearmen.h"
 
 #include "units/Enemy/EvilArcher.h"
 #include "units/Enemy/EvilAssassin.h"
 #include "units/Enemy/EvilSpearmen.h"
 
+// Save/load
 void LUCY::GameState::saveToFile(int slot)
 {
 	std::ofstream file("saved.txt");
@@ -123,6 +126,263 @@ void LUCY::GameState::UnitFactories(std::string buffer, int lane_id)
 	}
 }
 
+// Virtual fn dari IState
+void LUCY::GameState::VInit()
+{
+	// Default resource setup (klo load nanti dioverwrite
+	food = 100;
+	seed = 5;
+
+	// Load game?
+	if (saveSlot != -1) {
+		loadFromFile(saveSlot);
+	}
+
+	renderTexture.create(data->window.getSize().x, data->window.getSize().y);
+
+	selectionArea.setSize(sf::Vector2f(60, LANE_HEIGHT));
+	selectionArea.setFillColor(sf::Color(0, 255, 0, 100));
+	selectionArea.setOrigin(selectionArea.getGlobalBounds().width / 2.0, selectionArea.getGlobalBounds().height / 2.0);
+
+	background.setTexture(*data->assets.GetTexturePtr("Grass"));
+	background.setColor(sf::Color(250, 250, 250, 200));
+	background.setPosition(sf::Vector2f(0, 0));
+
+	for (int i = 0; i < TOTAL_LANES; i++) {
+		lanes[i].setSpawnPosition(sf::Vector2f(ENEMY_SPAWN_X - 100, (i + 1) * LANE_HEIGHT));
+	}
+
+	lanes[0].spawnEnemyUnit(new UNITS::EvilAssassin(data, lanes, 0));
+	lanes[1].spawnEnemyUnit(new UNITS::EvilArcher(data, lanes, 1));
+	lanes[2].spawnEnemyUnit(new UNITS::EvilArcher(data, lanes, 2));
+	lanes[3].spawnEnemyUnit(new UNITS::EvilAssassin(data, lanes, 3));
+	lanes[4].spawnEnemyUnit(new UNITS::EvilSpearmen(data, lanes, 4));
+
+	UISetup();
+}
+
+void LUCY::GameState::VHandleInput()
+{
+	sf::Event event;
+	while (data->window.pollEvent(event)) {
+
+		// General
+		if (event.type == sf::Event::Closed) {
+			VExit();
+			data->window.close();
+		}
+		else if (event.type == sf::Event::KeyPressed) {
+			if (event.key.code == sf::Keyboard::Escape) {
+				isPausing = !isPausing;
+			}
+		}
+
+		// Non game inputs
+		alert.handleInput(event, data->window);
+
+		// Game Inputs
+		if (!isPausing) {
+
+			// Bottom UI seelction
+			bottomUISelection(event);
+
+			// Selection area highlighting and what to do on click.
+			if (event.type == sf::Event::MouseButtonPressed) {
+				int laneNo = UTILS::screenPositionToLaneMap(sf::Mouse::getPosition(data->window), 0, TOTAL_LANES, LANE_HEIGHT);
+				if (laneNo != -1) {
+					if (isSelectedAreaEmpty(laneNo)) {
+
+						if (selectedUnit == 0) {
+
+							if (food >= 50) {
+								food -= 50;
+							}
+
+							lanes[laneNo].spawnFriendlyUnit(new UNITS::Archer(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+						}
+						else if (selectedUnit == 1) {
+
+
+							lanes[laneNo].spawnFriendlyUnit(new UNITS::GoldenKnight(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+						}
+						else if (selectedUnit == 2) {
+
+							lanes[laneNo].spawnFriendlyUnit(new UNITS::Assassin(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+						}
+						else if (selectedUnit == 3) {
+							//lanes[laneNo].spawnFriendlyUnit(new UNITS::Spearman(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+						}
+						else if (selectedUnit == 4) {
+							//lanes[laneNo].spawnFriendlyUnit(new UNITS::Defender(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+						}
+						else if (selectedUnit == 5) {
+							//lanes[laneNo].spawnFriendlyUnit(new UNITS::Healer(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+						}
+						else if (selectedUnit == 6) {
+
+							if (seed >= 1) {
+								seed -= 1;
+							}
+
+							lanes[laneNo].spawnWheat(data, selectionArea.getPosition().x + selectionArea.getGlobalBounds().width / 2.0);
+						}
+
+					}
+					else {
+						// Harvest wheat
+						for (int i = 0; i < lanes[laneNo].getWheatCount(); i++) {
+							Wheat* w = lanes[laneNo].getWheat(i);
+							if (selectionArea.getGlobalBounds().intersects(
+								w->getSprite().getGlobalBounds()))
+							{
+								if (w->getCurrentState() == Harvest || w->getCurrentState() == Pillage) {
+									food += lanes[laneNo].getWheat(i)->getValue();
+									lanes[laneNo].getWheat(i)->Remove();
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		// Pause inputs
+		else {
+			pause_menu.handleInput(event, data->window);
+
+			if (pause_menu.getComponent<UI::Button>("Pause_Resume")->isClicked(event, data->window)) {
+				isPausing = false;
+			}
+			else if (pause_menu.getComponent<UI::Button>("Pause_Exit")->isClicked(event, data->window)) {
+				VExit();
+			}
+		}
+	}
+}
+
+void LUCY::GameState::VUpdate(float dt)
+{
+	alert.update(data->window);
+
+	// Update ketika pause
+	if (isPausing) {
+		pause_menu.update(data->window);
+		return;
+	}
+
+	bottom_ui.update(data->window);
+
+	resources_ui.update(data->window);
+
+	// Update UI resources dgn data resources yang baru
+	foodText.setString(foodStr + std::to_string(food));
+
+	cashText.setString(seedStr + std::to_string(seed));
+
+
+	int index = UTILS::screenPositionToLaneMap(sf::Mouse::getPosition(data->window), 0, TOTAL_LANES, LANE_HEIGHT);
+
+	// Update posisi Selection Area
+	selectionArea.setOrigin(0, 0);
+	int xMouse = sf::Mouse::getPosition(data->window).x;
+	int yMouse = sf::Mouse::getPosition(data->window).y;
+	// Kapan Selection Area berhenti di batas.
+	if (index != -1 &&
+		UTILS::isInBetween(xMouse, 
+					selectionArea.getGlobalBounds().width, 
+					data->window.getSize().x - selectionArea.getGlobalBounds().width) &&
+		UTILS::isInBetween(yMouse, 0, data->window.getSize().y))
+	{
+		selectionArea.setPosition(xMouse - selectionArea.getGlobalBounds().width / 2.0, LANE_HEIGHT * index);
+	}
+	else if (xMouse >= data->window.getSize().x - selectionArea.getGlobalBounds().width) {
+		selectionArea.setPosition(data->window.getSize().x - selectionArea.getGlobalBounds().width, LANE_HEIGHT * index);
+	}
+	else if (xMouse <= selectionArea.getGlobalBounds().width) {
+		selectionArea.setPosition(0, LANE_HEIGHT * index);
+	}
+
+	// Update enemy unit, friendly unit, dan wheat.
+	for (Lane &lane : lanes) {
+		for (int i = 0; i < lane.getEnemyCount(); i++) {
+			lane.getEnemyUnit(i)->update();
+		}
+		for (int i = 0; i < lane.getFriendlyCount(); i++) {
+			lane.getFriendlyUnit(i)->update();
+		}
+		for (int i = 0; i < lane.getWheatCount(); i++) {
+			lane.getWheat(i)->Update(1);
+		}
+	}
+
+	// Hapus unit / wheat yang tidak dipakai lagi
+	for (int i = 0; i < TOTAL_LANES; i++) {
+		lanes[i].removeDeadUnits();
+	}
+
+}
+
+void LUCY::GameState::VDraw(float dt)
+{
+	data->window.clear();
+
+	// Draw ke rendertexture (gameplay only)
+	// Spy => Shader bisa diapply ke 1 layar.
+	renderTexture.clear();
+	renderTexture.draw(background);
+
+	for (int i = 0; i < TOTAL_LANES; i++) {
+		for (int j = 0; j < lanes[i].getEnemyCount(); j++) {
+			lanes[i].getEnemyUnit(j)->draw(renderTexture);
+		}
+		for (int j = 0; j < lanes[i].getFriendlyCount(); j++) {
+			lanes[i].getFriendlyUnit(j)->draw(renderTexture);
+		}
+		for (int j = 0; j < lanes[i].getWheatCount(); j++) {
+			lanes[i].getWheat(j)->Draw(renderTexture);
+		}
+	}
+
+	bottom_ui.draw(renderTexture);
+	resources_ui.draw(renderTexture);
+	renderTexture.draw(cashText);
+	renderTexture.draw(foodText);
+	renderTexture.draw(selectionArea);
+
+	renderTexture.display();
+
+	sf::Sprite spr(renderTexture.getTexture());
+
+	if (isPausing) {
+		sf::Shader sh;
+		sh.loadFromFile("res/shader/tint.shader", sf::Shader::Fragment);
+		sh.setUniform("u_texture", sf::Shader::CurrentTexture);
+
+		data->window.draw(spr, &sh);
+
+		pause_menu.draw(data->window);
+	}
+	else
+		data->window.draw(spr);
+
+	alert.draw(data->window);
+
+	data->window.display();
+}
+
+void LUCY::GameState::VResume()
+{
+}
+
+void LUCY::GameState::VPause()
+{
+}
+
+void LUCY::GameState::VExit()
+{
+	data->machine.RemoveState();
+}
+
+// Function dlm GameState
 void LUCY::GameState::UISetup()
 {
 	// Setup container unit
@@ -132,34 +392,59 @@ void LUCY::GameState::UISetup()
 	bottom_ui.setTexture(data->assets.GetTexturePtr("UI_Box"));
 
 	// Add UI components
-	bottom_ui.addComponent("Archer", new UI::Button());
-	bottom_ui.addComponent("Knight", new UI::Button());
-	bottom_ui.addComponent("Assassin", new UI::Button());
-	bottom_ui.addComponent("Wheat", new UI::Button());
+	bottom_ui.addComponent("Archer",	new UI::Button());
+	bottom_ui.addComponent("Knight",	new UI::Button());
+	bottom_ui.addComponent("Assassin",	new UI::Button());
+	bottom_ui.addComponent("Spearman",	new UI::Button());
+	bottom_ui.addComponent("Defender",	new UI::Button());
+	bottom_ui.addComponent("Healer",	new UI::Button());
+	bottom_ui.addComponent("Wheat",		new UI::Button());
 
 	// Archer
-	UI::Button* btn1 = bottom_ui.getComponent<UI::Button>("Archer");
-	UI::Button* btn2 = bottom_ui.getComponent<UI::Button>("Knight");
-	UI::Button* btn3 = bottom_ui.getComponent<UI::Button>("Assassin");
+	unitBtnRef[0] = bottom_ui.getComponent<UI::Button>("Archer");
+	unitBtnRef[1] = bottom_ui.getComponent<UI::Button>("Knight");
+	unitBtnRef[2] = bottom_ui.getComponent<UI::Button>("Assassin");
+	unitBtnRef[3] = bottom_ui.getComponent<UI::Button>("Spearman");
+	unitBtnRef[4] = bottom_ui.getComponent<UI::Button>("Defender");
+	unitBtnRef[5] = bottom_ui.getComponent<UI::Button>("Healer");
+	unitBtnRef[6] = bottom_ui.getComponent<UI::Button>("Wheat");
 
-	UI::Button* btnWheat = bottom_ui.getComponent<UI::Button>("Wheat");
+	sf::Vector2f btnSize = { 37 * 2.2, 53 * 2.2 };
 
-	btn1->set(UI::TOPLEFT, sf::Vector2f(37 * 2.2, 53 * 2.2), data->assets.GetTexturePtr("Archer_Green"), sf::IntRect(0, 53, 37, 53));
-	btn2->set(UI::TOPLEFT, sf::Vector2f(37 * 2.2, 53 * 2.2), data->assets.GetTexturePtr("Knight_Gold"), sf::IntRect(61, 0, -37, 53));
-	btn3->set(UI::TOPLEFT, sf::Vector2f(37 * 2.2, 53 * 2.2), data->assets.GetTexturePtr("Assassin_Green"), sf::IntRect(0, 0, 37, 36));
-	btnWheat->set(UI::TOPLEFT, sf::Vector2f(37 * 2.2, 53 * 2.2), data->assets.GetTexturePtr("Wheat"), sf::IntRect(0, 0, 64, 64));
+	unitBtnRef[0]->set(UI::TOPLEFT, btnSize, 
+		data->assets.GetTexturePtr("Archer_Green"),		sf::IntRect(0, 53, 37, 53));
+	unitBtnRef[1]->set(UI::TOPLEFT, btnSize, 
+		data->assets.GetTexturePtr("Knight_Gold"),		sf::IntRect(61, 0, -37, 53));
+	unitBtnRef[2]->set(UI::TOPLEFT, btnSize, 
+		data->assets.GetTexturePtr("Assassin_Green"),	sf::IntRect(0, 0, 37, 36));
+	unitBtnRef[3]->set(UI::TOPLEFT, btnSize, 
+		data->assets.GetTexturePtr("Spearman"),			sf::IntRect(0, 0, 37, 36));
+	unitBtnRef[4]->set(UI::TOPLEFT, btnSize, 
+		data->assets.GetTexturePtr("Defender"),			sf::IntRect(0, 0, 37, 36));
+	unitBtnRef[5]->set(UI::TOPLEFT, btnSize, 
+		data->assets.GetTexturePtr("Healer"),			sf::IntRect(0, 0, 37, 36));
+	unitBtnRef[6]->set(UI::TOPLEFT, btnSize, 
+		data->assets.GetTexturePtr("Wheat"),			sf::IntRect(0, 0, 64, 64));
 
-	bottom_ui.setComponentPosition("Archer", sf::Vector2f(40, bottom_ui.getSize().y / 2.0 - btn1->getSize().y / 2.0));
-	bottom_ui.setComponentPosition("Knight", sf::Vector2f(45 + 53 * 2.2, bottom_ui.getSize().y / 2.0 - btn1->getSize().y / 2.0));
-	bottom_ui.setComponentPosition("Assassin", sf::Vector2f(45 + 2 * 53 * 2.2, bottom_ui.getSize().y / 2.0 - btn1->getSize().y / 2.0));
+	float y_btn_position = bottom_ui.getSize().y / 2.0 - unitBtnRef[0]->getSize().y / 2.0;
+	float x_btn_position = 53 * 2.2;
+	float padding_left = 45;
+	int count = 1;
 
-	bottom_ui.setComponentPosition("Wheat", sf::Vector2f(45 + 3 * 53 * 2.2, bottom_ui.getSize().y / 2.0 - btn1->getSize().y / 2.0));
-
-	unitSelectionRef[0] = btn1;
-	unitSelectionRef[1] = btn2;
-	unitSelectionRef[2] = btn3;
-	unitSelectionRef[3] = btnWheat;
-	unitSelectionRef[4] = nullptr;
+	bottom_ui.setComponentPosition("Archer", 
+		sf::Vector2f(40, y_btn_position));
+	bottom_ui.setComponentPosition("Knight", 
+		sf::Vector2f(padding_left + (count++ * x_btn_position), y_btn_position));
+	bottom_ui.setComponentPosition("Assassin", 
+		sf::Vector2f(padding_left + (count++ * x_btn_position), y_btn_position));
+	bottom_ui.setComponentPosition("Spearman", 
+		sf::Vector2f(padding_left + (count++ * x_btn_position), y_btn_position));
+	bottom_ui.setComponentPosition("Defender", 
+		sf::Vector2f(padding_left + (count++ * x_btn_position), y_btn_position));
+	bottom_ui.setComponentPosition("Healer", 
+		sf::Vector2f(padding_left + (count++ * x_btn_position), y_btn_position));
+	bottom_ui.setComponentPosition("Wheat", 
+		sf::Vector2f(padding_left + (count++ * x_btn_position), y_btn_position));
 
 	// Setup container resource
 	resources_ui.setOrigin(UI::TOPLEFT);
@@ -167,9 +452,9 @@ void LUCY::GameState::UISetup()
 	resources_ui.setSize(sf::Vector2f(400, BOTTOM_UI_HEIGHT));
 	resources_ui.setTexture(data->assets.GetTexturePtr("UI_Box"));
 
-	// Setup resources
+	// Setup resources display
 	foodStr = "Food: ";
-	cashStr = "Cash: ";
+	seedStr = "Seed: ";
 
 	cashText.setPosition(resources_ui.getPosition().x + 20, resources_ui.getPosition().y + 30);
 	cashText.setFont(*data->assets.GetFontPtr("Press_Start"));
@@ -178,7 +463,6 @@ void LUCY::GameState::UISetup()
 	foodText.setPosition(resources_ui.getPosition().x + 20, resources_ui.getPosition().y + 80);
 	foodText.setFont(*data->assets.GetFontPtr("Press_Start"));
 	foodText.setCharacterSize(15);
-	// UI
 
 	// Opening alert setup
 	alert.setSize(sf::Vector2f(800, 300));
@@ -228,9 +512,9 @@ void LUCY::GameState::UISetup()
 
 void LUCY::GameState::clearUnitSelection()
 {
-	for (int i = 0; i < 5; i++) {
-		if (unitSelectionRef[i] != nullptr)
-			unitSelectionRef[i]->setOutline(0, sf::Color());
+	for (int i = 0; i < 7; i++) {
+		if (unitBtnRef[i] != nullptr)
+			unitBtnRef[i]->setOutline(0, sf::Color());
 	}
 }
 
@@ -268,7 +552,7 @@ void LUCY::GameState::bottomUISelection(sf::Event& event)
 		clearUnitSelection();
 
 		if (selectedUnit != 0) {
-			unitSelectionRef[0]->setOutline(5, sf::Color::White);
+			unitBtnRef[0]->setOutline(5, sf::Color::White);
 			selectedUnit = 0;
 		}
 	}
@@ -276,7 +560,7 @@ void LUCY::GameState::bottomUISelection(sf::Event& event)
 		clearUnitSelection();
 
 		if (selectedUnit != 1) {
-			unitSelectionRef[1]->setOutline(5, sf::Color::White);
+			unitBtnRef[1]->setOutline(5, sf::Color::White);
 			selectedUnit = 1;
 		}
 	}
@@ -284,236 +568,40 @@ void LUCY::GameState::bottomUISelection(sf::Event& event)
 		clearUnitSelection();
 
 		if (selectedUnit != 2) {
-			unitSelectionRef[2]->setOutline(5, sf::Color::White);
+			unitBtnRef[2]->setOutline(5, sf::Color::White);
 			selectedUnit = 2;
+		}
+	}
+	else if (bottom_ui.getComponent<UI::Button>("Spearman")->isClicked(event, data->window)) {
+		clearUnitSelection();
+
+		if (selectedUnit != 3) {
+			unitBtnRef[3]->setOutline(5, sf::Color::White);
+			selectedUnit = 3;
+		}
+	}
+	else if (bottom_ui.getComponent<UI::Button>("Defender")->isClicked(event, data->window)) {
+		clearUnitSelection();
+
+		if (selectedUnit != 4) {
+			unitBtnRef[4]->setOutline(5, sf::Color::White);
+			selectedUnit = 4;
+		}
+	}
+	else if (bottom_ui.getComponent<UI::Button>("Healer")->isClicked(event, data->window)) {
+		clearUnitSelection();
+
+		if (selectedUnit != 5) {
+			unitBtnRef[5]->setOutline(5, sf::Color::White);
+			selectedUnit = 5;
 		}
 	}
 	else if (bottom_ui.getComponent<UI::Button>("Wheat")->isClicked(event, data->window)) {
 		clearUnitSelection();
 
-		if (selectedUnit != 3) {
-			unitSelectionRef[3]->setOutline(5, sf::Color::White);
-			selectedUnit = 3;
+		if (selectedUnit != 6) {
+			unitBtnRef[6]->setOutline(5, sf::Color::White);
+			selectedUnit = 6;
 		}
 	}
-}
-
-void LUCY::GameState::VInit()
-{
-	// Default resource setup (klo load nanti dioverwrite
-	cash = food = 0;
-
-	// Load game?
-	if (saveSlot != -1) {
-		loadFromFile(saveSlot);
-	}
-
-	renderTexture.create(data->window.getSize().x, data->window.getSize().y);
-
-	selectionArea.setSize(sf::Vector2f(60, LANE_HEIGHT));
-	selectionArea.setFillColor(sf::Color(0, 255, 0, 100));
-	selectionArea.setOrigin(selectionArea.getGlobalBounds().width / 2.0, selectionArea.getGlobalBounds().height / 2.0);
-
-	background.setTexture(*data->assets.GetTexturePtr("Grass"));
-	background.setPosition(sf::Vector2f(0, 0));
-
-	for (int i = 0; i < TOTAL_LANES; i++) {
-		lanes[i].setSpawnPosition(sf::Vector2f(ENEMY_SPAWN_X - 100, (i + 1) * LANE_HEIGHT));
-	}
-
-	/*for (int i = 0; i < TOTAL_LANES; i++) {
-		lanes[i].spawnEnemyUnit(new UNITS::EvilAssassin(data, lanes, i));
-	}*/
-
-	lanes[0].spawnEnemyUnit(new UNITS::EvilAssassin(data, lanes, 0));
-	lanes[1].spawnEnemyUnit(new UNITS::EvilArcher(data, lanes, 1));
-	lanes[2].spawnEnemyUnit(new UNITS::EvilArcher(data, lanes, 2));
-	lanes[3].spawnEnemyUnit(new UNITS::EvilAssassin(data, lanes, 3));
-	lanes[4].spawnEnemyUnit(new UNITS::EvilSpearmen(data, lanes, 4));
-
-	UISetup();
-}
-
-void LUCY::GameState::VHandleInput()
-{
-	sf::Event event;
-	while (data->window.pollEvent(event)) {
-
-		// General
-		if (event.type == sf::Event::Closed) {
-			VExit();
-			data->window.close();
-		}
-		else if (event.type == sf::Event::KeyPressed) {
-			if (event.key.code == sf::Keyboard::Escape) {
-				isPausing = !isPausing;
-			}
-		}
-
-		// Non game inputs
-		alert.handleInput(event, data->window);
-
-		// Game Inputs
-		if (!isPausing) {
-
-			// Bottom UI seelction
-			bottomUISelection(event);
-
-			// Selection area highlighting and what to do on click.
-			if (event.type == sf::Event::MouseButtonPressed) {
-				int laneNo = UTILS::screenPositionToLaneMap(sf::Mouse::getPosition(data->window), 0, TOTAL_LANES, LANE_HEIGHT);
-				if (laneNo != -1) {
-
-					if (isSelectedAreaEmpty(laneNo)) {
-
-						if (selectedUnit == 0) {
-							lanes[laneNo].spawnFriendlyUnit(new UNITS::Archer(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
-						}
-						else if (selectedUnit == 1) {
-							lanes[laneNo].spawnFriendlyUnit(new UNITS::GoldenKnight(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
-						}
-						else if (selectedUnit == 2) {
-							lanes[laneNo].spawnFriendlyUnit(new UNITS::Assassin(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
-						}
-						else if (selectedUnit == 3) {
-							lanes[laneNo].spawnWheat(data, selectionArea.getPosition().x);
-						}
-
-					}
-					else {
-						// Harvest wheat
-						for (int i = 0; i < lanes[laneNo].getWheatCount(); i++) {
-							if (selectionArea.getGlobalBounds().intersects(
-								lanes[laneNo].getWheat(i)->getSprite().getGlobalBounds()) &&
-								lanes[laneNo].getWheat(i)->getCurrentState() == LUCY::Crop_State::Harvest)
-							{
-								food += lanes[laneNo].getWheat(i)->getValue();
-							}
-						}
-
-					}
-				}
-
-
-			}
-		}
-		// Pause inputs
-		else {
-			pause_menu.handleInput(event, data->window);
-
-			if (pause_menu.getComponent<UI::Button>("Pause_Resume")->isClicked(event, data->window)) {
-				isPausing = false;
-			}
-			else if (pause_menu.getComponent<UI::Button>("Pause_Exit")->isClicked(event, data->window)) {
-				VExit();
-			}
-
-		}
-	}
-}
-
-void LUCY::GameState::VUpdate(float dt)
-{
-	alert.update(data->window);
-
-	bottom_ui.update(data->window);
-
-	resources_ui.update(data->window);
-
-	foodText.setString(foodStr + std::to_string(food));
-
-	cashText.setString(cashStr + std::to_string(cash));
-
-	if (isPausing) {
-		pause_menu.update(data->window);
-		return;
-	}
-
-	int index = UTILS::screenPositionToLaneMap(sf::Mouse::getPosition(data->window), 0, TOTAL_LANES, LANE_HEIGHT);
-
-	selectionArea.setOrigin(0, 0);
-	if (index != -1)
-		selectionArea.setPosition(sf::Mouse::getPosition(data->window).x - 43, LANE_HEIGHT * index);
-
-	for (Lane &lane : lanes) {
-		for (int i = 0; i < lane.getEnemyCount(); i++) {
-			lane.getEnemyUnit(i)->update();
-		}
-		for (int i = 0; i < lane.getFriendlyCount(); i++) {
-			lane.getFriendlyUnit(i)->update();
-		}
-		for (int i = 0; i < lane.getWheatCount(); i++) {
-			lane.getWheat(i)->Update(1);
-		}
-	}
-
-	for (int i = 0; i < TOTAL_LANES; i++) {
-		lanes[i].removeDeadUnits();
-	}
-
-}
-
-void LUCY::GameState::VDraw(float dt)
-{
-	data->window.clear();
-
-	// Draw ke rendertexture (gameplay only)
-	renderTexture.clear();
-
-	renderTexture.draw(background);
-
-	for (int i = 0; i < TOTAL_LANES; i++) {
-		for (int j = 0; j < lanes[i].getEnemyCount(); j++) {
-			lanes[i].getEnemyUnit(j)->draw(renderTexture);
-		}
-		for (int j = 0; j < lanes[i].getFriendlyCount(); j++) {
-			lanes[i].getFriendlyUnit(j)->draw(renderTexture);
-		}
-		for (int j = 0; j < lanes[i].getWheatCount(); j++) {
-			lanes[i].getWheat(j)->Draw(renderTexture);
-		}
-	}
-
-	bottom_ui.draw(renderTexture);
-
-	resources_ui.draw(renderTexture);
-
-	renderTexture.draw(cashText);
-
-	renderTexture.draw(foodText);
-
-	renderTexture.draw(selectionArea);
-
-	renderTexture.display();
-
-	sf::Sprite spr(renderTexture.getTexture());
-
-	if (isPausing) {
-		sf::Shader sh;
-		sh.loadFromFile("res/shader/tint.shader", sf::Shader::Fragment);
-		sh.setUniform("u_texture", sf::Shader::CurrentTexture);
-
-		data->window.draw(spr, &sh);
-
-		pause_menu.draw(data->window);
-	}
-	else
-		data->window.draw(spr);
-
-	alert.draw(data->window);
-
-	data->window.display();
-}
-
-void LUCY::GameState::VResume()
-{
-}
-
-void LUCY::GameState::VPause()
-{
-}
-
-void LUCY::GameState::VExit()
-{
-	data->machine.RemoveState();
 }

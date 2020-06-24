@@ -8,7 +8,7 @@
 
 #define ASSET_CONF "res/Assets.conf"
 
-#define SFML_LOGO "res/sfml-logo-big-word.png"
-#define LOGO_SFX "res/LogoSFX.ogg"
-
-#define LOG_FILE_PATH "logs/gamelog.log"
+#define TOTAL_LANES 5
+#define ENEMY_SPAWN_X data->window.getSize().x + 100
+#define BOTTOM_UI_HEIGHT 180
+#define LANE_HEIGHT ((data->window.getSize().y - BOTTOM_UI_HEIGHT) / TOTAL_LANES)

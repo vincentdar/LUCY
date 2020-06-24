@@ -49,13 +49,8 @@ namespace UNITS
 			Friendly::setup(position);
 		}
 
-		void update() {
-			Base::update();
-		}
-
-		void skill() {
-			
-		}
+		// Skill adalah first hit tadi.
+		void skill() {}
 
 		std::string getType() override {
 			return "Assassin";
