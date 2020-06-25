@@ -57,7 +57,7 @@ namespace LUCY
 
 	const std::string& AssetManager::GetMusicPath(const std::string& name)
 	{
-		assert(m_musicPaths.find(name) == m_musicPaths.end());
+		assert(m_musicPaths.find(name) != m_musicPaths.end());
 		return m_musicPaths[name];
 	}
 

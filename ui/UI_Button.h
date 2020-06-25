@@ -31,7 +31,6 @@ namespace UI {
 		bool hovered = false;
 		bool enabled = true;
 		bool usingSecondary = false;
-
 		bool isOutlined = false;
 
 	public:

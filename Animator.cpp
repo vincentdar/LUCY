@@ -82,7 +82,7 @@ void Animator::unbindSprite()
 
 // Animstate methods
 Animator::AnimState::AnimState(sf::Texture * texture, sf::IntRect start, float delta, int frameCount, bool isLooping, bool allowCancel)
-	: texture(texture), start(start), isLooping(isLooping), delta(delta), frameCount(frameCount), allowCancel(allowCancel) {
+	: texture(texture), start(start), isLooping(isLooping), delta(delta), frameCount(frameCount) {
 	current = start;
 }
 

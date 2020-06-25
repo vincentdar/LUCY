@@ -6,7 +6,7 @@ namespace UNITS {
 	class EvilSpearmen : public Enemies {
 
 	public:
-		EvilSpearmen(GameDataRef data, Lane* lane, int laneNumber) : Enemies(data, lane, laneNumber) {}
+		EvilSpearmen(GameDataRef data, Lane* lane, int laneNumber, Wall* wall) : Enemies(data, lane, laneNumber, wall) {}
 
 		void setup(sf::Vector2f position) override {
 			Base::setUnitStats(120, 25, 100, 0.5, 1.0);

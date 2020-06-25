@@ -5,9 +5,17 @@
 namespace UNITS
 {
 	void Enemies::triggerStateChanges() {
+
+		if (isIdlePeriod) {
+
+			if (clock.getElapsedTime().asSeconds() >= 1) {
+				isIdlePeriod = false;
+			}
+			return;
+		}
+
 		if (state != ATTACK) {
-			// Apabila ketemu musuh in range, play animation
-			// ketika animation selesai, baru take damage
+			// Apabila ketemu musuh in range, play animation dan take damage langsung
 			int friendlyWithMinDistance = INT_MAX;
 			for (int i = 0; i < laneDataRef[laneNumber].getFriendlyCount(); i++)
 			{
@@ -25,6 +33,11 @@ namespace UNITS
 				targetedEntity = nullptr;
 				clock.restart();
 			}
+			else if (charSprite.getPosition().x - wall->getDetectionPoint() <= stats.range) {
+				this->setState(ATTACK);
+				wall->takeDamage(stats.normalDamage);
+				clock.restart();
+			}
 		}
 	}
 
@@ -32,6 +45,8 @@ namespace UNITS
 	{
 		if (state == ATTACK) {
 			if (clock.getElapsedTime().asSeconds() >= stats.attackSpeed) {
+				sfx.setBuffer(*data->assets.GetSoundBufferPtr("bowarrow"));
+				sfx.play();
 				this->setState(MOVE);
 				clock.restart();
 			}
@@ -54,7 +69,6 @@ namespace UNITS
 				wh->Pillaged();
 			}
 		}
-
 		
 	}
 }

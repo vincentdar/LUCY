@@ -8,7 +8,7 @@ namespace UNITS {
 		float initialDamage;
 
 	public:
-		EvilAssassin(GameDataRef data, Lane* lane, int laneNumber) : Enemies(data, lane, laneNumber) {}
+		EvilAssassin(GameDataRef data, Lane* lane, int laneNumber, Wall* wall) : Enemies(data, lane, laneNumber, wall) {}
 
 		void setup(sf::Vector2f position) override {
 			

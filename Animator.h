@@ -26,7 +26,6 @@ private:
 
 		// Booleans
 		bool isLooping;
-		bool allowCancel;
 		bool isDone;
 
 	public:
@@ -44,8 +43,6 @@ private:
 		sf::IntRect& getTexRect() { return current; }
 
 		sf::Texture* getTexture() { return texture; }
-
-		bool getAllowCancel() { return allowCancel; }
 	};
 
 	sf::Clock timer;

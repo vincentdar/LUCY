@@ -137,7 +137,7 @@ namespace UI {
 		// Kalau nullptr, maka dapatnya main_texture;
 		this->hovered_texture = hovered_texture == nullptr ? main_texture : hovered_texture;
 		this->secondary_texture = secondary_texture == nullptr ? main_texture : secondary_texture;
-		this->pressed_texture = pressed_texture == nullptr ? main_texture : pressed_texture;;
+		this->pressed_texture = pressed_texture == nullptr ? main_texture : pressed_texture;
 		this->disabled_texture = disabled_texture == nullptr ? main_texture : disabled_texture;
 	}
 

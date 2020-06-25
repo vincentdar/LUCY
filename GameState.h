@@ -10,6 +10,7 @@
 #include "ui/UI_Button.h"
 #include "ui/UI_Alert.h"
 #include "Wheat.h"
+#include "Spawner.h"
 
 #include "Lane.h"
 
@@ -53,11 +54,11 @@ namespace LUCY {
 
 		UI::Alert alert;
 
-		sf::Text cashText, foodText;
-
-		std::string seedStr, foodStr;
+		sf::Text seedText, foodText, wallHPText;
 
 		Wall wall;
+
+		Spawner spawner;
 
 		// Functions untuk create UI dll
 		void UISetup();
@@ -67,12 +68,9 @@ namespace LUCY {
 
 	public:
 		GameState(GameDataRef data, bool isLoad = false)
-			: data(data), isLoad(isLoad), wall(data){}
+			: data(data), isLoad(isLoad), wall(data), spawner(lanes, data, &wall) {}
 
-		// Fungsi khusus di GameState
-		void clearUnitSelection();
-		bool isSelectedAreaEmpty(int laneNo);
-		void bottomUISelection(sf::Event& event);
+		
 
 		// Fungsi dlm game loop
 		void VHandleInput()		override;
@@ -82,6 +80,12 @@ namespace LUCY {
 		void VResume()			override;
 		void VPause()			override;
 		void VExit()			override;
+
+		// Fungsi khusus di GameState
+		void clearUnitSelection();
+		bool isSelectedAreaEmpty(int laneNo);
+		void bottomUISelection(sf::Event& event);
+		void spawnUnitBasedOnSelection(int laneNo);
 
 	};
 }

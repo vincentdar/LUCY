@@ -25,6 +25,14 @@ void LUCY::MainMenuState::VInit()
 	_menuBox.setPosition(m_data->window.getSize().x / 2.0, m_data->window.getSize().y / 2.0 + 100);
 	_menuBox.setFillColor(sf::Color(0, 0, 0, 80));
 
+	if (!_music.openFromFile(m_data->assets.GetMusicPath("main")))
+	{
+		std::cout << "Failed to open music" << std::endl;
+	}
+
+	_music.setLoop(true);
+	_music.play();
+
 	//buttons
 	/* 
 		index [0]=Start/NewGame button

@@ -26,7 +26,6 @@ private:
 	// Setiap unit hanya menyimpan value x, y nya tetap sama (1 baseline tiap lane)
 	//  jadi nilai y dari vector2f ini dipakai utk spawn unit friendly dan enemy
 	sf::Vector2f enemyLaneSpawnPoint;
-	int x_start;
 
 public:
 	Lane(){}
@@ -67,10 +66,5 @@ public:
 			buffer += "\n";
 		}
 		return buffer;
-		return "";
-	}
-
-	void LoadUnserialize(std::string buffer, int lane)
-	{
 	}
 };

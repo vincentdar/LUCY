@@ -53,7 +53,7 @@ namespace UNITS {
 			if (skillIsActivated) {
 				if (skillTimer.getElapsedTime().asSeconds() >= 5.0) {
 					skillIsActivated = false;
-					stats.attackSpeed /= 2;
+					stats.attackSpeed *= 2;
 				}
 			}
 		}
@@ -71,7 +71,7 @@ namespace UNITS {
 		}
 
 		void skill() override {
-			stats.attackSpeed *= 2;
+			stats.attackSpeed /= 2;
 			skillTimer.restart();
 		}
 

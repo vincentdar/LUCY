@@ -6,7 +6,7 @@ namespace UNITS {
 	class EvilArcher : public Enemies {
 
 	public:
-		EvilArcher(GameDataRef data, Lane* lane, int laneNumber) : Enemies(data, lane, laneNumber) {}
+		EvilArcher(GameDataRef data, Lane* lane, int laneNumber, Wall* wall) : Enemies(data, lane, laneNumber, wall) {}
 
 		void setup(sf::Vector2f position) override {
 			Base::setUnitStats(40, 5, 400, 0.5, 1.4);
@@ -44,6 +44,7 @@ namespace UNITS {
 		void updateStateActions() override {
 			Enemies::updateStateActions();
 		}
+
 
 		void skill() {}
 	};

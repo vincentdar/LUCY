@@ -36,9 +36,14 @@ public:
 		if (isHit) {
 			shader.loadFromFile("res/shader/hitflash.shader", sf::Shader::Fragment);
 			target.draw(wallSprite, &shader);
+			isHit = false;
 		}
 		else {
 			target.draw(wallSprite);
 		}
+	}
+
+	float getDetectionPoint() {
+		return wallSprite.getGlobalBounds().left + wallSprite.getGlobalBounds().width;
 	}
 };

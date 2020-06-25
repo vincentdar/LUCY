@@ -10,6 +10,7 @@
 #include "units/Enemy/EvilArcher.h"
 #include "units/Enemy/EvilAssassin.h"
 #include "units/Enemy/EvilSpearmen.h"
+#include "units/Enemy/EvilKnight.h"
 
 // Save/load
 void LUCY::GameState::saveToFile()
@@ -148,18 +149,14 @@ void LUCY::GameState::VInit()
 	background.setPosition(sf::Vector2f(0, 0));
 
 	for (int i = 0; i < TOTAL_LANES; i++) {
-		lanes[i].setSpawnPosition(sf::Vector2f(ENEMY_SPAWN_X - 100, (i + 1) * LANE_HEIGHT));
+		lanes[i].setSpawnPosition(sf::Vector2f(ENEMY_SPAWN_X, (i + 1) * LANE_HEIGHT));
 	}
 
 	if (isLoad) {
 		loadFromFile();
 	}
 
-	lanes[0].spawnEnemyUnit(new UNITS::EvilAssassin(data, lanes, 0));
-	lanes[1].spawnEnemyUnit(new UNITS::EvilArcher(data, lanes, 1));
-	lanes[2].spawnEnemyUnit(new UNITS::EvilArcher(data, lanes, 2));
-	lanes[3].spawnEnemyUnit(new UNITS::EvilAssassin(data, lanes, 3));
-	lanes[4].spawnEnemyUnit(new UNITS::EvilSpearmen(data, lanes, 4));
+	spawner.checkState();
 
 	UISetup();
 }
@@ -180,11 +177,11 @@ void LUCY::GameState::VHandleInput()
 				isPausing = !isPausing;
 			}
 			else if (event.key.code == sf::Keyboard::P) {
-				lanes[0].spawnEnemyUnit(new UNITS::EvilAssassin(data, lanes, 0));
-				lanes[1].spawnEnemyUnit(new UNITS::EvilArcher(data, lanes, 1));
-				lanes[2].spawnEnemyUnit(new UNITS::EvilArcher(data, lanes, 2));
-				lanes[3].spawnEnemyUnit(new UNITS::EvilAssassin(data, lanes, 3));
-				lanes[4].spawnEnemyUnit(new UNITS::EvilSpearmen(data, lanes, 4));
+				lanes[0].spawnEnemyUnit(new UNITS::EvilAssassin(data, lanes, 0, &wall));
+				lanes[1].spawnEnemyUnit(new UNITS::EvilArcher(data, lanes, 1, &wall));
+				lanes[2].spawnEnemyUnit(new UNITS::EvilKnight(data, lanes, 2, &wall));
+				lanes[3].spawnEnemyUnit(new UNITS::EvilAssassin(data, lanes, 3, &wall));
+				lanes[4].spawnEnemyUnit(new UNITS::EvilSpearmen(data, lanes, 4, &wall));
 			}
 		}
 
@@ -199,45 +196,12 @@ void LUCY::GameState::VHandleInput()
 
 			// Selection area highlighting and what to do on click.
 			if (event.type == sf::Event::MouseButtonPressed) {
+
 				int laneNo = UTILS::screenPositionToLaneMap(sf::Mouse::getPosition(data->window), 0, TOTAL_LANES, LANE_HEIGHT);
+
 				if (laneNo != -1) {
 					if (isSelectedAreaEmpty(laneNo)) {
-
-						if (selectedUnit == 0) {
-
-							if (food >= 50) {
-								food -= 50;
-							}
-
-							lanes[laneNo].spawnFriendlyUnit(new UNITS::Archer(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
-						}
-						else if (selectedUnit == 1) {
-
-
-							lanes[laneNo].spawnFriendlyUnit(new UNITS::GoldenKnight(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
-						}
-						else if (selectedUnit == 2) {
-
-							lanes[laneNo].spawnFriendlyUnit(new UNITS::Assassin(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
-						}
-						else if (selectedUnit == 3) {
-							lanes[laneNo].spawnFriendlyUnit(new UNITS::Spearman(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
-						}
-						else if (selectedUnit == 4) {
-							lanes[laneNo].spawnFriendlyUnit(new UNITS::Defender(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
-						}
-						else if (selectedUnit == 5) {
-							//lanes[laneNo].spawnFriendlyUnit(new UNITS::Healer(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
-						}
-						else if (selectedUnit == 6) {
-
-							if (seed >= 1) {
-								seed -= 1;
-							}
-
-							lanes[laneNo].spawnWheat(data, selectionArea.getPosition().x + selectionArea.getGlobalBounds().width / 2.0);
-						}
-
+						spawnUnitBasedOnSelection(laneNo);
 					}
 					else {
 						// Harvest wheat
@@ -246,7 +210,7 @@ void LUCY::GameState::VHandleInput()
 							if (selectionArea.getGlobalBounds().intersects(
 								w->getSprite().getGlobalBounds()))
 							{
-								if (w->getCurrentState() == Harvest || w->getCurrentState() == Pillage) {
+								if (w->getCurrentState() == Harvest || w->getCurrentState() == Withered) {
 									food += lanes[laneNo].getWheat(i)->getValue();
 									lanes[laneNo].getWheat(i)->Remove();
 								}
@@ -285,15 +249,17 @@ void LUCY::GameState::VUpdate(float dt)
 	resources_ui.update(data->window);
 
 	// Update UI resources dgn data resources yang baru
-	foodText.setString(foodStr + std::to_string(food));
+	foodText.setString("Food: " + std::to_string(food));
 
-	cashText.setString(seedStr + std::to_string(seed));
+	seedText.setString("Seed: " + std::to_string(seed));
 
+	wallHPText.setString("Wall HP: " + std::to_string(wall.getHealth()));
 
 	int index = UTILS::screenPositionToLaneMap(sf::Mouse::getPosition(data->window), 0, TOTAL_LANES, LANE_HEIGHT);
 
 	// Update posisi Selection Area
 	selectionArea.setOrigin(0, 0);
+
 	int xMouse = sf::Mouse::getPosition(data->window).x;
 	int yMouse = sf::Mouse::getPosition(data->window).y;
 	// Kapan Selection Area berhenti di batas.
@@ -330,6 +296,7 @@ void LUCY::GameState::VUpdate(float dt)
 		lanes[i].removeDeadUnits();
 	}
 
+	spawner.checkState();
 }
 
 void LUCY::GameState::VDraw(float dt)
@@ -356,7 +323,7 @@ void LUCY::GameState::VDraw(float dt)
 
 	bottom_ui.draw(renderTexture);
 	resources_ui.draw(renderTexture);
-	renderTexture.draw(cashText);
+	renderTexture.draw(seedText);
 	renderTexture.draw(foodText);
 
 	wall.draw(renderTexture);
@@ -468,16 +435,18 @@ void LUCY::GameState::UISetup()
 	resources_ui.setTexture(data->assets.GetTexturePtr("UI_Box"));
 
 	// Setup resources display
-	foodStr = "Food: ";
-	seedStr = "Seed: ";
 
-	cashText.setPosition(resources_ui.getPosition().x + 20, resources_ui.getPosition().y + 30);
-	cashText.setFont(*data->assets.GetFontPtr("Press_Start"));
-	cashText.setCharacterSize(15);
+	seedText.setPosition(resources_ui.getPosition().x + 20, resources_ui.getPosition().y + 30);
+	seedText.setFont(*data->assets.GetFontPtr("Press_Start"));
+	seedText.setCharacterSize(15);
 
 	foodText.setPosition(resources_ui.getPosition().x + 20, resources_ui.getPosition().y + 80);
 	foodText.setFont(*data->assets.GetFontPtr("Press_Start"));
 	foodText.setCharacterSize(15);
+
+	wallHPText.setPosition(resources_ui.getPosition().x + 20, resources_ui.getPosition().y + 130);
+	wallHPText.setFont(*data->assets.GetFontPtr("Press_Start"));
+	wallHPText.setCharacterSize(15);
 
 	// Opening alert setup
 	alert.setSize(sf::Vector2f(800, 300));
@@ -541,6 +510,16 @@ bool LUCY::GameState::isSelectedAreaEmpty(int laneNo)
 	for (int i = 0; i < lanes[laneNo].getFriendlyCount(); i++) {
 		if (selectionArea.getGlobalBounds().intersects(
 			lanes[laneNo].getFriendlyUnit(i)->getUnitBounds()))
+		{
+			areaIsEmpty = false;
+			break;
+		}
+	}
+
+	// CHeck enemy
+	for (int i = 0; i < lanes[laneNo].getEnemyCount(); i++) {
+		if (selectionArea.getGlobalBounds().intersects(
+			lanes[laneNo].getEnemyUnit(i)->getUnitBounds()))
 		{
 			areaIsEmpty = false;
 			break;
@@ -618,5 +597,43 @@ void LUCY::GameState::bottomUISelection(sf::Event& event)
 			unitBtnRef[6]->setOutline(5, sf::Color::White);
 			selectedUnit = 6;
 		}
+	}
+}
+
+void LUCY::GameState::spawnUnitBasedOnSelection(int laneNo)
+{
+	if (selectedUnit == 0) {
+
+		if (food >= 50) {
+			food -= 50;
+		}
+
+		lanes[laneNo].spawnFriendlyUnit(new UNITS::Archer(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+	}
+	else if (selectedUnit == 1) {
+
+
+		lanes[laneNo].spawnFriendlyUnit(new UNITS::GoldenKnight(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+	}
+	else if (selectedUnit == 2) {
+
+		lanes[laneNo].spawnFriendlyUnit(new UNITS::Assassin(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+	}
+	else if (selectedUnit == 3) {
+		lanes[laneNo].spawnFriendlyUnit(new UNITS::Spearman(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+	}
+	else if (selectedUnit == 4) {
+		lanes[laneNo].spawnFriendlyUnit(new UNITS::Defender(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+	}
+	else if (selectedUnit == 5) {
+		//lanes[laneNo].spawnFriendlyUnit(new UNITS::Healer(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+	}
+	else if (selectedUnit == 6) {
+
+		if (seed >= 1) {
+			seed -= 1;
+		}
+
+		lanes[laneNo].spawnWheat(data, selectionArea.getPosition().x + selectionArea.getGlobalBounds().width / 2.0);
 	}
 }

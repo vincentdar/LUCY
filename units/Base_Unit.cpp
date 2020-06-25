@@ -94,6 +94,10 @@ namespace UNITS
 	{
 		isHit = true;
 		stats.health -= damage;
+
+		sfx.setBuffer(*data->assets.GetSoundBufferPtr("hitsfx"));
+		sfx.play();
+
 		if (stats.health <= 0) {
 			this->setState(DIE);
 		}

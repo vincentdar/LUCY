@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Base_Unit.h"
+#include "Wall.h"
 
 namespace UNITS
 {
@@ -9,8 +10,12 @@ namespace UNITS
 	protected:
 		bool isAttacking;
 
+		// Reference ke wall yang ada di gamestate
+		Wall* wall;
+
 	public:
-		Enemies(GameDataRef data, Lane* lane, int laneNumber) : Base(data, lane, laneNumber) {}
+		Enemies(GameDataRef data, Lane* lane, int laneNumber, Wall* wall) 
+			: Base(data, lane, laneNumber), wall(wall) {}
 
 		void triggerStateChanges() override;
 		void updateStateActions() override;

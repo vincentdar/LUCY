@@ -39,6 +39,8 @@ namespace UNITS
 		if (state == ATTACK) {
 			if (clock.getElapsedTime().asSeconds() >= stats.attackSpeed) {
 				this->setState(IDLE);
+				sfx.setBuffer(*data->assets.GetSoundBufferPtr("axeswing"));
+				sfx.play();
 				clock.restart();
 			}
 		}
