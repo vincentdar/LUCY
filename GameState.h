@@ -2,6 +2,7 @@
 
 #include "Game.h"
 #include "IState.h"
+#include "units/Wall.h"
 
 #include "units/Base_Unit.h"
 
@@ -56,6 +57,8 @@ namespace LUCY {
 
 		std::string seedStr, foodStr;
 
+		Wall wall;
+
 		// Functions untuk create UI dll
 		void UISetup();
 
@@ -64,7 +67,7 @@ namespace LUCY {
 
 	public:
 		GameState(GameDataRef data, bool isLoad = false)
-			: data(data), isLoad(isLoad) {}
+			: data(data), isLoad(isLoad), wall(data){}
 
 		// Fungsi khusus di GameState
 		void clearUnitSelection();

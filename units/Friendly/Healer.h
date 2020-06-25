@@ -14,7 +14,7 @@ namespace UNITS {
 
 		void setup(sf::Vector2f position) {
 
-			Friendly::setUnitStats(250, 700, 500);
+			Friendly::setUnitStats(250, 700, 500, 100, 100);
 			animator.bindSprite(&charSprite);
 			//42 x 52 Healer
 			animator.addAnimationState(
@@ -69,6 +69,7 @@ namespace UNITS {
 
 			if (!skillIsActivated) {
 				if (numOfAttacks >= 8) {
+					isSkillChanged = true;
 					skillIsActivated = true;
 					skill();
 				}

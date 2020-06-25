@@ -79,6 +79,7 @@ namespace UNITS {
 			if (!skillIsActivated) {
 				if (numOfAttacks >= 10) {
 					skillIsActivated = true;
+					isSkillChanged = true;
 					skill();
 				}
 			}

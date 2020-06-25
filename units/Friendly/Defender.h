@@ -16,7 +16,7 @@ namespace UNITS {
 
 		void setup(sf::Vector2f position) {
 
-			Friendly::setUnitStats(200, 0, 0, 0, 0);
+			Friendly::setUnitStats(100, 0, 0, 0, 0);
 			animator.bindSprite(&charSprite);
 
 			//36 x 42
@@ -68,6 +68,7 @@ namespace UNITS {
 
 			if (!skillIsActivated) {
 				if (reagent.getElapsedTime().asSeconds() >= 15) {
+					isSkillChanged = true;
 					skillIsActivated = true;
 					skill();
 				}
@@ -93,6 +94,7 @@ namespace UNITS {
 		void takeDamage(float damage) override {
 			isHit = true;
 			animator.playAnimation("GetHit");
+			stats.health -= damage;
 			if (stats.health <= 0) {
 				setState(DIE);
 			}

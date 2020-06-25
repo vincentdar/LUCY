@@ -54,5 +54,7 @@ namespace UNITS
 				wh->Pillaged();
 			}
 		}
+
+		
 	}
 }

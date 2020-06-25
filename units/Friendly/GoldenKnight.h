@@ -61,12 +61,13 @@ namespace UNITS {
 		void triggerStateChanges() override {
 			Friendly::triggerStateChanges();
 
-			/*if (!skillIsActivated) {
+			if (!skillIsActivated) {
 				if (stats.health <= stats.max_health * 0.3) {
+					isSkillChanged = true;
 					skillIsActivated = true;
 					skill();
 				}
-			}*/
+			}
 		}
 
 		void skill() override {

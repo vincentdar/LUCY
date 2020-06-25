@@ -82,9 +82,10 @@ namespace UNITS
 			stateIsChanged = false;
 		}
 
-		if (skillIsActivated) {
+		if (skillIsActivated && isSkillChanged) {
 			shader.loadFromFile("res/shader/outline.shader", sf::Shader::Fragment);
 			shader.setUniform("outline_color", sf::Glsl::Vec4(sf::Color::Red));
+			isSkillChanged = false;
 		}
 
 	}

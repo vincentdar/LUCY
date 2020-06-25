@@ -33,6 +33,7 @@ namespace UNITS {
 		// Process State
 		UnitState		state;
 		bool			stateIsChanged = false;
+		bool			isSkillChanged = false;
 
 		// Idle period => Idle slama 1 detik setelah spawn
 		bool			isIdlePeriod = true;

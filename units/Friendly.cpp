@@ -5,13 +5,11 @@
 namespace UNITS
 {
 	void Friendly::triggerStateChanges() {
-
 		if (isIdlePeriod) {
 
 			if (clock.getElapsedTime().asSeconds() >= 1) {
 				isIdlePeriod = false;
 			}
-
 			return;
 		}
 
