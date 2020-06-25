@@ -16,7 +16,7 @@ namespace LUCY
 		return m_textures.at(name);
 	}
 
-	sf::Texture * AssetManager::GetTexturePtr(const std::string& name)
+	sf::Texture* AssetManager::GetTexturePtr(const std::string& name)
 	{
 		return &m_textures[name];
 	}
@@ -35,7 +35,7 @@ namespace LUCY
 		return m_fonts.at(name);
 	}
 
-	sf::Font * AssetManager::GetFontPtr(const std::string & name)
+	sf::Font* AssetManager::GetFontPtr(const std::string & name)
 	{
 		if (m_fonts.find(name) == m_fonts.end()) {
 			printf("Font doesn't exist!\n");

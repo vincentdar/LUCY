@@ -12,13 +12,20 @@ namespace LUCY
 		m_data->window.create(sf::VideoMode(width, height), title, sf::Style::None);
 		m_data->window.setKeyRepeatEnabled(false);
 		m_data->assets.LoadAssetFromText(ASSET_CONF);
+
+		m_data->assets.LoadSoundBuffer("Axe", "res/sfx/axeswing.ogg");
+		m_data->assets.LoadSoundBuffer("Bow", "res/sfx/bowarrow.ogg");
+		m_data->assets.LoadSoundBuffer("Spear", "res/sfx/spearswing.ogg");
+		m_data->assets.LoadSoundBuffer("Sword", "res/sfx/swordclash.ogg");
+		m_data->assets.LoadSoundBuffer("Hit", "res/sfx/hitsfx.ogg");
+
 		m_data->machine.AddState(StateRef(new MainMenuState(this->m_data)), true);
 		
 		this->Run();
 	}
 	void Game::Run()
 	{
-		m_data->window.setFramerateLimit(60);
+		//m_data->window.setFramerateLimit(5);
 
 		float newTime, frameTime, interpolation;
 
@@ -39,7 +46,7 @@ namespace LUCY
 				frameTime = newTime - currentTime;
 
 				// Show fps:
-				printf("FPS: %f\n", (1 / frameTime));
+				//printf("FPS: %f\n", (1 / frameTime));
 
 				if (frameTime > 0.25f)
 				{

@@ -20,6 +20,7 @@ namespace LUCY
 		sf::View _cam;
 
 		//Camera camera;
+		sf::Music _music;
 
 	public:
 		MainMenuState(GameDataRef data);

@@ -1,6 +1,7 @@
 #include "MainMenuState.h"
 #include "GameState.h"
 #include "LoadingState.h"
+#include <SFML/Audio/Music.hpp>
 
 LUCY::MainMenuState::MainMenuState(GameDataRef data) : m_data(data)
 {
@@ -56,6 +57,14 @@ void LUCY::MainMenuState::VInit()
 	m_data->window.setView(_cam);
 
 	_clock.restart();
+
+	
+	if (!_music.openFromFile("res/sfx/music.wav"))
+	{
+		std::cout << "Failed to open music" << std::endl;
+	}
+	_music.setLoop(true);
+	_music.play();
 }
 
 void LUCY::MainMenuState::VDraw(float dt)
@@ -88,6 +97,7 @@ void LUCY::MainMenuState::VHandleInput()
 			m_data->machine.AddState(StateRef(new LoadingState<GameState>(m_data, 3, true)), false);
 		}
 		else if (_buttons[2].isClicked(event, m_data->window)) { // Credits Button
+			//MARK TO OPTIMIZE
 		}
 
 		else if (_buttons[3].isClicked(event, m_data->window)) { // Exit Button

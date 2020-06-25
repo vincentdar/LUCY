@@ -74,6 +74,7 @@ void LUCY::GameState::UnitFactories(std::string buffer, int lane_id)
 	std::string string_var;
 	for (int i = 0; i < buffer.length(); i++)
 	{
+		//std::cout << "Size: " << buffer.length() << std::endl;
 		if (buffer.at(i) == '$')
 		{
 			string_var_vector.push_back(std::move(string_var));
@@ -180,11 +181,7 @@ void LUCY::GameState::VHandleInput()
 				isPausing = !isPausing;
 			}
 			else if (event.key.code == sf::Keyboard::P) {
-				lanes[0].spawnEnemyUnit(new UNITS::EvilAssassin(data, lanes, 0));
-				lanes[1].spawnEnemyUnit(new UNITS::EvilArcher(data, lanes, 1));
-				lanes[2].spawnEnemyUnit(new UNITS::EvilArcher(data, lanes, 2));
-				lanes[3].spawnEnemyUnit(new UNITS::EvilAssassin(data, lanes, 3));
-				lanes[4].spawnEnemyUnit(new UNITS::EvilSpearmen(data, lanes, 4));
+				saveToFile();
 			}
 		}
 
@@ -358,9 +355,6 @@ void LUCY::GameState::VDraw(float dt)
 	resources_ui.draw(renderTexture);
 	renderTexture.draw(cashText);
 	renderTexture.draw(foodText);
-
-	wall.draw(renderTexture);
-
 	renderTexture.draw(selectionArea);
 
 	renderTexture.display();
