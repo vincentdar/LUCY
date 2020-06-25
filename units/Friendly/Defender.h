@@ -12,11 +12,13 @@ namespace UNITS {
 	public:
 		Defender(GameDataRef data, Lane* lanes, int laneCount) :Friendly(data, lanes, laneCount) {
 			reagent.restart();
+
+			unitCost = 175;
 		}
 
 		void setup(sf::Vector2f position) {
 
-			Friendly::setUnitStats(100, 0, 0, 0, 0);
+			Friendly::setUnitStats(350, 0, 0, 0, 0);
 			animator.bindSprite(&charSprite);
 
 			//36 x 42

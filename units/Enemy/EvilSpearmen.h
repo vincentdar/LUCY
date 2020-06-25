@@ -4,12 +4,17 @@
 
 namespace UNITS {
 	class EvilSpearmen : public Enemies {
+	private:
+
+		int numOfAttacks = 0;
+		float attackUp = 0;
+		sf::Clock skillTimer;
 
 	public:
 		EvilSpearmen(GameDataRef data, Lane* lane, int laneNumber, Wall* wall) : Enemies(data, lane, laneNumber, wall) {}
 
 		void setup(sf::Vector2f position) override {
-			Base::setUnitStats(120, 25, 100, 0.5, 1.0);
+			Base::setUnitStats(120, 50, 150, 1.5, 2.0);
 
 			animator.bindSprite(&charSprite);
 
@@ -39,7 +44,27 @@ namespace UNITS {
 			setState(MOVE);
 		}
 
-		void skill() {}
+		void triggerStateChanges() override {
+
+			Enemies::triggerStateChanges();
+
+			if (!skillIsActivated) {
+				if (numOfAttacks >= 10) {
+					skillIsActivated = true;
+					skill();
+				}
+			}
+		}
+
+		void skill() {
+			if (skillIsActivated) {
+				if (skillTimer.getElapsedTime().asSeconds() >= 5)
+					skillIsActivated = false;
+				numOfAttacks = 0;
+				attackUp = 0;
+				stats.range *= 3;
+			}
+		}
 		
 	};
 }

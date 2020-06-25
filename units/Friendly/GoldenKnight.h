@@ -13,11 +13,13 @@ namespace UNITS {
 	public:
 		GoldenKnight(GameDataRef data, Lane* lane, int laneNumber) : Friendly(data, lane, laneNumber) { 
 			skillTimer.restart();
+
+			unitCost = 80;
 		}
 
 		void setup(sf::Vector2f position) {
 
-			Friendly::setUnitStats(180, 15, 100, 0.2, 2.0);
+			Friendly::setUnitStats(250, 125, 100, 0, 2.0);
 
 			animator.bindSprite(&charSprite);
 

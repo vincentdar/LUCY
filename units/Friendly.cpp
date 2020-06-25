@@ -4,6 +4,9 @@
 
 namespace UNITS
 {
+	// Declaration utk static member
+	int Friendly::unitCost = 0;
+
 	void Friendly::triggerStateChanges() {
 		if (isIdlePeriod) {
 

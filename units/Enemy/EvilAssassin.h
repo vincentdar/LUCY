@@ -12,7 +12,7 @@ namespace UNITS {
 
 		void setup(sf::Vector2f position) override {
 			
-			Base::setUnitStats(50, 30, 100, 1, 2.0);
+			Base::setUnitStats(50, 30, 75, 3, 2.0);
 
 			animator.bindSprite(&charSprite);
 

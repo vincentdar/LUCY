@@ -64,7 +64,7 @@ namespace UNITS {
 
 	public:
 
-		Stats getUnitStats() { return stats; }
+		Stats& getUnitStats() { return stats; }
 
 		virtual void update();
 		virtual void setup(sf::Vector2f spawnPosition);

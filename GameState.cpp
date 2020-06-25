@@ -4,7 +4,7 @@
 #include "units/Friendly/GoldenKnight.h"
 #include "units/Friendly/Assassin.h"
 #include "units/Friendly/Defender.h"
-//#include "units/Healer/Healer.h"
+#include "units/Friendly/Healer.h"
 #include "units/Friendly/Spearmen.h"
 
 #include "units/Enemy/EvilArcher.h"
@@ -135,7 +135,7 @@ void LUCY::GameState::UnitFactories(std::string buffer, int lane_id)
 void LUCY::GameState::VInit()
 {
 	// Default resource setup (klo load nanti dioverwrite
-	food = 100;
+	food = 10000;
 	seed = 5;
 
 	renderTexture.create(data->window.getSize().x, data->window.getSize().y);
@@ -204,7 +204,8 @@ void LUCY::GameState::VHandleInput()
 						spawnUnitBasedOnSelection(laneNo);
 					}
 					else {
-						// Harvest wheat
+
+						// Harvest wheat, klo withered dpt 1 seed dan 0 food, kalau harvest biasa dapat 100 food 2 seed
 						for (int i = 0; i < lanes[laneNo].getWheatCount(); i++) {
 							Wheat* w = lanes[laneNo].getWheat(i);
 							if (selectionArea.getGlobalBounds().intersects(
@@ -213,9 +214,15 @@ void LUCY::GameState::VHandleInput()
 								if (w->getCurrentState() == Harvest || w->getCurrentState() == Withered) {
 									food += lanes[laneNo].getWheat(i)->getValue();
 									lanes[laneNo].getWheat(i)->Remove();
+
+									if (w->getCurrentState() == Harvest) seed += 2;
+									else seed++;
 								}
 							}
 						}
+
+
+
 					}
 				}
 			}
@@ -248,12 +255,14 @@ void LUCY::GameState::VUpdate(float dt)
 
 	resources_ui.update(data->window);
 
+	wall.update();
+
 	// Update UI resources dgn data resources yang baru
 	foodText.setString("Food: " + std::to_string(food));
 
 	seedText.setString("Seed: " + std::to_string(seed));
 
-	wallHPText.setString("Wall HP: " + std::to_string(wall.getHealth()));
+	waveNumberText.setString("Wave " + std::to_string(spawner.getCurrentWave()));
 
 	int index = UTILS::screenPositionToLaneMap(sf::Mouse::getPosition(data->window), 0, TOTAL_LANES, LANE_HEIGHT);
 
@@ -297,6 +306,26 @@ void LUCY::GameState::VUpdate(float dt)
 	}
 
 	spawner.checkState();
+
+	// Check kapan ganti wave
+	if (previousWave != spawner.getCurrentWave()) {
+		previousWave = spawner.getCurrentWave();
+		saveToFile();
+	}
+
+	if (wall.getHealth() <= 0) {
+		// Game is over
+
+		isOver = true;
+
+		alert.setTitle("Game Over!");
+		alert.setContent("You survived " + std::to_string(spawner.getCurrentWave()) + " waves!\n");
+		alert.setPosition(sf::Vector2f(data->window.getSize().x / 2.0, 0));
+		alert.init();
+		alert.show();
+
+		alert.translate(sf::Vector2f(data->window.getSize().x / 2.0, data->window.getSize().y / 2.0), 2);
+	}
 }
 
 void LUCY::GameState::VDraw(float dt)
@@ -323,8 +352,10 @@ void LUCY::GameState::VDraw(float dt)
 
 	bottom_ui.draw(renderTexture);
 	resources_ui.draw(renderTexture);
+
 	renderTexture.draw(seedText);
 	renderTexture.draw(foodText);
+	renderTexture.draw(waveNumberText);
 
 	wall.draw(renderTexture);
 
@@ -444,9 +475,9 @@ void LUCY::GameState::UISetup()
 	foodText.setFont(*data->assets.GetFontPtr("Press_Start"));
 	foodText.setCharacterSize(15);
 
-	wallHPText.setPosition(resources_ui.getPosition().x + 20, resources_ui.getPosition().y + 130);
-	wallHPText.setFont(*data->assets.GetFontPtr("Press_Start"));
-	wallHPText.setCharacterSize(15);
+	waveNumberText.setPosition(resources_ui.getPosition().x + 20, resources_ui.getPosition().y + 130);
+	waveNumberText.setFont(*data->assets.GetFontPtr("Press_Start"));
+	waveNumberText.setCharacterSize(15);
 
 	// Opening alert setup
 	alert.setSize(sf::Vector2f(800, 300));
@@ -604,29 +635,45 @@ void LUCY::GameState::spawnUnitBasedOnSelection(int laneNo)
 {
 	if (selectedUnit == 0) {
 
-		if (food >= 50) {
-			food -= 50;
+		if (food >= UNITS::Archer::getCost()) {
+			lanes[laneNo].spawnFriendlyUnit(new UNITS::Archer(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+			food -= UNITS::Archer::getCost();
 		}
-
-		lanes[laneNo].spawnFriendlyUnit(new UNITS::Archer(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
 	}
 	else if (selectedUnit == 1) {
 
-
-		lanes[laneNo].spawnFriendlyUnit(new UNITS::GoldenKnight(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+		if (food >= UNITS::GoldenKnight::getCost()) {
+			lanes[laneNo].spawnFriendlyUnit(new UNITS::GoldenKnight(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+			food -= UNITS::GoldenKnight::getCost();
+		}
 	}
 	else if (selectedUnit == 2) {
 
-		lanes[laneNo].spawnFriendlyUnit(new UNITS::Assassin(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+		if (food >= UNITS::Assassin::getCost()) {
+			lanes[laneNo].spawnFriendlyUnit(new UNITS::Assassin(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+			food -= UNITS::Assassin::getCost();
+		}
 	}
 	else if (selectedUnit == 3) {
-		lanes[laneNo].spawnFriendlyUnit(new UNITS::Spearman(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+
+		if (food >= UNITS::Spearman::getCost()) {
+			lanes[laneNo].spawnFriendlyUnit(new UNITS::Spearman(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+			food -= UNITS::Spearman::getCost();
+		}
 	}
 	else if (selectedUnit == 4) {
-		lanes[laneNo].spawnFriendlyUnit(new UNITS::Defender(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+
+		if (food >= UNITS::Defender::getCost()) {
+			lanes[laneNo].spawnFriendlyUnit(new UNITS::Defender(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+			food -= UNITS::Defender::getCost();
+		}
 	}
 	else if (selectedUnit == 5) {
-		//lanes[laneNo].spawnFriendlyUnit(new UNITS::Healer(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+
+		if (food >= UNITS::Healer::getCost()) {
+			lanes[laneNo].spawnFriendlyUnit(new UNITS::Healer(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+			food -= UNITS::Healer::getCost();
+		}
 	}
 	else if (selectedUnit == 6) {
 

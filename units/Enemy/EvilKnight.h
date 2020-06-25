@@ -5,13 +5,14 @@
 namespace UNITS {
 	class EvilKnight : public Enemies {
 	private:
-		sf::Clock gracePeriod;
+		int numOfAttacks = 0;
+		float attackUp = 0;
 
 	public:
 		EvilKnight(GameDataRef data, Lane* lane, int laneNumber, Wall* wall) : Enemies(data, lane, laneNumber, wall) {}
 
 		void setup(sf::Vector2f position) override {
-			Base::setUnitStats(200, 150, 100, 0.5, 1.2);
+			Base::setUnitStats(150, 30, 100, 1, 2.0);
 
 			animator.bindSprite(&charSprite);
 
@@ -53,22 +54,24 @@ namespace UNITS {
 					clock.restart();
 				}
 			}
-			else if (state == IDLE)
-			{
-				if (gracePeriod.getElapsedTime().asSeconds() >= 5.0f)
-					this->setState(MOVE);
-			}
 		}
 
 		void triggerStateChanges() override {
 			Enemies::triggerStateChanges();
 
 			if (!skillIsActivated) {
+				if (!skillIsActivated) {
+					if (numOfAttacks >= 7) {
+						skillIsActivated = true;
+						skill();
+					}
+				}
 			}
 		}
 
 		void skill() override {
-			printf("EVIL KNIGHT SKILL USED\n");
+			attackUp = stats.normalDamage * 3;
+			stats.normalDamage += attackUp;
 		}
 	};
 }

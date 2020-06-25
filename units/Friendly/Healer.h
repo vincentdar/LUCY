@@ -2,6 +2,8 @@
 
 #include "../Friendly.h"
 
+#include "../../Lane.h"
+
 namespace UNITS {
 	class Healer :
 		public Friendly
@@ -10,31 +12,33 @@ namespace UNITS {
 		sf::Clock skillTimer;
 		int numOfAttacks = 0;
 	public:
-		Healer(GameDataRef data, Lane* lane, int laneNumber) :Friendly(data, lane, laneNumber) {}
+		Healer(GameDataRef data, Lane* lane, int laneNumber) :Friendly(data, lane, laneNumber) {
+			unitCost = 30;
+		}
 
 		void setup(sf::Vector2f position) {
 
-			Friendly::setUnitStats(250, 700, 500, 100, 100);
+			Friendly::setUnitStats(100, 125, 900, 0, 4);
 			animator.bindSprite(&charSprite);
 			//42 x 52 Healer
 			animator.addAnimationState(
 				"Idle",
 				data->assets.GetTexturePtr("Healer"),
-				sf::IntRect(0, 52 * 5, 42, 52),
+				sf::IntRect(0, 52 * 4, 42, 52),
 				sf::Vector2i(42, 0), 0.2, 2, true, true
 			);
 
 			animator.addAnimationState(
 				"Move",
 				data->assets.GetTexturePtr("Healer"),
-				sf::IntRect(0, 52 * 6, 42, 52),
+				sf::IntRect(0, 52 * 5, 42, 52),
 				sf::Vector2i(42, 0), 0.2, 3, false, false
 			);
 
 			animator.addAnimationState(
 				"Attack",
 				data->assets.GetTexturePtr("Healer"),
-				sf::IntRect(0, 52 * 7, 42, 52),
+				sf::IntRect(0, 52 * 6, 42, 52),
 				sf::Vector2i(42, 0), 0.2, 4, false, false
 			);
 
@@ -49,29 +53,68 @@ namespace UNITS {
 
 			if (state == ATTACK) {
 				if (clock.getElapsedTime().asSeconds() >= 2.0) {
-					this->setState(IDLE);
+					checkFriendlyHP();
 					numOfAttacks++;
 					clock.restart();
 				}
 			}
 
 			if (skillIsActivated) {
-				if (skillTimer.getElapsedTime().asSeconds() >= .0) {
-					skillIsActivated = false;
-					numOfAttacks = 0;
-				}
+				numOfAttacks = 0;
+				skillIsActivated = false;
+				stats.normalDamage /= 2;
 			}
 
 		}
 
-		void triggerStateChanges() override {
-			Friendly::triggerStateChanges();
+		void checkFriendlyHP() {
+			for (int i = 0; i < laneDataRef[this->laneNumber].getFriendlyCount(); i++) {
+				if (laneDataRef[this->laneNumber].getFriendlyUnit(i)->getUnitStats().health < laneDataRef[this->laneNumber].getFriendlyUnit(i)->getUnitStats().max_health)
+					this->setState(ATTACK);
+				else
+					this->setState(IDLE);
+			}
+		}
 
-			if (!skillIsActivated) {
-				if (numOfAttacks >= 8) {
-					isSkillChanged = true;
-					skillIsActivated = true;
-					skill();
+		void triggerStateChanges() override {
+			if (state != ATTACK) {
+				// If enemy is close, setState attack
+				// SAMPLE MELEE ATTACK!1!1
+				int friendlyWithMinDistance = INT_MAX;
+				int target = 0;
+				Friendly* friendlyUnit = nullptr;
+				for (int i = 0; i < laneDataRef[laneNumber].getFriendlyCount(); i++)
+				{
+					int distance = charSprite.getPosition().x - laneDataRef[laneNumber].getFriendlyUnit(i)->getPosition().x;
+					if (distance < stats.range && distance < friendlyWithMinDistance && distance > 0)
+					{
+						friendlyWithMinDistance = distance;
+						friendlyUnit = laneDataRef[laneNumber].getFriendlyUnit(i);
+					}
+
+				}
+
+				if (friendlyUnit != nullptr) {
+					this->setState(ATTACK);
+					friendlyUnit->takeDamage(stats.normalDamage * -1);
+
+					for (int i = 0; i < laneDataRef[this->laneNumber].getFriendlyCount(); i++) {
+						if (laneDataRef[this->laneNumber].getFriendlyUnit(i)->getUnitStats().health >= laneDataRef[this->laneNumber].getFriendlyUnit(i)->getUnitStats().max_health) {
+							laneDataRef[this->laneNumber].getFriendlyUnit(i)->getUnitStats().health 
+								= laneDataRef[this->laneNumber].getFriendlyUnit(i)->getUnitStats().max_health;
+						}
+					}
+
+					friendlyUnit = nullptr;
+					numOfAttacks++;
+					clock.restart();
+				}
+
+				if (!skillIsActivated) {
+					if (numOfAttacks >= 5) {
+						skillIsActivated = true;
+						skill();
+					}
 				}
 			}
 		}
@@ -81,13 +124,20 @@ namespace UNITS {
 		}
 
 		void skill() override {
-			//Nge heal, how to access other's HP ?
-			printf("SKILL\n");
+			//Waiting for near future implementation, coz im dumb
+			//Edit 1: IT WORKS
+			for (int i = 0; i < laneDataRef[this->laneNumber].getFriendlyCount(); i++) {
+				laneDataRef[this->laneNumber].getFriendlyUnit(i)->takeDamage(-(this->stats.normalDamage * 2));
+
+				if (laneDataRef[this->laneNumber].getFriendlyUnit(i)->getUnitStats().health >= laneDataRef[this->laneNumber].getFriendlyUnit(i)->getUnitStats().max_health)
+					laneDataRef[this->laneNumber].getFriendlyUnit(i)->getUnitStats().health = laneDataRef[this->laneNumber].getFriendlyUnit(i)->getUnitStats().max_health;
+			}
+
+			stats.normalDamage *= 2;
+			printf("HEALER USED SKILL\n");
 		}
 
-		std::string getType() override {
-			return "Healer";
-		}
+		std::string getType() override { return "Healer"; }
 	};
 
 }

@@ -15,11 +15,12 @@ namespace UNITS {
 	public:
 		Archer(LUCY::GameDataRef data, Lane* lane, int laneNumber) : Friendly(data, lane, laneNumber) {
 			skillTimer.restart();
+			unitCost = 100;
 		}
 
 		void setup(sf::Vector2f position) override {
 
-			Friendly::setUnitStats(100, 15, 600, 0.2, 1.4); //Sets unit info
+			Friendly::setUnitStats(175, 100, 1000, 0, 2.0); //Sets unit info
 
 			animator.bindSprite(&charSprite);
 

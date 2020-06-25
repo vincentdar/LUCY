@@ -30,10 +30,12 @@ namespace LUCY {
 
 		bool isPausing = false;
 		bool isLoad;
+		bool isOver = false;
 
 		// Spawn-related
 		Lane lanes[5];
 		int waveNumber;
+		int previousWave = 1;
 
 		GameDataRef data;
 		
@@ -49,15 +51,19 @@ namespace LUCY {
 		UI::Container resources_ui;
 		UI::Container pause_menu;
 
+		// Array buttons di bottom ui
 		UI::Button* unitBtnRef[7];
+		
+		// Integer utk nentukan lagi select unit apa
 		int selectedUnit = -1;
 
+		// UI utk kasih message
 		UI::Alert alert;
 
-		sf::Text seedText, foodText, wallHPText;
+		// Display text di bawah
+		sf::Text seedText, foodText, waveNumberText;
 
 		Wall wall;
-
 		Spawner spawner;
 
 		// Functions untuk create UI dll

@@ -13,10 +13,13 @@ namespace UNITS {
 		sf::Clock skillTimer;
 
 	public:
-		Spearman(GameDataRef data, Lane* lane, int laneNumber) : Friendly(data, lane, laneNumber) {}
+		Spearman(GameDataRef data, Lane* lane, int laneNumber) : Friendly(data, lane, laneNumber) {
+			unitCost = 150;
+		}
+
 		void setup(sf::Vector2f position) {
 
-			Friendly::setUnitStats(225, 175, 400, 0, 1.0);
+			Friendly::setUnitStats(225, 175, 400, 0, 3.0);
 
 			animator.bindSprite(&charSprite);
 			//71 x 51

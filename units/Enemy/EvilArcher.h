@@ -4,12 +4,16 @@
 
 namespace UNITS {
 	class EvilArcher : public Enemies {
+	private:
+		int numOfAttacks = 0;
+		float attackUp = 0;
+		sf::Clock gracePeriod;
 
 	public:
 		EvilArcher(GameDataRef data, Lane* lane, int laneNumber, Wall* wall) : Enemies(data, lane, laneNumber, wall) {}
 
 		void setup(sf::Vector2f position) override {
-			Base::setUnitStats(40, 5, 400, 0.5, 1.4);
+			Base::setUnitStats(140, 70, 400, 1, 1.4);
 
 			animator.bindSprite(&charSprite);
 
@@ -43,9 +47,30 @@ namespace UNITS {
 
 		void updateStateActions() override {
 			Enemies::updateStateActions();
+
+			if (state == ATTACK) {
+				if (clock.getElapsedTime().asSeconds() >= stats.attackSpeed) {
+					this->setState(MOVE);
+					clock.restart();
+				}
+			}
+			else if (state == IDLE)
+			{
+				if (gracePeriod.getElapsedTime().asSeconds() >= 5.0f)
+					this->setState(MOVE);
+			}
+
+			if (skillIsActivated) {
+				skillIsActivated = false;
+				numOfAttacks = 0;
+				attackUp = 0;
+			}
 		}
 
 
-		void skill() {}
+		void skill() {
+			attackUp = stats.normalDamage * 2;
+			stats.normalDamage += attackUp;
+		}
 	};
 }
