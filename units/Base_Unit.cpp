@@ -10,7 +10,10 @@ namespace UNITS
 		: data(data), 
 		laneDataRef(lanes), 
 		laneNumber(laneNumber), 
-		laneTotal(TOTAL_LANES) {}
+		laneTotal(TOTAL_LANES) 
+	{
+		clock.restart();
+	}
 
 	void Base::update()
 	{
@@ -72,9 +75,6 @@ namespace UNITS
 			case MOVE:
 				animator.playAnimation("Move");
 				break;
-			case DIE:
-				//animator.playAnimation("Die");
-				break;
 			default:
 				break;
 			}
@@ -89,7 +89,7 @@ namespace UNITS
 
 	}
 
-	void Base::takeDamage(int damage)
+	void Base::takeDamage(float damage)
 	{
 		isHit = true;
 		stats.health -= damage;

@@ -5,10 +5,18 @@
 namespace UNITS
 {
 	void Friendly::triggerStateChanges() {
+
+		if (isIdlePeriod) {
+
+			if (clock.getElapsedTime().asSeconds() >= 1) {
+				isIdlePeriod = false;
+			}
+
+			return;
+		}
+
 		if (state != ATTACK) {
-			// If enemy is close, setState attack
-			// SAMPLE MELEE ATTACK!1!1
-			int enemyWithMinDistance = INT_MAX;
+			int enemyWithMinDistance = stats.range;
 			for (int i = 0; i < laneDataRef[laneNumber].getEnemyCount(); i++)
 			{
 				int distance = laneDataRef[laneNumber].getEnemyUnit(i)->getPosition().x - charSprite.getPosition().x;

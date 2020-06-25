@@ -34,6 +34,9 @@ namespace UNITS {
 		UnitState		state;
 		bool			stateIsChanged = false;
 
+		// Idle period => Idle slama 1 detik setelah spawn
+		bool			isIdlePeriod = true;
+
 		// Check apakah sedang kena hit (play hitflash shader)
 		bool			isHit = false;
 
@@ -68,7 +71,7 @@ namespace UNITS {
 		virtual void skill() = 0;
 
 		virtual void processStateChanges();
-		virtual void takeDamage(int damage);
+		virtual void takeDamage(float damage);
 		virtual void triggerStateChanges() {}
 		virtual void updateStateActions() {}
 		void setState(UnitState state);

@@ -1,10 +1,11 @@
 #include "GameState.h"
 
-#include "units/Archer/Archer.h"
-#include "units/Knight/GoldenKnight.h"
+#include "units/Friendly/Archer.h"
+#include "units/Friendly/GoldenKnight.h"
 #include "units/Friendly/Assassin.h"
+#include "units/Friendly/Defender.h"
 //#include "units/Healer/Healer.h"
-//#include "units/Spearmen/Spearmen.h"
+#include "units/Friendly/Spearmen.h"
 
 #include "units/Enemy/EvilArcher.h"
 #include "units/Enemy/EvilAssassin.h"
@@ -151,15 +152,15 @@ void LUCY::GameState::VInit()
 		lanes[i].setSpawnPosition(sf::Vector2f(ENEMY_SPAWN_X - 100, (i + 1) * LANE_HEIGHT));
 	}
 
+	if (isLoad) {
+		loadFromFile();
+	}
+
 	lanes[0].spawnEnemyUnit(new UNITS::EvilAssassin(data, lanes, 0));
 	lanes[1].spawnEnemyUnit(new UNITS::EvilArcher(data, lanes, 1));
 	lanes[2].spawnEnemyUnit(new UNITS::EvilArcher(data, lanes, 2));
 	lanes[3].spawnEnemyUnit(new UNITS::EvilAssassin(data, lanes, 3));
 	lanes[4].spawnEnemyUnit(new UNITS::EvilSpearmen(data, lanes, 4));
-
-	if (isLoad) {
-		loadFromFile();
-	}
 
 	UISetup();
 }
@@ -179,6 +180,9 @@ void LUCY::GameState::VHandleInput()
 			if (event.key.code == sf::Keyboard::Escape) {
 				isPausing = !isPausing;
 			}
+			else if (event.key.code == sf::Keyboard::P) {
+				saveToFile();
+			}
 		}
 
 		// Non game inputs
@@ -186,8 +190,6 @@ void LUCY::GameState::VHandleInput()
 
 		// Game Inputs
 		if (!isPausing) {
-
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::P)) { saveToFile(); }
 
 			// Bottom UI seelction
 			bottomUISelection(event);
@@ -216,10 +218,10 @@ void LUCY::GameState::VHandleInput()
 							lanes[laneNo].spawnFriendlyUnit(new UNITS::Assassin(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
 						}
 						else if (selectedUnit == 3) {
-							//lanes[laneNo].spawnFriendlyUnit(new UNITS::Spearman(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+							lanes[laneNo].spawnFriendlyUnit(new UNITS::Spearman(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
 						}
 						else if (selectedUnit == 4) {
-							//lanes[laneNo].spawnFriendlyUnit(new UNITS::Defender(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
+							lanes[laneNo].spawnFriendlyUnit(new UNITS::Defender(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);
 						}
 						else if (selectedUnit == 5) {
 							//lanes[laneNo].spawnFriendlyUnit(new UNITS::Healer(data, lanes, laneNo), selectionArea.getPosition().x + selectionArea.getSize().x / 2.0);

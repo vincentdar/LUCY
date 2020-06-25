@@ -45,6 +45,7 @@ namespace UNITS {
 
 			Friendly::setup(position);
 		}
+
 		void updateStateActions() override {
 
 			Friendly::updateStateActions();
@@ -55,18 +56,17 @@ namespace UNITS {
 					stats.attackSpeed /= 2;
 				}
 			}
-
 		}
 
 		void triggerStateChanges() override {
 			Friendly::triggerStateChanges();
 
-			if (!skillIsActivated) {
+			/*if (!skillIsActivated) {
 				if (stats.health <= stats.max_health * 0.3) {
 					skillIsActivated = true;
 					skill();
 				}
-			}
+			}*/
 		}
 
 		void skill() override {
