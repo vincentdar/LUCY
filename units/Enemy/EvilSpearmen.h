@@ -41,7 +41,15 @@ namespace UNITS {
 
 			charSprite.setScale(2, 2);
 			charSprite.setPosition(position);
-			setState(MOVE);
+			setState(IDLE);
+
+			Enemies::setup(position);
+		}
+
+		void update() {
+			Base::update();
+			if (state == MOVE)
+				charSprite.move(-1, 0);
 		}
 
 		void triggerStateChanges() override {
@@ -53,6 +61,21 @@ namespace UNITS {
 					skillIsActivated = true;
 					skill();
 				}
+			}
+		}
+
+
+		void updateStateActions() override {
+			if (state == ATTACK) {
+				if (clock.getElapsedTime().asSeconds() >= 2.0) {
+					this->setState(MOVE);
+					clock.restart();
+				}
+			}
+			else if (state == IDLE)
+			{
+				if (gracePeriod.getElapsedTime().asSeconds() >= 5.0f)
+					this->setState(MOVE);
 			}
 		}
 

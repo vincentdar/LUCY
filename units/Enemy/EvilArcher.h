@@ -40,7 +40,7 @@ namespace UNITS {
 
 			charSprite.setScale(2, 2);
 			charSprite.setPosition(position);
-			setState(MOVE);
+			setState(IDLE);
 
 			Enemies::setup(position);
 		}
@@ -52,6 +52,10 @@ namespace UNITS {
 				if (clock.getElapsedTime().asSeconds() >= stats.attackSpeed) {
 					this->setState(MOVE);
 					clock.restart();
+
+					if (skillIsActivated) {
+						skillIsActivated = false;
+					}
 				}
 			}
 			else if (state == IDLE)

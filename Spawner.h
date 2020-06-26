@@ -112,34 +112,34 @@ public:
 
 		//Spawn Enemy
 		while (enemyOnField < waveEnemyCount) {
-			if (respawnTimer.getElapsedTime().asSeconds() >= 0.5) {
-				for (int i = 0; i < clusterSpawn; i++) {
-					if (enemyPicker == 0) {
-						lane[lanePicker].spawnEnemyUnit(new UNITS::EvilAssassin(data, lane, lanePicker, wall));
-					}
-					else if (enemyPicker == 1) {
-						lane[lanePicker].spawnEnemyUnit(new UNITS::EvilKnight(data, lane, lanePicker, wall));
-					}
-					else if (enemyPicker == 2) {
-						lane[lanePicker].spawnEnemyUnit(new UNITS::EvilSpearmen(data, lane, lanePicker, wall));
-					}
-					else if (enemyPicker == 3) {
-						lane[lanePicker].spawnEnemyUnit(new UNITS::EvilArcher(data, lane, lanePicker, wall));
-					}
-					enemyPicker = rand() % 4;
-					lanePicker = rand() % TOTAL_LANES;
-				}
 
-				enemyOnField += clusterSpawn;
-				clusterSpawn = (rand() % 4) + 1;
-				respawnTimer.restart();
+			for (int i = 0; i < clusterSpawn; i++) {
+				if (enemyPicker == 0) {
+					lane[lanePicker].spawnEnemyUnit(new UNITS::EvilAssassin(data, lane, lanePicker, wall));
+				}
+				else if (enemyPicker == 1) {
+					lane[lanePicker].spawnEnemyUnit(new UNITS::EvilKnight(data, lane, lanePicker, wall));
+				}
+				else if (enemyPicker == 2) {
+					lane[lanePicker].spawnEnemyUnit(new UNITS::EvilSpearmen(data, lane, lanePicker, wall));
+				}
+				else if (enemyPicker == 3) {
+					lane[lanePicker].spawnEnemyUnit(new UNITS::EvilArcher(data, lane, lanePicker, wall));
+				}
+				enemyPicker = rand() % 4;
+				lanePicker = rand() % TOTAL_LANES;
 			}
+
+			enemyOnField += clusterSpawn;
+			clusterSpawn = (rand() % 4) + 1;
+			respawnTimer.restart();
 
 			if (enemyOnField >= waveEnemyCount) {
 				break;
 			}
-		}
 
-		state = WAITING;
+
+			state = WAITING;
+		}
 	}
 };

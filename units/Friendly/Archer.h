@@ -20,7 +20,7 @@ namespace UNITS {
 
 		void setup(sf::Vector2f position) override {
 
-			Friendly::setUnitStats(175, 100, 1000, 0, 2.0); //Sets unit info
+			Friendly::setUnitStats(175, 100, 600, 0, 2.0); //Sets unit info
 
 			animator.bindSprite(&charSprite);
 

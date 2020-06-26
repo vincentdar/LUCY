@@ -8,7 +8,7 @@ namespace UNITS
 
 		if (isIdlePeriod) {
 
-			if (clock.getElapsedTime().asSeconds() >= 1) {
+			if (clock.getElapsedTime().asSeconds() >= 5.0f) {
 				isIdlePeriod = false;
 			}
 			return;

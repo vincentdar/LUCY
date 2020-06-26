@@ -10,15 +10,27 @@ namespace UNITS
 	protected:
 		bool isAttacking;
 
+		sf::Clock interval;
+		sf::Clock gracePeriod;
+		sf::Clock skillTimer;
+
+		float attackUp;
+		int numOfAttacks;
+
 		// Reference ke wall yang ada di gamestate
 		Wall* wall;
 
 	public:
 		Enemies(GameDataRef data, Lane* lane, int laneNumber, Wall* wall) 
-			: Base(data, lane, laneNumber), wall(wall) {}
+			: Base(data, lane, laneNumber), wall(wall) {
+			interval.restart();
+			gracePeriod.restart();
+			skillTimer.restart();
+			isAttacking = false;
+		}
 
-		void triggerStateChanges() override;
-		void updateStateActions() override;
+		virtual void triggerStateChanges() override;
+		virtual void updateStateActions() override;
 		void update() override;
 
 		void setup(sf::Vector2f spawnPosition) override {

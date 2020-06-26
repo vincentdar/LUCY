@@ -12,7 +12,7 @@ namespace UNITS {
 
 		void setup(sf::Vector2f position) override {
 			
-			Base::setUnitStats(50, 30, 75, 3, 2.0);
+			Base::setUnitStats(150, 30, 75, 3, 2.0);
 
 			animator.bindSprite(&charSprite);
 
@@ -39,7 +39,7 @@ namespace UNITS {
 
 			charSprite.setScale(2, 2);
 			charSprite.setPosition(position);
-			setState(MOVE);
+			setState(IDLE);
 
 			// Custom skill setup
 			shader.loadFromFile("res/shader/invisible.shader", sf::Shader::Fragment);
@@ -105,6 +105,12 @@ namespace UNITS {
 					}
 				}
 
+			}
+
+			else if (state == IDLE)
+			{
+				if (gracePeriod.getElapsedTime().asSeconds() >= 5.0f)
+					this->setState(MOVE);
 			}
 		}
 		

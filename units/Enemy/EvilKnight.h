@@ -39,6 +39,8 @@ namespace UNITS {
 			charSprite.setScale(2, 2);
 			charSprite.setPosition(position);
 			setState(IDLE);
+
+			Enemies::setup(position);
 		}
 
 		void update() {
@@ -53,6 +55,11 @@ namespace UNITS {
 					this->setState(MOVE);
 					clock.restart();
 				}
+			}
+			else if (state == IDLE)
+			{
+				if (gracePeriod.getElapsedTime().asSeconds() >= 5.0f)
+					this->setState(MOVE);
 			}
 		}
 

@@ -53,7 +53,6 @@ public:
 
 	void update() {
 		float health_percentage = UTILS::getValueFromRange(0, 2000, 0, 1, health);
-		std::cout << health << std::endl;
 		wallHPBarBase.setSize(sf::Vector2f(15, (1 - health_percentage) * maxHealth));
 	}
 

@@ -129,6 +129,42 @@ void LUCY::GameState::UnitFactories(std::string buffer, int lane_id)
 		);
 		lanes[lane_id].spawnFriendlyUnit(pFriend, std::stof(string_var_vector[1]));
 	}
+	else if (string_var_vector.at(0) == "Spearman")
+	{
+		pFriend = new UNITS::Spearman(data, lanes, lane_id);
+		pFriend->StatUnserialize(
+			string_var_vector[2],
+			string_var_vector[3],
+			string_var_vector[4],
+			string_var_vector[5],
+			string_var_vector[6]
+		);
+		lanes[lane_id].spawnFriendlyUnit(pFriend, std::stof(string_var_vector[1]));
+	}
+	else if (string_var_vector.at(0) == "Defender")
+	{
+		pFriend = new UNITS::Defender(data, lanes, lane_id);
+		pFriend->StatUnserialize(
+			string_var_vector[2],
+			string_var_vector[3],
+			string_var_vector[4],
+			string_var_vector[5],
+			string_var_vector[6]
+		);
+		lanes[lane_id].spawnFriendlyUnit(pFriend, std::stof(string_var_vector[1]));
+	}
+	else if (string_var_vector.at(0) == "Healer")
+	{
+		pFriend = new UNITS::Healer(data, lanes, lane_id);
+		pFriend->StatUnserialize(
+			string_var_vector[2],
+			string_var_vector[3],
+			string_var_vector[4],
+			string_var_vector[5],
+			string_var_vector[6]
+		);
+		lanes[lane_id].spawnFriendlyUnit(pFriend, std::stof(string_var_vector[1]));
+	}
 }
 
 // Virtual fn dari IState
@@ -163,7 +199,6 @@ void LUCY::GameState::VInit()
 
 void LUCY::GameState::VHandleInput()
 {
-
 	sf::Event event;
 	while (data->window.pollEvent(event)) {
 
@@ -431,11 +466,11 @@ void LUCY::GameState::UISetup()
 	unitBtnRef[2]->set(UI::TOPLEFT, btnSize, 
 		data->assets.GetTexturePtr("Assassin_Green"),	sf::IntRect(0, 0, 37, 36));
 	unitBtnRef[3]->set(UI::TOPLEFT, btnSize, 
-		data->assets.GetTexturePtr("Spearman"),			sf::IntRect(0, 0, 37, 36));
+		data->assets.GetTexturePtr("Spearman"),			sf::IntRect(0, 0, 71, 51));
 	unitBtnRef[4]->set(UI::TOPLEFT, btnSize, 
 		data->assets.GetTexturePtr("Defender"),			sf::IntRect(0, 0, 37, 36));
 	unitBtnRef[5]->set(UI::TOPLEFT, btnSize, 
-		data->assets.GetTexturePtr("Healer"),			sf::IntRect(0, 0, 37, 36));
+		data->assets.GetTexturePtr("Healer"),			sf::IntRect(0, 52*4, 42, 52));
 	unitBtnRef[6]->set(UI::TOPLEFT, btnSize, 
 		data->assets.GetTexturePtr("Wheat"),			sf::IntRect(0, 0, 64, 64));
 
